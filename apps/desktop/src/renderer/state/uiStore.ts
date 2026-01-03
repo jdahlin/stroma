@@ -5,26 +5,46 @@ export type Theme = 'light' | 'dark' | 'system';
 
 interface UIState {
   theme: Theme;
-  sidebarOpen: boolean;
+  leftSidebarOpen: boolean;
+  rightSidebarOpen: boolean;
+  leftSidebarWidth: number; // in rem
+  rightSidebarWidth: number; // in rem
   commandPaletteOpen: boolean;
   setTheme: (theme: Theme) => void;
-  toggleSidebar: () => void;
+  toggleLeftSidebar: () => void;
+  toggleRightSidebar: () => void;
+  setLeftSidebarWidth: (width: number) => void;
+  setRightSidebarWidth: (width: number) => void;
   toggleCommandPalette: () => void;
 }
+
+const DEFAULT_SIDEBAR_WIDTH = 15; // rem
 
 export const useUIStore = create<UIState>()(
   persist(
     (set) => ({
       theme: 'system',
-      sidebarOpen: true,
+      leftSidebarOpen: true,
+      rightSidebarOpen: true,
+      leftSidebarWidth: DEFAULT_SIDEBAR_WIDTH,
+      rightSidebarWidth: DEFAULT_SIDEBAR_WIDTH,
       commandPaletteOpen: false,
 
       setTheme: (theme) => set({ theme }),
 
-      toggleSidebar: () =>
+      toggleLeftSidebar: () =>
         set((state) => ({
-          sidebarOpen: !state.sidebarOpen,
+          leftSidebarOpen: !state.leftSidebarOpen,
         })),
+
+      toggleRightSidebar: () =>
+        set((state) => ({
+          rightSidebarOpen: !state.rightSidebarOpen,
+        })),
+
+      setLeftSidebarWidth: (width) => set({ leftSidebarWidth: width }),
+
+      setRightSidebarWidth: (width) => set({ rightSidebarWidth: width }),
 
       toggleCommandPalette: () =>
         set((state) => ({
@@ -35,7 +55,10 @@ export const useUIStore = create<UIState>()(
       name: 'stroma-ui',
       partialize: (state) => ({
         theme: state.theme,
-        sidebarOpen: state.sidebarOpen,
+        leftSidebarOpen: state.leftSidebarOpen,
+        rightSidebarOpen: state.rightSidebarOpen,
+        leftSidebarWidth: state.leftSidebarWidth,
+        rightSidebarWidth: state.rightSidebarWidth,
       }),
     }
   )

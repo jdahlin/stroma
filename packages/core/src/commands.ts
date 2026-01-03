@@ -93,6 +93,8 @@ export const commandRegistry = new CommandRegistry();
 export const COMMANDS = {
   toggleCommandPalette: commandId('app.toggleCommandPalette'),
   toggleTheme: commandId('app.toggleTheme'),
+  toggleLeftSidebar: commandId('sidebar.toggleLeft'),
+  toggleRightSidebar: commandId('sidebar.toggleRight'),
   openHome: commandId('pane.openHome'),
   openNotes: commandId('pane.openNotes'),
   openQueue: commandId('pane.openQueue'),
@@ -122,6 +124,18 @@ commandRegistry.define({
   category: 'App',
 });
 commandRegistry.define({ id: COMMANDS.toggleTheme, label: 'Toggle Theme', category: 'App' });
+commandRegistry.define({
+  id: COMMANDS.toggleLeftSidebar,
+  label: 'Toggle Left Sidebar',
+  shortcut: key('\\', { meta: true }),
+  category: 'Sidebar',
+});
+commandRegistry.define({
+  id: COMMANDS.toggleRightSidebar,
+  label: 'Toggle Right Sidebar',
+  shortcut: key('\\', { meta: true, shift: true }),
+  category: 'Sidebar',
+});
 commandRegistry.define({ id: COMMANDS.openHome, label: 'Open Home', category: 'Panes' });
 commandRegistry.define({ id: COMMANDS.openNotes, label: 'Open Notes', category: 'Panes' });
 commandRegistry.define({ id: COMMANDS.openQueue, label: 'Open Queue', category: 'Panes' });

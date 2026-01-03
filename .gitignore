@@ -4,7 +4,7 @@ node_modules/
 # Build outputs
 dist/
 out/
-.turbo/
+.turbo
 *.tsbuildinfo
 
 # Logs

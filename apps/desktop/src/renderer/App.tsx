@@ -1,7 +1,10 @@
 import React, { useEffect } from 'react';
-import { commandRegistry, COMMANDS } from '@repo/core';
+import { commandRegistry } from '@repo/core';
 import { DockRoot } from './layout/DockRoot';
 import { TopBar } from './chrome/TopBar';
+import { Ribbon } from './chrome/Ribbon';
+import { LeftSidebar } from './chrome/LeftSidebar';
+import { RightSidebar } from './chrome/RightSidebar';
 import { CommandPalette } from './chrome/CommandPalette';
 import { useUIStore } from './state';
 import { registerCommands } from './commands';
@@ -33,9 +36,14 @@ export const App: React.FC = () => {
   return (
     <div className="app-container">
       <TopBar />
-      <main className="app-main">
-        <DockRoot />
-      </main>
+      <div className="app-content">
+        <Ribbon />
+        <LeftSidebar />
+        <main className="app-main">
+          <DockRoot />
+        </main>
+        <RightSidebar />
+      </div>
       <CommandPalette isOpen={commandPaletteOpen} onClose={toggleCommandPalette} />
     </div>
   );

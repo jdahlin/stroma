@@ -16,6 +16,14 @@ export function registerCommands(): () => void {
       setTheme(THEMES[nextIndex]!);
     }),
 
+    // Sidebar commands
+    commandRegistry.register(COMMANDS.toggleLeftSidebar, () => {
+      useUIStore.getState().toggleLeftSidebar();
+    }),
+    commandRegistry.register(COMMANDS.toggleRightSidebar, () => {
+      useUIStore.getState().toggleRightSidebar();
+    }),
+
     // Tab commands
     commandRegistry.register(COMMANDS.newTab, () => {
       useLayoutStore.getState().openNewTab();
