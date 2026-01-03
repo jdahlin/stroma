@@ -34,12 +34,16 @@ export const App: React.FC = () => {
 
   return (
     <div className="app-container">
-      <TopBar />
       <div className="app-content">
-        <Ribbon />
-        <Sidebar side="left">
-          <div className="sidebar-placeholder">Left Sidebar</div>
-        </Sidebar>
+        <div className="left-stack">
+          <div className="traffic-lights-spacer" />
+          <div className="left-row">
+            <Ribbon />
+            <Sidebar side="left">
+              <div className="sidebar-placeholder">Left Sidebar</div>
+            </Sidebar>
+          </div>
+        </div>
         <main className="app-main">
           <DockRoot />
         </main>

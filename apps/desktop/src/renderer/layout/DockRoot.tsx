@@ -4,6 +4,7 @@ import { DockHost } from '@repo/ux';
 import { paneComponents } from './paneRegistry';
 import { createDefaultLayout } from './defaultLayout';
 import { useLayoutStore } from '../state';
+import './DockRoot.css';
 
 export const DockRoot: React.FC = () => {
   const { serializedLayout, setLayout, setApi } = useLayoutStore();

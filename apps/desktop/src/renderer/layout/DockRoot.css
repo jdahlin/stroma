@@ -1,0 +1,15 @@
+/* Offset the leftmost tab strip where it can sit under window controls. */
+.app-content:not(:has(.sidebar-left))
+  .dockview-theme-stroma
+  .dv-split-view-container.dv-horizontal
+  > .dv-view-container:is(:first-child, :nth-child(2))
+  > .dv-view:first-child
+  .dv-groupview
+  .dv-scrollable {
+  margin-left: 40px !important;
+}
+
+/* App-level dock tab height hook for sidebar/ribbon spacing. */
+.app-container .dockview-theme-stroma {
+  --dv-tabs-and-actions-container-height: var(--stroma-dock-tabs-height);
+}
