@@ -1,6 +1,6 @@
 import type React from 'react';
 import type { IDockviewPanelProps } from 'dockview';
-import type { PaneType } from '@core';
+import type { PaneType } from '@repo';
 import { HomePane } from '../panes/HomePane';
 import { NotesPane } from '../panes/NotesPane';
 import { QueuePane } from '../panes/QueuePane';

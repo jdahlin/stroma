@@ -2,9 +2,20 @@
   "extends": "@repo/tsconfig/node.json",
   "compilerOptions": {
     "composite": true,
+    "baseUrl": ".",
     "outDir": "dist/preload",
-    "rootDir": "src/preload",
-    "noEmit": false
+    "paths": {
+      "@core": ["../../packages/core/src/index.ts"],
+      "@core/*": ["../../packages/core/src/*"],
+      "@shared": ["../../packages/shared/src/index.ts"],
+      "@shared/*": ["../../packages/shared/src/*"],
+      "@ux": ["../../packages/ux/src/index.ts"],
+      "@ux/*": ["../../packages/ux/src/*"]
+    },
+    "noEmit": true
   },
-  "include": ["src/preload"]
+  "include": [
+    "src/preload",
+    "src/electron.d.ts"
+  ]
 }

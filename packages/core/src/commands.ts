@@ -1,44 +1,120 @@
-import type { Brand } from '@shared';
+import type { Brand } from '@repo';
 
-/**
- * Command identifier type.
- */
 export type CommandId = Brand<string, 'CommandId'>;
 
-/**
- * Command definition for the command palette.
- */
-export interface Command {
-  id: CommandId;
-  label: string;
-  /** Optional keyboard shortcut (e.g., "Cmd+K", "Ctrl+Shift+P") */
-  shortcut?: string;
-  /** Optional category for grouping in command palette */
-  category?: string;
-  /** Whether this command is currently enabled */
-  enabled?: boolean;
-  /** Execute the command */
-  execute: () => void | Promise<void>;
-}
-
-/**
- * Creates a typed CommandId from a string.
- */
 export function commandId(id: string): CommandId {
   return id as CommandId;
 }
 
-/**
- * Built-in command IDs.
- */
+/** Mirrors DOM KeyboardEvent for platform independence */
+export interface KeyboardEvent {
+  key: string;
+  code?: string;
+  metaKey: boolean;
+  ctrlKey: boolean;
+  shiftKey: boolean;
+  altKey: boolean;
+}
+
+export interface CommandDefinition {
+  id: CommandId;
+  label: string;
+  shortcut?: KeyboardEvent;
+  category?: string;
+}
+
+export type CommandHandler = () => void | Promise<void>;
+
+function shortcutMatches(shortcut: KeyboardEvent, event: KeyboardEvent): boolean {
+  const keyMatches = event.key.toLowerCase() === shortcut.key.toLowerCase();
+  const codeMatches = shortcut.code && event.code === shortcut.code;
+
+  if (!keyMatches && !codeMatches) return false;
+
+  const modPressed = event.metaKey || event.ctrlKey;
+  const modRequired = shortcut.metaKey || shortcut.ctrlKey;
+
+  if (modRequired && !modPressed) return false;
+  if (!modRequired && modPressed) return false;
+  if (shortcut.shiftKey !== event.shiftKey) return false;
+  if (shortcut.altKey !== event.altKey) return false;
+
+  return true;
+}
+
+export class CommandRegistry {
+  private definitions = new Map<CommandId, CommandDefinition>();
+  private handlers = new Map<CommandId, CommandHandler>();
+
+  define(definition: CommandDefinition): void {
+    this.definitions.set(definition.id, definition);
+  }
+
+  register(id: CommandId, handler: CommandHandler): () => void {
+    this.handlers.set(id, handler);
+    return () => this.handlers.delete(id);
+  }
+
+  async execute(id: CommandId): Promise<void> {
+    const handler = this.handlers.get(id);
+    if (handler) await handler();
+  }
+
+  isRegistered(id: CommandId): boolean {
+    return this.handlers.has(id);
+  }
+
+  getDefinition(id: CommandId): CommandDefinition | undefined {
+    return this.definitions.get(id);
+  }
+
+  getAllDefinitions(): CommandDefinition[] {
+    return Array.from(this.definitions.values());
+  }
+
+  getAvailableCommands(): CommandDefinition[] {
+    return this.getAllDefinitions().filter((def) => this.isRegistered(def.id));
+  }
+
+  async executeFromShortcut(event: KeyboardEvent): Promise<boolean> {
+    for (const def of this.definitions.values()) {
+      if (!def.shortcut) continue;
+      if (shortcutMatches(def.shortcut, event)) {
+        await this.execute(def.id);
+        return true;
+      }
+    }
+    return false;
+  }
+}
+
+export const commandRegistry = new CommandRegistry();
+
 export const COMMANDS = {
   toggleCommandPalette: commandId('app.toggleCommandPalette'),
   toggleTheme: commandId('app.toggleTheme'),
-  zoomIn: commandId('app.zoomIn'),
-  zoomOut: commandId('app.zoomOut'),
-  resetZoom: commandId('app.resetZoom'),
   openHome: commandId('pane.openHome'),
   openNotes: commandId('pane.openNotes'),
   openQueue: commandId('pane.openQueue'),
   openSearch: commandId('pane.openSearch'),
+  newTab: commandId('tab.new'),
+  closeTab: commandId('tab.close'),
 } as const;
+
+const key = (k: string, mods: { meta?: boolean; shift?: boolean; alt?: boolean; code?: string } = {}): KeyboardEvent => ({
+  key: k,
+  code: mods.code,
+  metaKey: mods.meta ?? false,
+  ctrlKey: false,
+  shiftKey: mods.shift ?? false,
+  altKey: mods.alt ?? false,
+});
+
+commandRegistry.define({ id: COMMANDS.toggleCommandPalette, label: 'Toggle Command Palette', shortcut: key('k', { meta: true }), category: 'App' });
+commandRegistry.define({ id: COMMANDS.toggleTheme, label: 'Toggle Theme', category: 'App' });
+commandRegistry.define({ id: COMMANDS.openHome, label: 'Open Home', category: 'Panes' });
+commandRegistry.define({ id: COMMANDS.openNotes, label: 'Open Notes', category: 'Panes' });
+commandRegistry.define({ id: COMMANDS.openQueue, label: 'Open Queue', category: 'Panes' });
+commandRegistry.define({ id: COMMANDS.openSearch, label: 'Open Search', category: 'Panes' });
+commandRegistry.define({ id: COMMANDS.newTab, label: 'New Tab', shortcut: key('t', { meta: true }), category: 'Tabs' });
+commandRegistry.define({ id: COMMANDS.closeTab, label: 'Close Tab', shortcut: key('w', { meta: true }), category: 'Tabs' });

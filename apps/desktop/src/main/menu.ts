@@ -1,4 +1,5 @@
-import { Menu, app, shell, type MenuItemConstructorOptions } from 'electron';
+import { Menu, app, shell, BrowserWindow, type MenuItemConstructorOptions } from 'electron';
+import { COMMANDS } from '@core';
 
 export function setupMenu(): void {
   const isMac = process.platform === 'darwin';
@@ -7,27 +8,54 @@ export function setupMenu(): void {
     // App menu (macOS only)
     ...(isMac
       ? [
-          {
-            label: app.name,
-            submenu: [
-              { role: 'about' as const },
-              { type: 'separator' as const },
-              { role: 'services' as const },
-              { type: 'separator' as const },
-              { role: 'hide' as const },
-              { role: 'hideOthers' as const },
-              { role: 'unhide' as const },
-              { type: 'separator' as const },
-              { role: 'quit' as const },
-            ],
-          },
-        ]
+        {
+          label: app.name,
+          submenu: [
+            { role: 'about' as const },
+            { type: 'separator' as const },
+            { role: 'services' as const },
+            { type: 'separator' as const },
+            { role: 'hide' as const },
+            { role: 'hideOthers' as const },
+            { role: 'unhide' as const },
+            { type: 'separator' as const },
+            { role: 'quit' as const },
+          ],
+        },
+      ]
       : []),
 
     // File menu
     {
       label: 'File',
-      submenu: [isMac ? { role: 'close' } : { role: 'quit' }],
+      submenu: [
+        {
+          label: 'New Tab',
+          accelerator: 'CmdOrCtrl+T',
+          click: () => {
+            const window = BrowserWindow.getFocusedWindow()
+            if (!window) {
+              console.error('No focused window found')
+              return;
+            }
+            window.webContents.send('execute-command', COMMANDS.newTab);
+          },
+        },
+        {
+          label: 'Close Tab',
+          accelerator: 'CmdOrCtrl+W',
+          click: () => {
+            const window = BrowserWindow.getFocusedWindow()
+            if (!window) {
+              console.error('No focused window found')
+              return;
+            }
+            window.webContents.send('execute-command', COMMANDS.closeTab);
+          },
+        },
+        { type: 'separator' },
+        isMac ? { role: 'close' } : { role: 'quit' },
+      ],
     },
 
     // Edit menu
@@ -42,15 +70,15 @@ export function setupMenu(): void {
         { role: 'paste' },
         ...(isMac
           ? [
-              { role: 'pasteAndMatchStyle' as const },
-              { role: 'delete' as const },
-              { role: 'selectAll' as const },
-            ]
+            { role: 'pasteAndMatchStyle' as const },
+            { role: 'delete' as const },
+            { role: 'selectAll' as const },
+          ]
           : [
-              { role: 'delete' as const },
-              { type: 'separator' as const },
-              { role: 'selectAll' as const },
-            ]),
+            { role: 'delete' as const },
+            { type: 'separator' as const },
+            { role: 'selectAll' as const },
+          ]),
       ],
     },
 
@@ -78,11 +106,11 @@ export function setupMenu(): void {
         { role: 'zoom' },
         ...(isMac
           ? [
-              { type: 'separator' as const },
-              { role: 'front' as const },
-              { type: 'separator' as const },
-              { role: 'window' as const },
-            ]
+            { type: 'separator' as const },
+            { role: 'front' as const },
+            { type: 'separator' as const },
+            { role: 'window' as const },
+          ]
           : [{ role: 'close' as const }]),
       ],
     },

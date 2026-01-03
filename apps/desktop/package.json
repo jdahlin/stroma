@@ -6,8 +6,8 @@
   "scripts": {
     "dev": "tsx scripts/dev.ts",
     "build": "pnpm run build:main && pnpm run build:preload && pnpm run build:renderer",
-    "build:main": "tsc -p tsconfig.main.json",
-    "build:preload": "tsc -p tsconfig.preload.json",
+    "build:main": "esbuild src/main/index.ts --bundle --platform=node --format=cjs --sourcemap --tsconfig=tsconfig.main.json --outfile=dist/main/index.js --external:electron --conditions=import --alias:@core=../../packages/core/src --alias:@shared=../../packages/shared/src --alias:@ux=../../packages/ux/src",
+    "build:preload": "esbuild src/preload/index.ts --bundle --platform=node --format=cjs --sourcemap --tsconfig=tsconfig.preload.json --outfile=dist/preload/index.js --external:electron --conditions=import --alias:@core=../../packages/core/src --alias:@shared=../../packages/shared/src --alias:@ux=../../packages/ux/src",
     "build:renderer": "vite build",
     "start": "electron .",
     "typecheck": "tsc --noEmit",

@@ -1,5 +1,5 @@
-import { contextBridge } from 'electron';
-import type { StromaAPI } from './types';
+import { contextBridge, ipcRenderer } from 'electron';
+import type { StromaAPI } from '../renderer/electron.d';
 
 const api: StromaAPI = {
   platform: process.platform,
@@ -8,10 +8,13 @@ const api: StromaAPI = {
     chrome: process.versions.chrome,
     electron: process.versions.electron,
   },
-  // Add IPC methods here as needed
-  // Example:
-  // send: (channel: string, data: unknown) => ipcRenderer.send(channel, data),
-  // invoke: (channel: string, data: unknown) => ipcRenderer.invoke(channel, data),
+  onCommand: (callback) => {
+    const subscription = (_event: Electron.IpcRendererEvent, id: string) => callback(id);
+    ipcRenderer.on('execute-command', subscription);
+    return () => {
+      ipcRenderer.removeListener('execute-command', subscription);
+    };
+  },
 };
 
 contextBridge.exposeInMainWorld('stroma', api);

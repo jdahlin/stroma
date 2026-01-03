@@ -4,7 +4,7 @@ import { useUIStore, type Theme } from '../state';
 const THEMES: readonly Theme[] = ['light', 'dark', 'system'] as const;
 
 export const TopBar: React.FC = () => {
-  const { theme, setTheme, zoom, setZoom } = useUIStore();
+  const { theme, setTheme } = useUIStore();
 
   const toggleTheme = () => {
     const currentIndex = THEMES.indexOf(theme);
@@ -22,13 +22,6 @@ export const TopBar: React.FC = () => {
         <span className="app-title">Stroma</span>
         <div className="top-bar-spacer" />
         <div className="top-bar-controls">
-          <button className="top-bar-button" onClick={() => setZoom(zoom - 10)} title="Zoom out">
-            -
-          </button>
-          <span className="zoom-level">{zoom}%</span>
-          <button className="top-bar-button" onClick={() => setZoom(zoom + 10)} title="Zoom in">
-            +
-          </button>
           <button className="top-bar-button" onClick={toggleTheme} title={`Theme: ${theme}`}>
             {theme === 'dark' ? '🌙' : theme === 'light' ? '☀️' : '💻'}
           </button>

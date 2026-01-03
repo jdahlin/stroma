@@ -3,9 +3,15 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@renderer/*": ["src/renderer/*"]
+      "@renderer/*": ["src/renderer/*"],
+      "@core": ["../../packages/core/src/index.ts"],
+      "@core/*": ["../../packages/core/src/*"],
+      "@shared": ["../../packages/shared/src/index.ts"],
+      "@shared/*": ["../../packages/shared/src/*"],
+      "@ux": ["../../packages/ux/src/index.ts"],
+      "@ux/*": ["../../packages/ux/src/*"]
     }
   },
   "include": ["src/renderer"],
-  "references": [{ "path": "./tsconfig.main.json" }, { "path": "./tsconfig.preload.json" }]
+  "references": []
 }

@@ -1,4 +1,4 @@
-import type { Brand } from '@shared';
+import type { Brand } from '@repo';
 
 /**
  * Pane type identifiers. Each pane in the dock system has a unique type.
