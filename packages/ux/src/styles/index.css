@@ -2,7 +2,9 @@
 @import './tokens.css';
 @import './themes.css';
 @import './base.css';
-@import './dockview-theme.css';
 
-/* Dockview base styles */
+/* Dockview base styles (must come before theme overrides) */
 @import 'dockview/dist/styles/dockview.css';
+
+/* Custom Stroma theme for Dockview (overrides defaults) */
+@import './dockview-theme.css';

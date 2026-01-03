@@ -3,37 +3,58 @@
   /* Gap between panels (Dockview v4+) */
   --dv-group-gap-size: 4px;
 
-  /* Map Dockview variables to our design tokens */
+  /* Base colors */
   --dv-background-color: var(--color-bg-primary);
-  --dv-group-view-background-color: var(--color-bg-secondary);
+  --dv-group-view-background-color: var(--color-bg-primary);
+
+  /* Tab container */
   --dv-tabs-and-actions-container-background-color: var(--color-bg-secondary);
+  --dv-tabs-and-actions-container-height: 36px;
+  --dv-tabs-and-actions-container-font-size: var(--text-sm);
+  --dv-tabs-container-scrollbar-color: var(--color-border);
+
+  /* Active group tabs */
   --dv-activegroup-visiblepanel-tab-background-color: var(--color-bg-primary);
-  --dv-activegroup-hiddenpanel-tab-background-color: var(--color-bg-tertiary);
+  --dv-activegroup-visiblepanel-tab-color: var(--color-text-primary);
+  --dv-activegroup-hiddenpanel-tab-background-color: transparent;
+  --dv-activegroup-hiddenpanel-tab-color: var(--color-text-secondary);
+
+  /* Inactive group tabs */
   --dv-inactivegroup-visiblepanel-tab-background-color: var(--color-bg-tertiary);
-  --dv-inactivegroup-hiddenpanel-tab-background-color: var(--color-bg-tertiary);
-  --dv-tab-divider-color: var(--color-border);
+  --dv-inactivegroup-visiblepanel-tab-color: var(--color-text-secondary);
+  --dv-inactivegroup-hiddenpanel-tab-background-color: transparent;
+  --dv-inactivegroup-hiddenpanel-tab-color: var(--color-text-muted);
+
+  /* Borders and dividers */
+  --dv-tab-divider-color: transparent;
   --dv-separator-border: var(--color-border);
   --dv-paneview-header-border-color: var(--color-border);
-  --dv-icon-hover-background-color: var(--color-bg-tertiary);
-  --dv-drag-over-background-color: var(--color-accent);
-  --dv-drag-over-border-color: var(--color-accent);
-  --dv-active-sash-color: var(--color-accent);
-  --dv-floating-box-shadow: var(--shadow-md);
+  --dv-paneview-active-outline-color: var(--color-accent);
 
-  /* Tab text colors */
-  --dv-activegroup-visiblepanel-tab-color: var(--color-text-primary);
-  --dv-activegroup-hiddenpanel-tab-color: var(--color-text-secondary);
-  --dv-inactivegroup-visiblepanel-tab-color: var(--color-text-secondary);
-  --dv-inactivegroup-hiddenpanel-tab-color: var(--color-text-muted);
+  /* Interactive elements */
+  --dv-icon-hover-background-color: var(--color-bg-tertiary);
+
+  /* Drag and drop */
+  --dv-drag-over-background-color: color-mix(in srgb, var(--color-accent) 20%, transparent);
+  --dv-drag-over-border-color: var(--color-accent);
 
   /* Sash (resize handle) */
   --dv-sash-background-color: transparent;
   --dv-sash-hover-background-color: var(--color-accent);
+  --dv-active-sash-color: var(--color-accent);
+
+  /* Floating panels */
+  --dv-floating-box-shadow: var(--shadow-lg);
 }
 
-/* Active group indicator */
-.dockview-theme-stroma .groupview.active-group > .tabs-and-actions-container {
-  border-bottom: 2px solid var(--color-accent);
+/* Tab container styling */
+.dockview-theme-stroma .tabs-and-actions-container {
+  border-bottom: 1px solid var(--color-border);
+}
+
+/* Active group indicator - subtle bottom border on active tab */
+.dockview-theme-stroma .groupview.active-group .tab.active-tab {
+  box-shadow: inset 0 -2px 0 var(--color-accent);
 }
 
 /* Tab styling */
@@ -42,9 +63,27 @@
   font-size: var(--text-sm);
   border-radius: var(--radius-sm) var(--radius-sm) 0 0;
   transition: background-color var(--transition-fast);
+  border: none;
+  margin: 0;
 }
 
-.dockview-theme-stroma .tab:hover {
+.dockview-theme-stroma .tab:hover:not(.active-tab) {
+  background-color: var(--color-bg-tertiary);
+}
+
+/* Tab close button */
+.dockview-theme-stroma .tab .dv-default-tab-action {
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+  border-radius: var(--radius-sm);
+}
+
+.dockview-theme-stroma .tab:hover .dv-default-tab-action,
+.dockview-theme-stroma .tab .dv-default-tab-action:focus {
+  opacity: 1;
+}
+
+.dockview-theme-stroma .tab .dv-default-tab-action:hover {
   background-color: var(--color-bg-tertiary);
 }
 
@@ -53,8 +92,25 @@
   background-color: var(--color-bg-primary);
 }
 
+/* Group view actions (toolbar buttons) */
+.dockview-theme-stroma .group-actions-container button {
+  border-radius: var(--radius-sm);
+  transition: background-color var(--transition-fast);
+}
+
+.dockview-theme-stroma .group-actions-container button:hover {
+  background-color: var(--color-bg-tertiary);
+}
+
 /* Floating windows */
 .dockview-theme-stroma .dv-overlay-render-container {
   border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
   overflow: hidden;
+}
+
+/* Watermark / empty state */
+.dockview-theme-stroma .watermark {
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-muted);
 }

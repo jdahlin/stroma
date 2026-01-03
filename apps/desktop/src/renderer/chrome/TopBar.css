@@ -1,7 +1,7 @@
 /* Top Bar */
 
 .top-bar {
-  height: 2.25em;
+  height: 3em;
   display: flex;
   align-items: center;
   background: var(--color-bg-secondary);
