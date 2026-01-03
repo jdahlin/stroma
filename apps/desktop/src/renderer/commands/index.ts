@@ -18,10 +18,10 @@ export function registerCommands(): () => void {
 
     // Sidebar commands
     commandRegistry.register(COMMANDS.toggleLeftSidebar, () => {
-      useUIStore.getState().toggleLeftSidebar();
+      useUIStore.getState().toggleSidebar('left');
     }),
     commandRegistry.register(COMMANDS.toggleRightSidebar, () => {
-      useUIStore.getState().toggleRightSidebar();
+      useUIStore.getState().toggleSidebar('right');
     }),
 
     // Tab commands

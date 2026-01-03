@@ -4,7 +4,7 @@ import { useUIStore } from '../state';
 import './Ribbon.css';
 
 export const Ribbon: React.FC = () => {
-  const { toggleLeftSidebar, toggleRightSidebar } = useUIStore();
+  const { toggleSidebar } = useUIStore();
 
   return (
     <aside className="ribbon">
@@ -12,7 +12,7 @@ export const Ribbon: React.FC = () => {
         <IconButton
           icon={PanelLeft}
           label="Toggle left sidebar"
-          onClick={toggleLeftSidebar}
+          onClick={() => toggleSidebar('left')}
         />
         <IconButton icon={Home} label="Home" />
         <IconButton icon={FileText} label="Files" />
@@ -23,7 +23,7 @@ export const Ribbon: React.FC = () => {
         <IconButton
           icon={PanelRight}
           label="Toggle right sidebar"
-          onClick={toggleRightSidebar}
+          onClick={() => toggleSidebar('right')}
         />
       </div>
     </aside>

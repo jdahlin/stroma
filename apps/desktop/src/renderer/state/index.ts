@@ -1,2 +1,2 @@
-export { useUIStore, type Theme } from './uiStore';
+export { useUIStore, type Theme, type SidebarSide } from './uiStore';
 export { useLayoutStore } from './layoutStore';

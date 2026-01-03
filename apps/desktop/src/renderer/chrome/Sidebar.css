@@ -1,9 +1,10 @@
 .sidebar {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   background-color: var(--color-bg-secondary);
   overflow: hidden;
   flex-shrink: 0;
+  position: relative;
 }
 
 .sidebar-left {
@@ -16,6 +17,8 @@
 
 .sidebar-content {
   flex: 1;
+  display: flex;
+  flex-direction: column;
   overflow-y: auto;
   padding: 0.5rem;
 }
@@ -27,4 +30,29 @@
   height: 100%;
   color: var(--color-text-muted);
   font-size: var(--text-sm);
+}
+
+/* Resize handle (sash) */
+.sidebar-sash {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background-color: transparent;
+  cursor: col-resize;
+  z-index: 10;
+  transition: background-color var(--transition-fast);
+}
+
+.sidebar-sash:hover,
+.sidebar-sash:active {
+  background-color: var(--color-accent);
+}
+
+.sidebar-sash-right {
+  right: -2px;
+}
+
+.sidebar-sash-left {
+  left: -2px;
 }

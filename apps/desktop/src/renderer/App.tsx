@@ -3,8 +3,7 @@ import { commandRegistry } from '@repo/core';
 import { DockRoot } from './layout/DockRoot';
 import { TopBar } from './chrome/TopBar';
 import { Ribbon } from './chrome/Ribbon';
-import { LeftSidebar } from './chrome/LeftSidebar';
-import { RightSidebar } from './chrome/RightSidebar';
+import { Sidebar } from './chrome/Sidebar';
 import { CommandPalette } from './chrome/CommandPalette';
 import { useUIStore } from './state';
 import { registerCommands } from './commands';
@@ -38,11 +37,15 @@ export const App: React.FC = () => {
       <TopBar />
       <div className="app-content">
         <Ribbon />
-        <LeftSidebar />
+        <Sidebar side="left">
+          <div className="sidebar-placeholder">Left Sidebar</div>
+        </Sidebar>
         <main className="app-main">
           <DockRoot />
         </main>
-        <RightSidebar />
+        <Sidebar side="right">
+          <div className="sidebar-placeholder">Right Sidebar</div>
+        </Sidebar>
       </div>
       <CommandPalette isOpen={commandPaletteOpen} onClose={toggleCommandPalette} />
     </div>
