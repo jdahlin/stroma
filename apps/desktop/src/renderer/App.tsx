@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { commandRegistry } from '@repo/core';
 import { DockRoot } from './layout/DockRoot';
-import { TopBar } from './chrome/TopBar';
+import { IconButton, PanelRight } from '@repo/ux';
 import { Ribbon } from './chrome/Ribbon';
 import { Sidebar } from './chrome/Sidebar';
 import { CommandPalette } from './chrome/CommandPalette';
@@ -10,7 +10,8 @@ import { registerCommands } from './commands';
 import './App.css';
 
 export const App: React.FC = () => {
-  const { theme, commandPaletteOpen, toggleCommandPalette } = useUIStore();
+  const { theme, commandPaletteOpen, toggleCommandPalette, toggleSidebar } = useUIStore();
+  const sidebars = useUIStore((state) => state.sidebars);
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
@@ -19,6 +20,13 @@ export const App: React.FC = () => {
   useEffect(() => {
     return registerCommands();
   }, []);
+
+  useEffect(() => {
+    window.stroma?.setSidebarState?.({
+      left: { open: sidebars.left.open },
+      right: { open: sidebars.right.open },
+    });
+  }, [sidebars.left.open, sidebars.right.open]);
 
   useEffect(() => {
     const handleKeyDown = async (e: KeyboardEvent) => {
@@ -34,6 +42,13 @@ export const App: React.FC = () => {
 
   return (
     <div className="app-container">
+      <div className="app-corner-toggle">
+        <IconButton
+          icon={PanelRight}
+          label="Toggle right sidebar"
+          onClick={() => toggleSidebar('right')}
+        />
+      </div>
       <div className="app-content">
         <div className="left-stack">
           <div className="traffic-lights-spacer" />

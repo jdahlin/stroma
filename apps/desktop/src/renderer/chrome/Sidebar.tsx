@@ -58,26 +58,23 @@ export const Sidebar: React.FC<SidebarProps> = ({ side, children }) => {
     };
   }, [side, setSidebarWidth]);
 
-  if (!isOpen) {
-    return null;
-  }
-
   const sashPosition = side === 'left' ? 'sidebar-sash-right' : 'sidebar-sash-left';
 
   return (
     <aside
       ref={sidebarRef}
-      className={`sidebar sidebar-${side}`}
-      style={{ width: `${width}rem` }}
+      className={`sidebar sidebar-${side} ${isOpen ? 'is-open' : 'is-closed'}`}
+      style={{ width: isOpen ? `${width}rem` : '0rem' }}
+      aria-hidden={!isOpen}
     >
-      {side === 'right' && (
+      {isOpen && side === 'right' && (
         <div
           className={`sidebar-sash ${sashPosition}`}
           onMouseDown={handleMouseDown}
         />
       )}
       <div className="sidebar-content">{children}</div>
-      {side === 'left' && (
+      {isOpen && side === 'left' && (
         <div
           className={`sidebar-sash ${sashPosition}`}
           onMouseDown={handleMouseDown}

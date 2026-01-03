@@ -15,6 +15,9 @@ const api: StromaAPI = {
       ipcRenderer.removeListener('execute-command', subscription);
     };
   },
+  setSidebarState: (state) => {
+    ipcRenderer.send('sidebar-state', state);
+  },
 };
 
 contextBridge.exposeInMainWorld('stroma', api);

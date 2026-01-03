@@ -1,5 +1,10 @@
 import React, { useCallback } from 'react';
-import { DockviewReact, type DockviewReadyEvent, type IDockviewPanelProps } from 'dockview';
+import {
+  DockviewReact,
+  type DockviewReadyEvent,
+  type IDockviewHeaderActionsProps,
+  type IDockviewPanelProps,
+} from 'dockview';
 import { stromaTheme } from './stromaTheme';
 
 export interface DockHostProps {
@@ -7,6 +12,12 @@ export interface DockHostProps {
   onReady?: (event: DockviewReadyEvent) => void;
   /** Map of component names to React components */
   components: Record<string, React.FC<IDockviewPanelProps>>;
+  /** Optional group header prefix component */
+  prefixHeaderActionsComponent?: React.FC<IDockviewHeaderActionsProps>;
+  /** Optional group header left component */
+  leftHeaderActionsComponent?: React.FC<IDockviewHeaderActionsProps>;
+  /** Optional group header right component */
+  rightHeaderActionsComponent?: React.FC<IDockviewHeaderActionsProps>;
   /** Optional className for additional styling */
   className?: string;
 }
@@ -14,7 +25,14 @@ export interface DockHostProps {
 /**
  * Wrapper component for Dockview that applies the Stroma theme.
  */
-export const DockHost: React.FC<DockHostProps> = ({ onReady, components, className }) => {
+export const DockHost: React.FC<DockHostProps> = ({
+  onReady,
+  components,
+  prefixHeaderActionsComponent,
+  leftHeaderActionsComponent,
+  rightHeaderActionsComponent,
+  className,
+}) => {
   const handleReady = useCallback(
     (event: DockviewReadyEvent) => {
       onReady?.(event);
@@ -27,6 +45,9 @@ export const DockHost: React.FC<DockHostProps> = ({ onReady, components, classNa
       className={`${stromaTheme.className}${className ? ` ${className}` : ''}`}
       onReady={handleReady}
       components={components}
+      prefixHeaderActionsComponent={prefixHeaderActionsComponent}
+      leftHeaderActionsComponent={leftHeaderActionsComponent}
+      rightHeaderActionsComponent={rightHeaderActionsComponent}
     />
   );
 };

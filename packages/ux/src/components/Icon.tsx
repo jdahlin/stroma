@@ -42,6 +42,7 @@ export {
   Search,
   Settings,
   ChevronLeft,
+  ChevronDown,
   ChevronRight,
   PanelLeft,
   PanelRight,

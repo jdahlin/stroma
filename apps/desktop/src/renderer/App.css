@@ -7,6 +7,14 @@
   --stroma-dock-tabs-height: 2.75rem;
 }
 
+.app-corner-toggle {
+  position: fixed;
+  top: 6px;
+  right: 6px;
+  z-index: 1000;
+  -webkit-app-region: no-drag;
+}
+
 .app-content {
   display: flex;
   flex-direction: row;

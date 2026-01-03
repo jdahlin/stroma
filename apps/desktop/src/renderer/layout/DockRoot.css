@@ -1,5 +1,5 @@
 /* Offset the leftmost tab strip where it can sit under window controls. */
-.app-content:not(:has(.sidebar-left))
+.app-content:not(:has(.sidebar-left.is-open))
   .dockview-theme-stroma
   .dv-split-view-container.dv-horizontal
   > .dv-view-container:is(:first-child, :nth-child(2))

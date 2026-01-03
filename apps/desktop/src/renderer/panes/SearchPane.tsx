@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import type { IDockviewPanelProps } from 'dockview';
+import { PaneMenu } from './PaneMenu';
 import './Pane.css';
 
 export const SearchPane: React.FC<IDockviewPanelProps> = () => {
@@ -7,6 +8,7 @@ export const SearchPane: React.FC<IDockviewPanelProps> = () => {
 
   return (
     <div className="pane pane-search">
+      <PaneMenu />
       <h2>Search</h2>
       <input
         type="text"

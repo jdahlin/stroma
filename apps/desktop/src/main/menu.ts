@@ -1,5 +1,27 @@
-import { Menu, app, shell, BrowserWindow, type MenuItemConstructorOptions } from 'electron';
+import { Menu, app, shell, BrowserWindow, ipcMain, type MenuItemConstructorOptions } from 'electron';
 import { COMMANDS } from '@repo/core';
+
+type SidebarState = {
+  left: { open: boolean };
+  right: { open: boolean };
+};
+
+function updateSidebarMenuState(state: SidebarState): void {
+  const menu = Menu.getApplicationMenu();
+  if (!menu) {
+    return;
+  }
+
+  const leftItem = menu.getMenuItemById('sidebar-left');
+  const rightItem = menu.getMenuItemById('sidebar-right');
+
+  if (leftItem) {
+    leftItem.checked = state.left.open;
+  }
+  if (rightItem) {
+    rightItem.checked = state.right.open;
+  }
+}
 
 export function setupMenu(): void {
   const isMac = process.platform === 'darwin';
@@ -113,6 +135,37 @@ export function setupMenu(): void {
           },
         },
         { type: 'separator' },
+        {
+          label: 'Left Sidebar',
+          id: 'sidebar-left',
+          type: 'checkbox',
+          accelerator: 'CmdOrCtrl+\\',
+          checked: true,
+          click: () => {
+            const window = BrowserWindow.getFocusedWindow();
+            if (!window) {
+              console.error('No focused window found');
+              return;
+            }
+            window.webContents.send('execute-command', COMMANDS.toggleLeftSidebar);
+          },
+        },
+        {
+          label: 'Right Sidebar',
+          id: 'sidebar-right',
+          type: 'checkbox',
+          accelerator: 'CmdOrCtrl+Shift+\\',
+          checked: true,
+          click: () => {
+            const window = BrowserWindow.getFocusedWindow();
+            if (!window) {
+              console.error('No focused window found');
+              return;
+            }
+            window.webContents.send('execute-command', COMMANDS.toggleRightSidebar);
+          },
+        },
+        { type: 'separator' },
         { role: 'resetZoom' },
         { role: 'zoomIn' },
         { role: 'zoomOut' },
@@ -154,4 +207,8 @@ export function setupMenu(): void {
 
   const menu = Menu.buildFromTemplate(template);
   Menu.setApplicationMenu(menu);
+
+  ipcMain.on('sidebar-state', (_event, state: SidebarState) => {
+    updateSidebarMenuState(state);
+  });
 }

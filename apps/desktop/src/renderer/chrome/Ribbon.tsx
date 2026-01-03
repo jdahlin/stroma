@@ -1,5 +1,5 @@
 import React from 'react';
-import { IconButton, Home, FileText, Search, Settings, PanelLeft, PanelRight } from '@repo/ux';
+import { IconButton, Home, FileText, Search, Settings, PanelLeft } from '@repo/ux';
 import { useUIStore } from '../state';
 import './Ribbon.css';
 
@@ -20,11 +20,6 @@ export const Ribbon: React.FC = () => {
       </div>
       <div className="ribbon-bottom">
         <IconButton icon={Settings} label="Settings" />
-        <IconButton
-          icon={PanelRight}
-          label="Toggle right sidebar"
-          onClick={() => toggleSidebar('right')}
-        />
       </div>
     </aside>
   );
