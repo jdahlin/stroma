@@ -14,7 +14,9 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
   const filteredCommands = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
     if (!normalizedQuery) return availableCommands;
-    return availableCommands.filter((command) => command.label.toLowerCase().includes(normalizedQuery));
+    return availableCommands.filter((command) =>
+      command.label.toLowerCase().includes(normalizedQuery)
+    );
   }, [availableCommands, query]);
 
   const executeCommand = (id: CommandId) => {

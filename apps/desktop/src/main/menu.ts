@@ -8,21 +8,21 @@ export function setupMenu(): void {
     // App menu (macOS only)
     ...(isMac
       ? [
-        {
-          label: app.name,
-          submenu: [
-            { role: 'about' as const },
-            { type: 'separator' as const },
-            { role: 'services' as const },
-            { type: 'separator' as const },
-            { role: 'hide' as const },
-            { role: 'hideOthers' as const },
-            { role: 'unhide' as const },
-            { type: 'separator' as const },
-            { role: 'quit' as const },
-          ],
-        },
-      ]
+          {
+            label: app.name,
+            submenu: [
+              { role: 'about' as const },
+              { type: 'separator' as const },
+              { role: 'services' as const },
+              { type: 'separator' as const },
+              { role: 'hide' as const },
+              { role: 'hideOthers' as const },
+              { role: 'unhide' as const },
+              { type: 'separator' as const },
+              { role: 'quit' as const },
+            ],
+          },
+        ]
       : []),
 
     // File menu
@@ -33,9 +33,9 @@ export function setupMenu(): void {
           label: 'New Tab',
           accelerator: 'CmdOrCtrl+T',
           click: () => {
-            const window = BrowserWindow.getFocusedWindow()
+            const window = BrowserWindow.getFocusedWindow();
             if (!window) {
-              console.error('No focused window found')
+              console.error('No focused window found');
               return;
             }
             window.webContents.send('execute-command', COMMANDS.newTab);
@@ -45,9 +45,9 @@ export function setupMenu(): void {
           label: 'Close Tab',
           accelerator: 'CmdOrCtrl+W',
           click: () => {
-            const window = BrowserWindow.getFocusedWindow()
+            const window = BrowserWindow.getFocusedWindow();
             if (!window) {
-              console.error('No focused window found')
+              console.error('No focused window found');
               return;
             }
             window.webContents.send('execute-command', COMMANDS.closeTab);
@@ -70,15 +70,15 @@ export function setupMenu(): void {
         { role: 'paste' },
         ...(isMac
           ? [
-            { role: 'pasteAndMatchStyle' as const },
-            { role: 'delete' as const },
-            { role: 'selectAll' as const },
-          ]
+              { role: 'pasteAndMatchStyle' as const },
+              { role: 'delete' as const },
+              { role: 'selectAll' as const },
+            ]
           : [
-            { role: 'delete' as const },
-            { type: 'separator' as const },
-            { role: 'selectAll' as const },
-          ]),
+              { role: 'delete' as const },
+              { type: 'separator' as const },
+              { role: 'selectAll' as const },
+            ]),
       ],
     },
 
@@ -93,9 +93,9 @@ export function setupMenu(): void {
         {
           label: 'Split Right',
           click: () => {
-            const window = BrowserWindow.getFocusedWindow()
+            const window = BrowserWindow.getFocusedWindow();
             if (!window) {
-              console.error('No focused window found')
+              console.error('No focused window found');
               return;
             }
             window.webContents.send('execute-command', COMMANDS.splitRight);
@@ -104,9 +104,9 @@ export function setupMenu(): void {
         {
           label: 'Split Down',
           click: () => {
-            const window = BrowserWindow.getFocusedWindow()
+            const window = BrowserWindow.getFocusedWindow();
             if (!window) {
-              console.error('No focused window found')
+              console.error('No focused window found');
               return;
             }
             window.webContents.send('execute-command', COMMANDS.splitDown);
@@ -129,11 +129,11 @@ export function setupMenu(): void {
         { role: 'zoom' },
         ...(isMac
           ? [
-            { type: 'separator' as const },
-            { role: 'front' as const },
-            { type: 'separator' as const },
-            { role: 'window' as const },
-          ]
+              { type: 'separator' as const },
+              { role: 'front' as const },
+              { type: 'separator' as const },
+              { role: 'window' as const },
+            ]
           : [{ role: 'close' as const }]),
       ],
     },

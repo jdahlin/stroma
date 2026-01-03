@@ -5,8 +5,5 @@
     "outDir": "dist/preload",
     "noEmit": true
   },
-  "include": [
-    "src/preload",
-    "src/electron.d.ts"
-  ]
+  "include": ["src/preload", "src/electron.d.ts"]
 }

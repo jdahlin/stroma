@@ -30,13 +30,13 @@ pnpm --filter @repo/desktop dev   # Start Electron app in dev mode
 
 ## Path Aliases & Import Boundaries
 
-| Alias       | Package                     | Can Import                | Cannot Import                        |
-| ----------- | --------------------------- | ------------------------- | ------------------------------------ |
-| `@repo/shared` | `packages/shared`           | (none)                           | `@repo/core`, `@repo/ux`, `@main`, `@renderer` |
-| `@repo/core`   | `packages/core`             | `@repo/shared`                   | `@repo/ux`, `@main`, `@renderer`               |
-| `@repo/ux`     | `packages/ux`               | `@repo/core`, `@repo/shared`     | `@main`, `@renderer`                           |
-| `@main`        | `apps/desktop/src/main`     | `@repo/core`, `@repo/shared`     | `@repo/ux`, `@renderer`                        |
-| `@renderer`    | `apps/desktop/src/renderer` | `@repo/core`, `@repo/shared`, `@repo/ux` | `@main`                                       |
+| Alias          | Package                     | Can Import                               | Cannot Import                                  |
+| -------------- | --------------------------- | ---------------------------------------- | ---------------------------------------------- |
+| `@repo/shared` | `packages/shared`           | (none)                                   | `@repo/core`, `@repo/ux`, `@main`, `@renderer` |
+| `@repo/core`   | `packages/core`             | `@repo/shared`                           | `@repo/ux`, `@main`, `@renderer`               |
+| `@repo/ux`     | `packages/ux`               | `@repo/core`, `@repo/shared`             | `@main`, `@renderer`                           |
+| `@main`        | `apps/desktop/src/main`     | `@repo/core`, `@repo/shared`             | `@repo/ux`, `@renderer`                        |
+| `@renderer`    | `apps/desktop/src/renderer` | `@repo/core`, `@repo/shared`, `@repo/ux` | `@main`                                        |
 
 Import boundaries are enforced by ESLint rules in `configs/eslint/boundaries.mjs`.
 

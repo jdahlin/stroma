@@ -103,7 +103,10 @@ export const COMMANDS = {
   closeTab: commandId('tab.close'),
 } as const;
 
-const key = (k: string, mods: { meta?: boolean; shift?: boolean; alt?: boolean; code?: string } = {}): KeyboardEvent => ({
+const key = (
+  k: string,
+  mods: { meta?: boolean; shift?: boolean; alt?: boolean; code?: string } = {}
+): KeyboardEvent => ({
   key: k,
   code: mods.code,
   metaKey: mods.meta ?? false,
@@ -112,7 +115,12 @@ const key = (k: string, mods: { meta?: boolean; shift?: boolean; alt?: boolean; 
   altKey: mods.alt ?? false,
 });
 
-commandRegistry.define({ id: COMMANDS.toggleCommandPalette, label: 'Toggle Command Palette', shortcut: key('k', { meta: true }), category: 'App' });
+commandRegistry.define({
+  id: COMMANDS.toggleCommandPalette,
+  label: 'Toggle Command Palette',
+  shortcut: key('k', { meta: true }),
+  category: 'App',
+});
 commandRegistry.define({ id: COMMANDS.toggleTheme, label: 'Toggle Theme', category: 'App' });
 commandRegistry.define({ id: COMMANDS.openHome, label: 'Open Home', category: 'Panes' });
 commandRegistry.define({ id: COMMANDS.openNotes, label: 'Open Notes', category: 'Panes' });
@@ -120,5 +128,15 @@ commandRegistry.define({ id: COMMANDS.openQueue, label: 'Open Queue', category: 
 commandRegistry.define({ id: COMMANDS.openSearch, label: 'Open Search', category: 'Panes' });
 commandRegistry.define({ id: COMMANDS.splitRight, label: 'Split Right', category: 'Panes' });
 commandRegistry.define({ id: COMMANDS.splitDown, label: 'Split Down', category: 'Panes' });
-commandRegistry.define({ id: COMMANDS.newTab, label: 'New Tab', shortcut: key('t', { meta: true }), category: 'Tabs' });
-commandRegistry.define({ id: COMMANDS.closeTab, label: 'Close Tab', shortcut: key('w', { meta: true }), category: 'Tabs' });
+commandRegistry.define({
+  id: COMMANDS.newTab,
+  label: 'New Tab',
+  shortcut: key('t', { meta: true }),
+  category: 'Tabs',
+});
+commandRegistry.define({
+  id: COMMANDS.closeTab,
+  label: 'Close Tab',
+  shortcut: key('w', { meta: true }),
+  category: 'Tabs',
+});

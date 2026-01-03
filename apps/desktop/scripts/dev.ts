@@ -116,9 +116,7 @@ async function startDev(): Promise<void> {
   };
 
   const watchDirs = [resolve(appRoot, 'dist/main'), resolve(appRoot, 'dist/preload')];
-  const watchers = watchDirs.map((dir) =>
-    watch(dir, { persistent: true }, scheduleRestart)
-  );
+  const watchers = watchDirs.map((dir) => watch(dir, { persistent: true }, scheduleRestart));
 
   startElectron();
   setTimeout(() => {
