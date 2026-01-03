@@ -1,0 +1,10 @@
+{
+  "extends": "@repo/tsconfig/node.json",
+  "compilerOptions": {
+    "composite": true,
+    "outDir": "dist/main",
+    "rootDir": "src/main",
+    "noEmit": false
+  },
+  "include": ["src/main"]
+}

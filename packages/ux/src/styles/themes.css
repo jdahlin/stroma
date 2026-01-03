@@ -1,0 +1,36 @@
+/* Dark theme */
+[data-theme='dark'] {
+  --color-bg-primary: #1a1a1a;
+  --color-bg-secondary: #252525;
+  --color-bg-tertiary: #333333;
+  --color-text-primary: #f0f0f0;
+  --color-text-secondary: #b0b0b0;
+  --color-text-muted: #808080;
+  --color-border: #404040;
+  --color-accent: #4da6ff;
+  --color-accent-hover: #80bfff;
+
+  /* Adjusted shadows for dark mode */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.4);
+}
+
+/* System theme - follows OS preference */
+@media (prefers-color-scheme: dark) {
+  [data-theme='system'] {
+    --color-bg-primary: #1a1a1a;
+    --color-bg-secondary: #252525;
+    --color-bg-tertiary: #333333;
+    --color-text-primary: #f0f0f0;
+    --color-text-secondary: #b0b0b0;
+    --color-text-muted: #808080;
+    --color-border: #404040;
+    --color-accent: #4da6ff;
+    --color-accent-hover: #80bfff;
+
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.4);
+  }
+}

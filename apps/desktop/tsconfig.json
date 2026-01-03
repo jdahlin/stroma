@@ -1,0 +1,11 @@
+{
+  "extends": "@repo/tsconfig/react.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@renderer/*": ["src/renderer/*"]
+    }
+  },
+  "include": ["src/renderer"],
+  "references": [{ "path": "./tsconfig.main.json" }, { "path": "./tsconfig.preload.json" }]
+}

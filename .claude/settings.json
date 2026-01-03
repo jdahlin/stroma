@@ -1,0 +1,10 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|NotebookEdit",
+        "hooks": ["pnpm prettier --write $CLAUDE_FILE_PATHS"]
+      }
+    ]
+  }
+}

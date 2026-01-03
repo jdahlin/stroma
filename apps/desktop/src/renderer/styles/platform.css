@@ -1,0 +1,15 @@
+/* Platform-specific tweaks */
+
+/* macOS traffic lights spacing */
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  .top-bar-drag-region {
+    width: 80px;
+  }
+}
+
+/* Windows/Linux - no traffic lights */
+@supports not (-webkit-app-region: drag) {
+  .top-bar-drag-region {
+    width: var(--space-4);
+  }
+}

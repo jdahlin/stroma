@@ -1,0 +1,10 @@
+{
+  "extends": "@repo/tsconfig/node.json",
+  "compilerOptions": {
+    "composite": true,
+    "outDir": "dist/preload",
+    "rootDir": "src/preload",
+    "noEmit": false
+  },
+  "include": ["src/preload"]
+}
