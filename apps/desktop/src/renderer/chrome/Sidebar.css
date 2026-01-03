@@ -32,27 +32,32 @@
   font-size: var(--text-sm);
 }
 
-/* Resize handle (sash) */
+/* Resize handle (sash) - matches Dockview styling */
 .sidebar-sash {
   position: absolute;
   top: 0;
   bottom: 0;
-  width: 4px;
+  width: 2px;
   background-color: transparent;
-  cursor: col-resize;
-  z-index: 10;
-  transition: background-color var(--transition-fast);
+  cursor: ew-resize;
+  z-index: 99;
+  user-select: none;
+  touch-action: none;
 }
 
 .sidebar-sash:hover,
 .sidebar-sash:active {
   background-color: var(--color-accent);
+  transition-property: background-color;
+  transition-timing-function: ease-in-out;
+  transition-duration: 0.1s;
+  transition-delay: 0.5s;
 }
 
 .sidebar-sash-right {
-  right: -2px;
+  right: 0;
 }
 
 .sidebar-sash-left {
-  left: -2px;
+  left: 0;
 }

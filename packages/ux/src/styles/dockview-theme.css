@@ -114,3 +114,12 @@
   background-color: var(--color-bg-primary);
   color: var(--color-text-muted);
 }
+
+/* Sash (resize handle) - 2px visual indicator */
+.dockview-theme-stroma .dv-split-view-container.dv-horizontal > .dv-sash-container > .dv-sash {
+  width: 2px !important;
+}
+
+.dockview-theme-stroma .dv-split-view-container.dv-vertical > .dv-sash-container > .dv-sash {
+  height: 2px !important;
+}
