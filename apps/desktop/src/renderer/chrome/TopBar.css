@@ -1,0 +1,58 @@
+/* Top Bar */
+
+.top-bar {
+  height: 2.25em;
+  display: flex;
+  align-items: center;
+  background: var(--color-bg-secondary);
+  border-bottom: 1px solid var(--color-border);
+  -webkit-app-region: drag;
+  user-select: none;
+}
+
+.top-bar-drag-region {
+  width: 80px;
+  /* Space for traffic lights on macOS */
+}
+
+.top-bar-content {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  padding: 0 var(--space-4);
+}
+
+.app-title {
+  font-weight: 600;
+  font-size: var(--text-sm);
+  color: var(--color-text-primary);
+}
+
+.top-bar-spacer {
+  flex: 1;
+}
+
+.top-bar-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.top-bar-button {
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-secondary);
+  transition: all var(--transition-fast);
+}
+
+.top-bar-button:hover {
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+}
+
+.zoom-level {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  min-width: 3ch;
+  text-align: center;
+}

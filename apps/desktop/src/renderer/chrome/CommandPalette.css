@@ -1,0 +1,100 @@
+/* Command Palette */
+
+.command-palette-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  padding-top: 100px;
+  z-index: var(--z-modal);
+}
+
+.command-palette {
+  width: 500px;
+  max-width: 90%;
+  background: var(--color-bg-primary);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: var(--space-2);
+  animation: slideDown 0.15s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.command-palette-input {
+  width: 100%;
+  padding: var(--space-3);
+  border: none;
+  font-size: var(--text-lg);
+  background: transparent;
+  color: var(--color-text-primary);
+  outline: none;
+}
+
+.command-palette-list {
+  max-height: 260px;
+  overflow-y: auto;
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.command-palette-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  background: transparent;
+  border: none;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  text-align: left;
+}
+
+.command-palette-item:hover,
+.command-palette-item:focus {
+  background: var(--color-bg-secondary);
+  outline: none;
+}
+
+.command-palette-item-label {
+  font-size: var(--text-sm);
+}
+
+.command-palette-item-category {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+
+.command-palette-empty {
+  padding: var(--space-3);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.command-palette-hint {
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+
+.command-palette-hint kbd {
+  display: inline-block;
+  padding: 2px 6px;
+  background: var(--color-bg-tertiary);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+}

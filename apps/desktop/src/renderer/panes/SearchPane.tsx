@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import type { IDockviewPanelProps } from 'dockview';
+import './Pane.css';
 
 export const SearchPane: React.FC<IDockviewPanelProps> = () => {
   const [query, setQuery] = useState('');

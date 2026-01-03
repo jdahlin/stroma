@@ -5,6 +5,7 @@ import { TopBar } from './chrome/TopBar';
 import { CommandPalette } from './chrome/CommandPalette';
 import { useUIStore } from './state';
 import { registerCommands } from './commands';
+import './App.css';
 
 export const App: React.FC = () => {
   const { theme, commandPaletteOpen, toggleCommandPalette } = useUIStore();

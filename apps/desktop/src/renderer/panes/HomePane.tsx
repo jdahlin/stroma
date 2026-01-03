@@ -1,5 +1,6 @@
 import React from 'react';
 import type { IDockviewPanelProps } from 'dockview';
+import './Pane.css';
 
 export const HomePane: React.FC<IDockviewPanelProps> = () => {
   return (

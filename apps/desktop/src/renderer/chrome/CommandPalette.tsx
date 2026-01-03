@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { commandRegistry, type CommandId } from '@repo/core';
+import './CommandPalette.css';
 
 interface CommandPaletteProps {
   isOpen: boolean;

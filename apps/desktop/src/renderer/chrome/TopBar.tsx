@@ -1,4 +1,5 @@
 import React from 'react';
+import './TopBar.css';
 
 export const TopBar: React.FC = () => {
   return (

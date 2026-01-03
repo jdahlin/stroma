@@ -1,4 +1,5 @@
 import React from 'react';
+import './StatusBar.css';
 
 export const StatusBar: React.FC = () => {
   return (
