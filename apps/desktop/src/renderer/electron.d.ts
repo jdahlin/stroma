@@ -9,7 +9,10 @@ export interface StromaAPI {
     electron: string;
   };
   onCommand: (callback: (id: string) => void) => () => void;
-  setSidebarState: (state: { left: { open: boolean }; right: { open: boolean } }) => void;
+  setUiState: (state: {
+    sidebars: { left: { open: boolean }; right: { open: boolean } };
+    ribbonOpen: boolean;
+  }) => void;
 }
 
 declare global {

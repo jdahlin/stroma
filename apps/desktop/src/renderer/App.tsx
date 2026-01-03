@@ -12,6 +12,7 @@ import './App.css';
 export const App: React.FC = () => {
   const { theme, commandPaletteOpen, toggleCommandPalette, toggleSidebar } = useUIStore();
   const sidebars = useUIStore((state) => state.sidebars);
+  const ribbonOpen = useUIStore((state) => state.ribbonOpen);
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
@@ -22,11 +23,14 @@ export const App: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    window.stroma?.setSidebarState?.({
-      left: { open: sidebars.left.open },
-      right: { open: sidebars.right.open },
+    window.stroma?.setUiState?.({
+      sidebars: {
+        left: { open: sidebars.left.open },
+        right: { open: sidebars.right.open },
+      },
+      ribbonOpen,
     });
-  }, [sidebars.left.open, sidebars.right.open]);
+  }, [sidebars.left.open, sidebars.right.open, ribbonOpen]);
 
   useEffect(() => {
     const handleKeyDown = async (e: KeyboardEvent) => {
@@ -53,7 +57,7 @@ export const App: React.FC = () => {
         <div className="left-stack">
           <div className="traffic-lights-spacer" />
           <div className="left-row">
-            <Ribbon />
+            {ribbonOpen ? <Ribbon /> : null}
             <Sidebar side="left">
               <div className="sidebar-placeholder">Left Sidebar</div>
             </Sidebar>

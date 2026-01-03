@@ -15,6 +15,9 @@ export function registerCommands(): () => void {
       const nextIndex = (currentIndex + 1) % THEMES.length;
       setTheme(THEMES[nextIndex]!);
     }),
+    commandRegistry.register(COMMANDS.toggleRibbon, () => {
+      useUIStore.getState().toggleRibbon();
+    }),
 
     // Sidebar commands
     commandRegistry.register(COMMANDS.toggleLeftSidebar, () => {

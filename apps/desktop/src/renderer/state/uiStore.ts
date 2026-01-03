@@ -12,11 +12,13 @@ interface SidebarState {
 interface UIState {
   theme: Theme;
   sidebars: Record<SidebarSide, SidebarState>;
+  ribbonOpen: boolean;
   commandPaletteOpen: boolean;
   setTheme: (theme: Theme) => void;
   getSidebar: (side: SidebarSide) => SidebarState;
   toggleSidebar: (side: SidebarSide) => void;
   setSidebarWidth: (side: SidebarSide, width: number) => void;
+  toggleRibbon: () => void;
   toggleCommandPalette: () => void;
 }
 
@@ -30,6 +32,7 @@ export const useUIStore = create<UIState>()(
         left: { open: true, width: DEFAULT_SIDEBAR_WIDTH },
         right: { open: true, width: DEFAULT_SIDEBAR_WIDTH },
       },
+      ribbonOpen: true,
       commandPaletteOpen: false,
 
       setTheme: (theme) => set({ theme }),
@@ -58,6 +61,11 @@ export const useUIStore = create<UIState>()(
           },
         })),
 
+      toggleRibbon: () =>
+        set((state) => ({
+          ribbonOpen: !state.ribbonOpen,
+        })),
+
       toggleCommandPalette: () =>
         set((state) => ({
           commandPaletteOpen: !state.commandPaletteOpen,
@@ -68,6 +76,7 @@ export const useUIStore = create<UIState>()(
       partialize: (state) => ({
         theme: state.theme,
         sidebars: state.sidebars,
+        ribbonOpen: state.ribbonOpen,
       }),
     }
   )

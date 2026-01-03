@@ -93,6 +93,7 @@ export const commandRegistry = new CommandRegistry();
 export const COMMANDS = {
   toggleCommandPalette: commandId('app.toggleCommandPalette'),
   toggleTheme: commandId('app.toggleTheme'),
+  toggleRibbon: commandId('ribbon.toggle'),
   toggleLeftSidebar: commandId('sidebar.toggleLeft'),
   toggleRightSidebar: commandId('sidebar.toggleRight'),
   openHome: commandId('pane.openHome'),
@@ -124,6 +125,7 @@ commandRegistry.define({
   category: 'App',
 });
 commandRegistry.define({ id: COMMANDS.toggleTheme, label: 'Toggle Theme', category: 'App' });
+commandRegistry.define({ id: COMMANDS.toggleRibbon, label: 'Toggle Ribbon', category: 'View' });
 commandRegistry.define({
   id: COMMANDS.toggleLeftSidebar,
   label: 'Toggle Left Sidebar',

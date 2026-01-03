@@ -1,10 +1,12 @@
 import React from 'react';
-import { IconButton, Home, FileText, Search, Settings, PanelLeft } from '@repo/ux';
+import { IconButton, Home, FileText, Search, Settings, PanelLeft, PanelRight } from '@repo/ux';
 import { useUIStore } from '../state';
 import './Ribbon.css';
 
 export const Ribbon: React.FC = () => {
-  const { toggleSidebar } = useUIStore();
+  const { toggleSidebar, sidebars } = useUIStore();
+  const leftOpen = sidebars.left.open;
+  const rightOpen = sidebars.right.open;
 
   return (
     <aside className="ribbon">
@@ -12,6 +14,15 @@ export const Ribbon: React.FC = () => {
         <IconButton
           icon={PanelLeft}
           label="Toggle left sidebar"
+          aria-pressed={leftOpen}
+          style={
+            leftOpen
+              ? {
+                  backgroundColor: 'var(--color-bg-tertiary)',
+                  color: 'var(--color-text-primary)',
+                }
+              : undefined
+          }
           onClick={() => toggleSidebar('left')}
         />
         <IconButton icon={Home} label="Home" />
@@ -20,6 +31,20 @@ export const Ribbon: React.FC = () => {
       </div>
       <div className="ribbon-bottom">
         <IconButton icon={Settings} label="Settings" />
+        <IconButton
+          icon={PanelRight}
+          label="Toggle right sidebar"
+          aria-pressed={rightOpen}
+          style={
+            rightOpen
+              ? {
+                  backgroundColor: 'var(--color-bg-tertiary)',
+                  color: 'var(--color-text-primary)',
+                }
+              : undefined
+          }
+          onClick={() => toggleSidebar('right')}
+        />
       </div>
     </aside>
   );

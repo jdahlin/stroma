@@ -1,12 +1,15 @@
 import { Menu, app, shell, BrowserWindow, ipcMain, type MenuItemConstructorOptions } from 'electron';
 import { COMMANDS } from '@repo/core';
 
-type SidebarState = {
-  left: { open: boolean };
-  right: { open: boolean };
+type UiState = {
+  sidebars: {
+    left: { open: boolean };
+    right: { open: boolean };
+  };
+  ribbonOpen: boolean;
 };
 
-function updateSidebarMenuState(state: SidebarState): void {
+function updateMenuState(state: UiState): void {
   const menu = Menu.getApplicationMenu();
   if (!menu) {
     return;
@@ -14,12 +17,16 @@ function updateSidebarMenuState(state: SidebarState): void {
 
   const leftItem = menu.getMenuItemById('sidebar-left');
   const rightItem = menu.getMenuItemById('sidebar-right');
+  const ribbonItem = menu.getMenuItemById('ribbon-toggle');
 
   if (leftItem) {
-    leftItem.checked = state.left.open;
+    leftItem.checked = state.sidebars.left.open;
   }
   if (rightItem) {
-    rightItem.checked = state.right.open;
+    rightItem.checked = state.sidebars.right.open;
+  }
+  if (ribbonItem) {
+    ribbonItem.checked = state.ribbonOpen;
   }
 }
 
@@ -108,10 +115,6 @@ export function setupMenu(): void {
     {
       label: 'View',
       submenu: [
-        { role: 'reload' },
-        { role: 'forceReload' },
-        { role: 'toggleDevTools' },
-        { type: 'separator' },
         {
           label: 'Split Right',
           click: () => {
@@ -135,6 +138,20 @@ export function setupMenu(): void {
           },
         },
         { type: 'separator' },
+        {
+          label: 'Ribbon',
+          id: 'ribbon-toggle',
+          type: 'checkbox',
+          checked: true,
+          click: () => {
+            const window = BrowserWindow.getFocusedWindow();
+            if (!window) {
+              console.error('No focused window found');
+              return;
+            }
+            window.webContents.send('execute-command', COMMANDS.toggleRibbon);
+          },
+        },
         {
           label: 'Left Sidebar',
           id: 'sidebar-left',
@@ -169,8 +186,6 @@ export function setupMenu(): void {
         { role: 'resetZoom' },
         { role: 'zoomIn' },
         { role: 'zoomOut' },
-        { type: 'separator' },
-        { role: 'togglefullscreen' },
       ],
     },
 
@@ -180,14 +195,11 @@ export function setupMenu(): void {
       submenu: [
         { role: 'minimize' },
         { role: 'zoom' },
-        ...(isMac
-          ? [
-              { type: 'separator' as const },
-              { role: 'front' as const },
-              { type: 'separator' as const },
-              { role: 'window' as const },
-            ]
-          : [{ role: 'close' as const }]),
+        { role: 'togglefullscreen' },
+        { type: 'separator' as const },
+        { role: 'front' as const },
+        { type: 'separator' as const },
+        { role: 'window' as const },
       ],
     },
 
@@ -208,7 +220,7 @@ export function setupMenu(): void {
   const menu = Menu.buildFromTemplate(template);
   Menu.setApplicationMenu(menu);
 
-  ipcMain.on('sidebar-state', (_event, state: SidebarState) => {
-    updateSidebarMenuState(state);
+  ipcMain.on('ui-state', (_event, state: UiState) => {
+    updateMenuState(state);
   });
 }
