@@ -1,4 +1,4 @@
-import type { Brand } from '@repo';
+import type { Brand } from '@repo/shared';
 
 export type CommandId = Brand<string, 'CommandId'>;
 

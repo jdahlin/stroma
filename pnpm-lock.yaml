@@ -33,21 +33,21 @@ importers:
         specifier: ^2.3.3
         version: 2.7.2
       typescript:
-        specifier: ^5.9.0
+        specifier: 5.9.3
         version: 5.9.3
       vitest:
         specifier: ^4.0.16
-        version: 4.0.16(@types/node@20.19.27)(@vitest/ui@4.0.16)(jiti@2.6.1)(jsdom@27.4.0)(tsx@4.21.0)
+        version: 4.0.16(@types/node@22.7.7)(@vitest/ui@4.0.16)(jiti@2.6.1)(jsdom@27.4.0)(tsx@4.21.0)
 
   apps/desktop:
     dependencies:
-      '@core':
+      '@repo/core':
         specifier: workspace:*
         version: link:../../packages/core
-      '@shared':
+      '@repo/shared':
         specifier: workspace:*
         version: link:../../packages/shared
-      '@ux':
+      '@repo/ux':
         specifier: workspace:*
         version: link:../../packages/ux
       dockview:
@@ -69,6 +69,9 @@ importers:
       '@repo/tsconfig':
         specifier: workspace:*
         version: link:../../configs/ts
+      '@types/node':
+        specifier: 22.7.7
+        version: 22.7.7
       '@types/react':
         specifier: ^19.2.0
         version: 19.2.7
@@ -77,13 +80,19 @@ importers:
         version: 19.2.3(@types/react@19.2.7)
       '@vitejs/plugin-react':
         specifier: ^4.3.4
-        version: 4.7.0(vite@6.4.1(@types/node@20.19.27)(jiti@1.21.7)(tsx@4.21.0))
+        version: 4.7.0(vite@6.4.1(@types/node@22.7.7)(jiti@1.21.7)(tsx@4.21.0))
       autoprefixer:
         specifier: ^10.4.20
         version: 10.4.23(postcss@8.5.6)
       electron:
-        specifier: ^34.0.0
-        version: 34.5.8
+        specifier: 39.2.7
+        version: 39.2.7
+      esbuild:
+        specifier: ^0.27.0
+        version: 0.27.2
+      node-abi:
+        specifier: 4.24.0
+        version: 4.24.0
       postcss:
         specifier: ^8.5.0
         version: 8.5.6
@@ -97,11 +106,11 @@ importers:
         specifier: ^4.19.2
         version: 4.21.0
       typescript:
-        specifier: ^5.9.0
+        specifier: 5.9.3
         version: 5.9.3
       vite:
         specifier: ^6.0.7
-        version: 6.4.1(@types/node@20.19.27)(jiti@1.21.7)(tsx@4.21.0)
+        version: 6.4.1(@types/node@22.7.7)(jiti@1.21.7)(tsx@4.21.0)
 
   configs/eslint:
     dependencies:
@@ -155,7 +164,7 @@ importers:
 
   packages/core:
     dependencies:
-      '@shared':
+      '@repo/shared':
         specifier: workspace:*
         version: link:../shared
     devDependencies:
@@ -183,10 +192,10 @@ importers:
 
   packages/ux:
     dependencies:
-      '@core':
+      '@repo/core':
         specifier: workspace:*
         version: link:../core
-      '@shared':
+      '@repo/shared':
         specifier: workspace:*
         version: link:../shared
       dockview:
@@ -956,8 +965,8 @@ packages:
   '@types/keyv@3.1.4':
     resolution: {integrity: sha512-BQ5aZNSCpj7D6K2ksrRCTmKRLEpnPvWDiLPfoGyhZ++8YtiK9d/3DBKPJgry359X/P1PfruyYwvnvwFjuEiEIg==}
 
-  '@types/node@20.19.27':
-    resolution: {integrity: sha512-N2clP5pJhB2YnZJ3PIHFk5RkygRX5WO/5f0WC08tp0wd+sv0rsJk3MqWn3CbNmT2J505a5336jaQj4ph1AdMug==}
+  '@types/node@22.7.7':
+    resolution: {integrity: sha512-SRxCrrg9CL/y54aiMCG3edPKdprgMVGDXjA3gB8UmmBW5TcXzRUYAh8EWzTnSJFAd1rgImPELza+A3bJ+qxz8Q==}
 
   '@types/react-dom@19.2.3':
     resolution: {integrity: sha512-jp2L/eY6fn+KgVVQAOqYItbF0VY/YApe5Mz2F0aykSO8gx31bYCZyvSeYxCHKvzHG5eZjc+zyaS5BrBWya2+kQ==}
@@ -1370,8 +1379,8 @@ packages:
   electron-to-chromium@1.5.267:
     resolution: {integrity: sha512-0Drusm6MVRXSOJpGbaSVgcQsuB4hEkMpHXaVstcPmhu5LIedxs1xNK/nIxmQIU/RPC0+1/o0AVZfBTkTNJOdUw==}
 
-  electron@34.5.8:
-    resolution: {integrity: sha512-vxLD65mabTzYmEVa9KceMHM0+zO+vqgrhcyNVlmTd0IGV5J7XZ8v/qElm0o4YQ4wPeq7olZkUjZkBQQEdr23/g==}
+  electron@39.2.7:
+    resolution: {integrity: sha512-KU0uFS6LSTh4aOIC3miolcbizOFP7N1M46VTYVfqIgFiuA2ilfNaOHLDS9tCMvwwHRowAsvqBrh9NgMXcTOHCQ==}
     engines: {node: '>= 12.20.55'}
     hasBin: true
 
@@ -1973,6 +1982,10 @@ packages:
   natural-compare@1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
 
+  node-abi@4.24.0:
+    resolution: {integrity: sha512-u2EC1CeNe25uVtX3EZbdQ275c74zdZmmpzrHEQh2aIYqoVjlglfUpOX9YY85x1nlBydEKDVaSmMNhR7N82Qj8A==}
+    engines: {node: '>=22.12.0'}
+
   node-releases@2.0.27:
     resolution: {integrity: sha512-nmh3lCkYZ3grZvqcCH+fjmQ7X+H0OeZgP40OierEaAptX4XofMh5kwNbWh7lBduUzCcV/8kZ+NDLCwm2iorIlA==}
 
@@ -2515,8 +2528,8 @@ packages:
     resolution: {integrity: sha512-nWJ91DjeOkej/TA8pXQ3myruKpKEYgqvpw9lz4OPHj/NWFNluYrjbz9j01CJ8yKQd2g4jFoOkINCTW2I5LEEyw==}
     engines: {node: '>= 0.4'}
 
-  undici-types@6.21.0:
-    resolution: {integrity: sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ==}
+  undici-types@6.19.8:
+    resolution: {integrity: sha512-ve2KP6f/JnbPBFyobGHuerC9g1FYGn/F8n1LWTwNxCEzd6IfqTwUQcNXgEtmmQ6DlRrC1hrSrBnCZPokRrDHjw==}
 
   universalify@0.1.2:
     resolution: {integrity: sha512-rBJeI5CXAlmy1pV+617WB9J63U6XcazHHF2f2dbJix4XzpUF0RS3Zbj0FGIOCAva5P/d/GBOYaACQ1w+0azUkg==}
@@ -3252,7 +3265,7 @@ snapshots:
     dependencies:
       '@types/http-cache-semantics': 4.0.4
       '@types/keyv': 3.1.4
-      '@types/node': 20.19.27
+      '@types/node': 22.7.7
       '@types/responselike': 1.0.3
 
   '@types/chai@5.2.3':
@@ -3275,11 +3288,11 @@ snapshots:
 
   '@types/keyv@3.1.4':
     dependencies:
-      '@types/node': 20.19.27
+      '@types/node': 22.7.7
 
-  '@types/node@20.19.27':
+  '@types/node@22.7.7':
     dependencies:
-      undici-types: 6.21.0
+      undici-types: 6.19.8
 
   '@types/react-dom@19.2.3(@types/react@19.2.7)':
     dependencies:
@@ -3291,11 +3304,11 @@ snapshots:
 
   '@types/responselike@1.0.3':
     dependencies:
-      '@types/node': 20.19.27
+      '@types/node': 22.7.7
 
   '@types/yauzl@2.10.3':
     dependencies:
-      '@types/node': 20.19.27
+      '@types/node': 22.7.7
     optional: true
 
   '@typescript-eslint/eslint-plugin@8.51.0(@typescript-eslint/parser@8.51.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3)':
@@ -3389,7 +3402,7 @@ snapshots:
       '@typescript-eslint/types': 8.51.0
       eslint-visitor-keys: 4.2.1
 
-  '@vitejs/plugin-react@4.7.0(vite@6.4.1(@types/node@20.19.27)(jiti@1.21.7)(tsx@4.21.0))':
+  '@vitejs/plugin-react@4.7.0(vite@6.4.1(@types/node@22.7.7)(jiti@1.21.7)(tsx@4.21.0))':
     dependencies:
       '@babel/core': 7.28.5
       '@babel/plugin-transform-react-jsx-self': 7.27.1(@babel/core@7.28.5)
@@ -3397,7 +3410,7 @@ snapshots:
       '@rolldown/pluginutils': 1.0.0-beta.27
       '@types/babel__core': 7.20.5
       react-refresh: 0.17.0
-      vite: 6.4.1(@types/node@20.19.27)(jiti@1.21.7)(tsx@4.21.0)
+      vite: 6.4.1(@types/node@22.7.7)(jiti@1.21.7)(tsx@4.21.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -3410,13 +3423,13 @@ snapshots:
       chai: 6.2.2
       tinyrainbow: 3.0.3
 
-  '@vitest/mocker@4.0.16(vite@6.4.1(@types/node@20.19.27)(jiti@2.6.1)(tsx@4.21.0))':
+  '@vitest/mocker@4.0.16(vite@6.4.1(@types/node@22.7.7)(jiti@2.6.1)(tsx@4.21.0))':
     dependencies:
       '@vitest/spy': 4.0.16
       estree-walker: 3.0.3
       magic-string: 0.30.21
     optionalDependencies:
-      vite: 6.4.1(@types/node@20.19.27)(jiti@2.6.1)(tsx@4.21.0)
+      vite: 6.4.1(@types/node@22.7.7)(jiti@2.6.1)(tsx@4.21.0)
 
   '@vitest/pretty-format@4.0.16':
     dependencies:
@@ -3444,7 +3457,7 @@ snapshots:
       sirv: 3.0.2
       tinyglobby: 0.2.15
       tinyrainbow: 3.0.3
-      vitest: 4.0.16(@types/node@20.19.27)(@vitest/ui@4.0.16)(jiti@2.6.1)(jsdom@27.4.0)(tsx@4.21.0)
+      vitest: 4.0.16(@types/node@22.7.7)(@vitest/ui@4.0.16)(jiti@2.6.1)(jsdom@27.4.0)(tsx@4.21.0)
 
   '@vitest/utils@4.0.16':
     dependencies:
@@ -3775,10 +3788,10 @@ snapshots:
 
   electron-to-chromium@1.5.267: {}
 
-  electron@34.5.8:
+  electron@39.2.7:
     dependencies:
       '@electron/get': 2.0.3
-      '@types/node': 20.19.27
+      '@types/node': 22.7.7
       extract-zip: 2.0.1
     transitivePeerDependencies:
       - supports-color
@@ -4558,6 +4571,10 @@ snapshots:
 
   natural-compare@1.4.0: {}
 
+  node-abi@4.24.0:
+    dependencies:
+      semver: 7.7.3
+
   node-releases@2.0.27: {}
 
   normalize-path@3.0.0: {}
@@ -5188,7 +5205,7 @@ snapshots:
       has-symbols: 1.1.0
       which-boxed-primitive: 1.1.1
 
-  undici-types@6.21.0: {}
+  undici-types@6.19.8: {}
 
   universalify@0.1.2: {}
 
@@ -5204,7 +5221,7 @@ snapshots:
 
   util-deprecate@1.0.2: {}
 
-  vite@6.4.1(@types/node@20.19.27)(jiti@1.21.7)(tsx@4.21.0):
+  vite@6.4.1(@types/node@22.7.7)(jiti@1.21.7)(tsx@4.21.0):
     dependencies:
       esbuild: 0.25.12
       fdir: 6.5.0(picomatch@4.0.3)
@@ -5213,12 +5230,12 @@ snapshots:
       rollup: 4.54.0
       tinyglobby: 0.2.15
     optionalDependencies:
-      '@types/node': 20.19.27
+      '@types/node': 22.7.7
       fsevents: 2.3.3
       jiti: 1.21.7
       tsx: 4.21.0
 
-  vite@6.4.1(@types/node@20.19.27)(jiti@2.6.1)(tsx@4.21.0):
+  vite@6.4.1(@types/node@22.7.7)(jiti@2.6.1)(tsx@4.21.0):
     dependencies:
       esbuild: 0.25.12
       fdir: 6.5.0(picomatch@4.0.3)
@@ -5227,15 +5244,15 @@ snapshots:
       rollup: 4.54.0
       tinyglobby: 0.2.15
     optionalDependencies:
-      '@types/node': 20.19.27
+      '@types/node': 22.7.7
       fsevents: 2.3.3
       jiti: 2.6.1
       tsx: 4.21.0
 
-  vitest@4.0.16(@types/node@20.19.27)(@vitest/ui@4.0.16)(jiti@2.6.1)(jsdom@27.4.0)(tsx@4.21.0):
+  vitest@4.0.16(@types/node@22.7.7)(@vitest/ui@4.0.16)(jiti@2.6.1)(jsdom@27.4.0)(tsx@4.21.0):
     dependencies:
       '@vitest/expect': 4.0.16
-      '@vitest/mocker': 4.0.16(vite@6.4.1(@types/node@20.19.27)(jiti@2.6.1)(tsx@4.21.0))
+      '@vitest/mocker': 4.0.16(vite@6.4.1(@types/node@22.7.7)(jiti@2.6.1)(tsx@4.21.0))
       '@vitest/pretty-format': 4.0.16
       '@vitest/runner': 4.0.16
       '@vitest/snapshot': 4.0.16
@@ -5252,10 +5269,10 @@ snapshots:
       tinyexec: 1.0.2
       tinyglobby: 0.2.15
       tinyrainbow: 3.0.3
-      vite: 6.4.1(@types/node@20.19.27)(jiti@2.6.1)(tsx@4.21.0)
+      vite: 6.4.1(@types/node@22.7.7)(jiti@2.6.1)(tsx@4.21.0)
       why-is-node-running: 2.3.0
     optionalDependencies:
-      '@types/node': 20.19.27
+      '@types/node': 22.7.7
       '@vitest/ui': 4.0.16(vitest@4.0.16)
       jsdom: 27.4.0
     transitivePeerDependencies:

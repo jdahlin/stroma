@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { App } from './App';
 
 // Import UX styles from package
-import '@ux/styles/index.css';
+import '@repo/ux/styles/index.css';
 import './styles/app.css';
 
 const root = document.getElementById('root');

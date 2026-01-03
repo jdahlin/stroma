@@ -1,5 +1,5 @@
 {
-  "name": "ux",
+  "name": "@repo/ux",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -20,8 +20,8 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@core": "workspace:*",
-    "@shared": "workspace:*",
+    "@repo/core": "workspace:*",
+    "@repo/shared": "workspace:*",
     "dockview": "^4.13.1",
     "react": "^19.2.0"
   },

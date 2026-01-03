@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import type { DockviewReadyEvent } from 'dockview';
-import { DockHost } from '@ux';
+import { DockHost } from '@repo/ux';
 import { paneComponents } from './paneRegistry';
 import { createDefaultLayout } from './defaultLayout';
 import { useLayoutStore } from '../state';

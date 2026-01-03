@@ -9,19 +9,25 @@ interface BoundaryConfig {
   rules: Linter.RulesRecord;
 }
 
-// @shared - Cannot import anything from other packages
+// @repo/shared - Cannot import anything from other packages
 export const sharedBoundaries: BoundaryConfig = {
   rules: {
     'no-restricted-imports': [
       'error',
       {
         patterns: [
-          { group: ['@core', '@core/*'], message: '@shared cannot import from @core' },
-          { group: ['@ux', '@ux/*'], message: '@shared cannot import from @ux' },
-          { group: ['@main', '@main/*'], message: '@shared cannot import from @main' },
+          {
+            group: ['@repo/core', '@repo/core/*'],
+            message: '@repo/shared cannot import from @repo/core',
+          },
+          {
+            group: ['@repo/ux', '@repo/ux/*'],
+            message: '@repo/shared cannot import from @repo/ux',
+          },
+          { group: ['@main', '@main/*'], message: '@repo/shared cannot import from @main' },
           {
             group: ['@renderer', '@renderer/*'],
-            message: '@shared cannot import from @renderer',
+            message: '@repo/shared cannot import from @renderer',
           },
         ],
       },
@@ -29,18 +35,18 @@ export const sharedBoundaries: BoundaryConfig = {
   },
 };
 
-// @core - Can only import from @shared
+// @repo/core - Can only import from @repo/shared
 export const coreBoundaries: BoundaryConfig = {
   rules: {
     'no-restricted-imports': [
       'error',
       {
         patterns: [
-          { group: ['@ux', '@ux/*'], message: '@core cannot import from @ux' },
-          { group: ['@main', '@main/*'], message: '@core cannot import from @main' },
+          { group: ['@repo/ux', '@repo/ux/*'], message: '@repo/core cannot import from @repo/ux' },
+          { group: ['@main', '@main/*'], message: '@repo/core cannot import from @main' },
           {
             group: ['@renderer', '@renderer/*'],
-            message: '@core cannot import from @renderer',
+            message: '@repo/core cannot import from @renderer',
           },
         ],
       },
@@ -48,17 +54,17 @@ export const coreBoundaries: BoundaryConfig = {
   },
 };
 
-// @ux - Can import from @core and @shared
+// @repo/ux - Can import from @repo/core and @repo/shared
 export const uxBoundaries: BoundaryConfig = {
   rules: {
     'no-restricted-imports': [
       'error',
       {
         patterns: [
-          { group: ['@main', '@main/*'], message: '@ux cannot import from @main' },
+          { group: ['@main', '@main/*'], message: '@repo/ux cannot import from @main' },
           {
             group: ['@renderer', '@renderer/*'],
-            message: '@ux cannot import from @renderer',
+            message: '@repo/ux cannot import from @renderer',
           },
         ],
       },
@@ -66,14 +72,14 @@ export const uxBoundaries: BoundaryConfig = {
   },
 };
 
-// @main - Can import from @core and @shared, NOT @ux or @renderer
+// @main - Can import from @repo/core and @repo/shared, NOT @repo/ux or @renderer
 export const mainBoundaries: BoundaryConfig = {
   rules: {
     'no-restricted-imports': [
       'error',
       {
         patterns: [
-          { group: ['@ux', '@ux/*'], message: '@main cannot import from @ux' },
+          { group: ['@repo/ux', '@repo/ux/*'], message: '@main cannot import from @repo/ux' },
           {
             group: ['@renderer', '@renderer/*'],
             message: '@main cannot import from @renderer',
@@ -84,7 +90,7 @@ export const mainBoundaries: BoundaryConfig = {
   },
 };
 
-// @renderer - Can import from @core, @shared, @ux, NOT @main
+// @renderer - Can import from @repo/core, @repo/shared, @repo/ux, NOT @main
 export const rendererBoundaries: BoundaryConfig = {
   rules: {
     'no-restricted-imports': [

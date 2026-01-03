@@ -32,11 +32,11 @@ pnpm --filter @repo/desktop dev   # Start Electron app in dev mode
 
 | Alias       | Package                     | Can Import                | Cannot Import                        |
 | ----------- | --------------------------- | ------------------------- | ------------------------------------ |
-| `@shared`   | `packages/shared`           | (none)                    | `@core`, `@ux`, `@main`, `@renderer` |
-| `@core`     | `packages/core`             | `@shared`                 | `@ux`, `@main`, `@renderer`          |
-| `@ux`       | `packages/ux`               | `@core`, `@shared`        | `@main`, `@renderer`                 |
-| `@main`     | `apps/desktop/src/main`     | `@core`, `@shared`        | `@ux`, `@renderer`                   |
-| `@renderer` | `apps/desktop/src/renderer` | `@core`, `@shared`, `@ux` | `@main`                              |
+| `@repo/shared` | `packages/shared`           | (none)                           | `@repo/core`, `@repo/ux`, `@main`, `@renderer` |
+| `@repo/core`   | `packages/core`             | `@repo/shared`                   | `@repo/ux`, `@main`, `@renderer`               |
+| `@repo/ux`     | `packages/ux`               | `@repo/core`, `@repo/shared`     | `@main`, `@renderer`                           |
+| `@main`        | `apps/desktop/src/main`     | `@repo/core`, `@repo/shared`     | `@repo/ux`, `@renderer`                        |
+| `@renderer`    | `apps/desktop/src/renderer` | `@repo/core`, `@repo/shared`, `@repo/ux` | `@main`                                       |
 
 Import boundaries are enforced by ESLint rules in `configs/eslint/boundaries.mjs`.
 
@@ -49,8 +49,8 @@ apps/desktop/              # Electron application
   src/renderer/           # React UI (no Node APIs)
 
 packages/shared/           # Pure utilities, type helpers - NO dependencies
-packages/core/             # Domain types/contracts - can import @shared
-packages/ux/               # Design system + Dockview - can import @core, @shared
+packages/core/             # Domain types/contracts - can import @repo/shared
+packages/ux/               # Design system + Dockview - can import @repo/core, @repo/shared
 
 configs/                   # Shared tooling configs
   ts/                     # TypeScript (base.json, react.json, node.json)

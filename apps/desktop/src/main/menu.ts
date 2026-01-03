@@ -1,5 +1,5 @@
 import { Menu, app, shell, BrowserWindow, type MenuItemConstructorOptions } from 'electron';
-import { COMMANDS } from '@core';
+import { COMMANDS } from '@repo/core';
 
 export function setupMenu(): void {
   const isMac = process.platform === 'darwin';

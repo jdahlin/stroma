@@ -6,17 +6,17 @@
   "scripts": {
     "dev": "tsx scripts/dev.ts",
     "build": "pnpm run build:main && pnpm run build:preload && pnpm run build:renderer",
-    "build:main": "esbuild src/main/index.ts --bundle --platform=node --format=cjs --sourcemap --tsconfig=tsconfig.main.json --outfile=dist/main/index.js --external:electron --conditions=import --alias:@core=../../packages/core/src --alias:@shared=../../packages/shared/src --alias:@ux=../../packages/ux/src",
-    "build:preload": "esbuild src/preload/index.ts --bundle --platform=node --format=cjs --sourcemap --tsconfig=tsconfig.preload.json --outfile=dist/preload/index.js --external:electron --conditions=import --alias:@core=../../packages/core/src --alias:@shared=../../packages/shared/src --alias:@ux=../../packages/ux/src",
+    "build:main": "esbuild src/main/index.ts --bundle --platform=node --format=cjs --sourcemap --tsconfig=tsconfig.main.json --outfile=dist/main/index.js --external:electron --conditions=import",
+    "build:preload": "esbuild src/preload/index.ts --bundle --platform=node --format=cjs --sourcemap --tsconfig=tsconfig.preload.json --outfile=dist/preload/index.js --external:electron --conditions=import",
     "build:renderer": "vite build",
     "start": "electron .",
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@core": "workspace:*",
-    "@shared": "workspace:*",
-    "@ux": "workspace:*",
+    "@repo/core": "workspace:*",
+    "@repo/shared": "workspace:*",
+    "@repo/ux": "workspace:*",
     "dockview": "^4.13.1",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
@@ -25,17 +25,19 @@
   "devDependencies": {
     "@repo/tailwind-config": "workspace:*",
     "@repo/tsconfig": "workspace:*",
+    "@types/node": "22.7.7",
     "@types/react": "^19.2.0",
     "@types/react-dom": "^19.2.0",
     "@vitejs/plugin-react": "^4.3.4",
     "autoprefixer": "^10.4.20",
     "esbuild": "^0.27.0",
-    "electron": "^34.0.0",
+    "electron": "39.2.7",
+    "node-abi": "4.24.0",
     "postcss": "^8.5.0",
     "postcss-load-config": "^6.0.0",
     "tailwindcss": "^3.4.17",
     "tsx": "^4.19.2",
-    "typescript": "^5.9.0",
+    "typescript": "5.9.3",
     "vite": "^6.0.7"
   }
 }

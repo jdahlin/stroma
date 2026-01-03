@@ -1,4 +1,4 @@
-import type { Brand } from '@repo';
+import type { Brand } from '@repo/shared';
 
 /**
  * Entity ID type for domain objects.

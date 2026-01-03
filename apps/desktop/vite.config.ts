@@ -1,6 +1,6 @@
+import { resolve } from 'node:path';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import { resolve } from 'path';
 
 export default defineConfig({
   clearScreen: false,
@@ -12,12 +12,12 @@ export default defineConfig({
     emptyOutDir: true,
   },
   resolve: {
-    alias: {
-      '@renderer': resolve(__dirname, 'src/renderer'),
-      '@core': resolve(__dirname, '../../packages/core/src'),
-      '@shared': resolve(__dirname, '../../packages/shared/src'),
-      '@ux': resolve(__dirname, '../../packages/ux/src'),
-    },
+    alias: [
+      { find: '@renderer', replacement: resolve(__dirname, 'src/renderer') },
+      { find: '@repo/core', replacement: resolve(__dirname, '../../packages/core/src') },
+      { find: '@repo/shared', replacement: resolve(__dirname, '../../packages/shared/src') },
+      { find: '@repo/ux', replacement: resolve(__dirname, '../../packages/ux/src') },
+    ],
   },
   server: {
     port: 5173,

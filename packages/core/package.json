@@ -1,5 +1,5 @@
 {
-  "name": "core",
+  "name": "@repo/core",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -18,7 +18,7 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@shared": "workspace:*"
+    "@repo/shared": "workspace:*"
   },
   "devDependencies": {
     "@repo/tsconfig": "workspace:*",

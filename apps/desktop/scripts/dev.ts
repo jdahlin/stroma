@@ -50,9 +50,6 @@ async function startDev(): Promise<void> {
     '--tsconfig=tsconfig.main.json',
     '--outfile=dist/main/index.js',
     '--external:electron',
-    '--alias:@core=../../packages/core/src',
-    '--alias:@shared=../../packages/shared/src',
-    '--alias:@ux=../../packages/ux/src',
     '--log-level=error',
   ];
 
@@ -66,9 +63,6 @@ async function startDev(): Promise<void> {
     '--tsconfig=tsconfig.preload.json',
     '--outfile=dist/preload/index.js',
     '--external:electron',
-    '--alias:@core=../../packages/core/src',
-    '--alias:@shared=../../packages/shared/src',
-    '--alias:@ux=../../packages/ux/src',
     '--log-level=error',
   ];
 

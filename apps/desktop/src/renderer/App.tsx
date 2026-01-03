@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { commandRegistry, COMMANDS } from '@core';
+import { commandRegistry, COMMANDS } from '@repo/core';
 import { DockRoot } from './layout/DockRoot';
 import { TopBar } from './chrome/TopBar';
 import { CommandPalette } from './chrome/CommandPalette';
