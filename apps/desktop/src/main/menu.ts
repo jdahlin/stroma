@@ -90,6 +90,29 @@ export function setupMenu(): void {
         { role: 'forceReload' },
         { role: 'toggleDevTools' },
         { type: 'separator' },
+        {
+          label: 'Split Right',
+          click: () => {
+            const window = BrowserWindow.getFocusedWindow()
+            if (!window) {
+              console.error('No focused window found')
+              return;
+            }
+            window.webContents.send('execute-command', COMMANDS.splitRight);
+          },
+        },
+        {
+          label: 'Split Down',
+          click: () => {
+            const window = BrowserWindow.getFocusedWindow()
+            if (!window) {
+              console.error('No focused window found')
+              return;
+            }
+            window.webContents.send('execute-command', COMMANDS.splitDown);
+          },
+        },
+        { type: 'separator' },
         { role: 'resetZoom' },
         { role: 'zoomIn' },
         { role: 'zoomOut' },

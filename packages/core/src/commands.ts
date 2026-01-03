@@ -97,6 +97,8 @@ export const COMMANDS = {
   openNotes: commandId('pane.openNotes'),
   openQueue: commandId('pane.openQueue'),
   openSearch: commandId('pane.openSearch'),
+  splitRight: commandId('pane.splitRight'),
+  splitDown: commandId('pane.splitDown'),
   newTab: commandId('tab.new'),
   closeTab: commandId('tab.close'),
 } as const;
@@ -116,5 +118,7 @@ commandRegistry.define({ id: COMMANDS.openHome, label: 'Open Home', category: 'P
 commandRegistry.define({ id: COMMANDS.openNotes, label: 'Open Notes', category: 'Panes' });
 commandRegistry.define({ id: COMMANDS.openQueue, label: 'Open Queue', category: 'Panes' });
 commandRegistry.define({ id: COMMANDS.openSearch, label: 'Open Search', category: 'Panes' });
+commandRegistry.define({ id: COMMANDS.splitRight, label: 'Split Right', category: 'Panes' });
+commandRegistry.define({ id: COMMANDS.splitDown, label: 'Split Down', category: 'Panes' });
 commandRegistry.define({ id: COMMANDS.newTab, label: 'New Tab', shortcut: key('t', { meta: true }), category: 'Tabs' });
 commandRegistry.define({ id: COMMANDS.closeTab, label: 'Close Tab', shortcut: key('w', { meta: true }), category: 'Tabs' });

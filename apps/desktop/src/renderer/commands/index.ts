@@ -37,6 +37,12 @@ export function registerCommands(): () => void {
         commandRegistry.register(COMMANDS.openSearch, () => {
             // TODO: switch to or open search pane
         }),
+        commandRegistry.register(COMMANDS.splitRight, () => {
+            useLayoutStore.getState().splitRight();
+        }),
+        commandRegistry.register(COMMANDS.splitDown, () => {
+            useLayoutStore.getState().splitDown();
+        }),
     ];
 
     // Listen for commands from main process (e.g. menu bar)

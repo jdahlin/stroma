@@ -13,6 +13,8 @@ interface LayoutState {
   clearLayout: () => void;
   openNewTab: () => void;
   closeActivePanel: () => void;
+  splitRight: () => void;
+  splitDown: () => void;
 }
 
 export const useLayoutStore = create<LayoutState>()(
@@ -45,6 +47,52 @@ export const useLayoutStore = create<LayoutState>()(
           api.activePanel.api.close();
         }
       },
+
+      splitRight: () => {
+        const { api, openNewTab } = get();
+        if (!api?.activePanel) {
+          openNewTab();
+          return;
+        }
+
+        tabCounter++;
+        const { activePanel } = api;
+        const component = (activePanel as { component?: string }).component ?? 'home';
+        const title = (activePanel as { title?: string }).title ?? 'Home';
+
+        api.addPanel({
+          id: `${component}-${Date.now()}-${tabCounter}`,
+          component,
+          title,
+          position: {
+            referencePanel: activePanel,
+            direction: 'right',
+          },
+        });
+      },
+
+      splitDown: () => {
+        const { api, openNewTab } = get();
+        if (!api?.activePanel) {
+          openNewTab();
+          return;
+        }
+
+        tabCounter++;
+        const { activePanel } = api;
+        const component = (activePanel as { component?: string }).component ?? 'home';
+        const title = (activePanel as { title?: string }).title ?? 'Home';
+
+        api.addPanel({
+          id: `${component}-${Date.now()}-${tabCounter}`,
+          component,
+          title,
+          position: {
+            referencePanel: activePanel,
+            direction: 'below',
+          },
+        });
+      },
     }),
     {
       name: 'stroma-layout',
@@ -55,4 +103,3 @@ export const useLayoutStore = create<LayoutState>()(
     }
   )
 );
-
