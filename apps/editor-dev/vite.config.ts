@@ -6,12 +6,12 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: [
+      { find: /^@repo\/editor\/styles$/, replacement: resolve(__dirname, '../../packages/editor/src/styles/prosemirror.css') },
+      { find: /^@repo\/ux\/styles$/, replacement: resolve(__dirname, '../../packages/ux/src/styles/index.css') },
       { find: '@repo/core', replacement: resolve(__dirname, '../../packages/core/src') },
       { find: '@repo/editor', replacement: resolve(__dirname, '../../packages/editor/src') },
-      { find: '@repo/editor/styles', replacement: resolve(__dirname, '../../packages/editor/src/styles/prosemirror.css') },
       { find: '@repo/shared', replacement: resolve(__dirname, '../../packages/shared/src') },
       { find: '@repo/ux', replacement: resolve(__dirname, '../../packages/ux/src') },
-      { find: '@repo/ux/styles', replacement: resolve(__dirname, '../../packages/ux/src/styles/index.css') },
     ],
   },
   server: {
