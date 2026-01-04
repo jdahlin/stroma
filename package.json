@@ -18,7 +18,7 @@
     "test": "pnpm -s run with-node-opts turbo test --log-prefix=none",
     "test:watch": "pnpm run with-node-opts turbo test:watch",
     "test:coverage": "pnpm run with-node-opts turbo test -- --coverage",
-    "typecheck": "pnpm run with-node-opts turbo typecheck",
+    "typecheck": "pnpm -s run with-node-opts turbo typecheck --log-prefix=none --output-logs=errors-only",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "clean": "cross-env TURBO_UI=stream turbo clean && rm -rf node_modules",
