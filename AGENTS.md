@@ -12,7 +12,7 @@ Stroma is a desktop knowledge work environment for deep reading, extraction, and
 - **UI**: React + TypeScript + Zustand
 - **Build**: Vite + pnpm workspaces + Turbo
 - **Layout**: Dockview (IDE-style docking)
-- **Styling**: CSS design tokens + Tailwind CSS
+- **Styling**: CSS design tokens
 - **Testing**: Vitest
 
 ## Development Commands
@@ -56,7 +56,6 @@ configs/                   # Shared tooling configs
   ts/                     # TypeScript (base.json, react.json, node.json)
   eslint/                 # ESLint with import boundary rules
   prettier/               # Prettier config
-  tailwind/               # Tailwind CSS config
   vitest/                 # Vitest shared config
 ```
 

@@ -4,5 +4,5 @@
     "noEmit": false,
     "outDir": "dist"
   },
-  "include": ["src", "vitest.config.ts", "tailwind.config.ts", "postcss.config.ts"]
+  "include": ["src", "vitest.config.ts"]
 }
