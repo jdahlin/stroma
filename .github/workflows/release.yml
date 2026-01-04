@@ -182,7 +182,7 @@ jobs:
         with:
           name: stroma-windows-${{ matrix.arch }}
           path: |
-            apps/desktop/release/**/*.exe
+            apps/desktop/release/**/*-win-*.exe
             apps/desktop/release/**/latest*.yml
           if-no-files-found: error
 
