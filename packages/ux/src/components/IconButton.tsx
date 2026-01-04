@@ -12,6 +12,7 @@ export interface IconButtonProps
   size?: IconButtonSize
   /** Accessible label for screen readers */
   label: string
+  'data-active'?: boolean
 }
 
 const iconSizeMap: Record<IconButtonSize, IconSize> = {

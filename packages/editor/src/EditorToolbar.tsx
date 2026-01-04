@@ -4,9 +4,11 @@ import {
   Bold,
   Code,
   Code2,
+  FileText,
   Heading1,
   Heading2,
   Heading3,
+  Image,
   Italic,
   Link,
   List,
@@ -47,11 +49,6 @@ const dividerStyles: React.CSSProperties = {
 
 const Divider: React.FC = () => <div style={dividerStyles} />
 
-const activeButtonStyle: React.CSSProperties = {
-  backgroundColor: 'var(--color-bg-tertiary)',
-  color: 'var(--color-text-primary)',
-}
-
 const linkPopoverStyles: React.CSSProperties = {
   position: 'absolute',
   top: '100%',
@@ -77,6 +74,36 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
     setShowLinkPopover(false)
   }, [])
 
+  const handleImageInsert = useCallback(() => {
+    const url = window.prompt('Image URL')
+    if (!url)
+      return
+    editor.chain().focus().setImage({ src: url }).run()
+  }, [editor])
+
+  const handlePdfReferenceInsert = useCallback(() => {
+    const sourceName = window.prompt('PDF name')
+    if (!sourceName)
+      return
+    const pageInput = window.prompt('Page number (1-based)', '1')
+    if (!pageInput)
+      return
+    const pageNumber = Number(pageInput)
+    if (!Number.isFinite(pageNumber) || pageNumber < 1)
+      return
+
+    editor
+      .chain()
+      .focus()
+      .insertPdfReference({
+        anchorId: crypto.randomUUID(),
+        sourceId: crypto.randomUUID(),
+        sourceName: sourceName.trim() || 'PDF',
+        pageIndex: pageNumber - 1,
+      })
+      .run()
+  }, [editor])
+
   if (!editor)
     return null
 
@@ -88,28 +115,28 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
         label="Bold (Cmd+B)"
         size="sm"
         onClick={() => editor.chain().focus().toggleBold().run()}
-        style={state.isBold ? activeButtonStyle : undefined}
+        data-active={state.isBold}
       />
       <IconButton
         icon={Italic}
         label="Italic (Cmd+I)"
         size="sm"
         onClick={() => editor.chain().focus().toggleItalic().run()}
-        style={state.isItalic ? activeButtonStyle : undefined}
+        data-active={state.isItalic}
       />
       <IconButton
         icon={Strikethrough}
         label="Strikethrough"
         size="sm"
         onClick={() => editor.chain().focus().toggleStrike().run()}
-        style={state.isStrike ? activeButtonStyle : undefined}
+        data-active={state.isStrike}
       />
       <IconButton
         icon={Code}
         label="Inline Code"
         size="sm"
         onClick={() => editor.chain().focus().toggleCode().run()}
-        style={state.isCode ? activeButtonStyle : undefined}
+        data-active={state.isCode}
       />
 
       <Divider />
@@ -120,21 +147,21 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
         label="Heading 1"
         size="sm"
         onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-        style={state.isHeading1 ? activeButtonStyle : undefined}
+        data-active={state.isHeading1}
       />
       <IconButton
         icon={Heading2}
         label="Heading 2"
         size="sm"
         onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-        style={state.isHeading2 ? activeButtonStyle : undefined}
+        data-active={state.isHeading2}
       />
       <IconButton
         icon={Heading3}
         label="Heading 3"
         size="sm"
         onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
-        style={state.isHeading3 ? activeButtonStyle : undefined}
+        data-active={state.isHeading3}
       />
 
       <Divider />
@@ -145,14 +172,14 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
         label="Bullet List"
         size="sm"
         onClick={() => editor.chain().focus().toggleBulletList().run()}
-        style={state.isBulletList ? activeButtonStyle : undefined}
+        data-active={state.isBulletList}
       />
       <IconButton
         icon={ListOrdered}
         label="Numbered List"
         size="sm"
         onClick={() => editor.chain().focus().toggleOrderedList().run()}
-        style={state.isOrderedList ? activeButtonStyle : undefined}
+        data-active={state.isOrderedList}
       />
 
       <Divider />
@@ -163,14 +190,14 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
         label="Blockquote"
         size="sm"
         onClick={() => editor.chain().focus().toggleBlockquote().run()}
-        style={state.isBlockquote ? activeButtonStyle : undefined}
+        data-active={state.isBlockquote}
       />
       <IconButton
         icon={Code2}
         label="Code Block"
         size="sm"
         onClick={() => editor.chain().focus().toggleCodeBlock().run()}
-        style={state.isCodeBlock ? activeButtonStyle : undefined}
+        data-active={state.isCodeBlock}
       />
       <IconButton
         icon={Minus}
@@ -187,7 +214,19 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
         label="Insert Link (Cmd+K)"
         size="sm"
         onClick={handleLinkClick}
-        style={state.isLink ? activeButtonStyle : undefined}
+        data-active={state.isLink}
+      />
+      <IconButton
+        icon={Image}
+        label="Insert Image"
+        size="sm"
+        onClick={handleImageInsert}
+      />
+      <IconButton
+        icon={FileText}
+        label="Insert PDF Reference"
+        size="sm"
+        onClick={handlePdfReferenceInsert}
       />
 
       <Divider />

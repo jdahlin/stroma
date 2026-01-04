@@ -15,6 +15,11 @@
   color: var(--color-text-primary);
 }
 
+.icon-button[data-active='true']:not(:disabled) {
+  background-color: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+}
+
 .icon-button:active:not(:disabled) {
   background-color: var(--color-bg-active);
 }
