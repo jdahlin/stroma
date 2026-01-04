@@ -4,23 +4,33 @@ import './PdfViewport.css'
 interface PdfViewportProps {
   children: React.ReactNode
   onZoomDelta?: (factor: number) => void
-  onScrollRatioChange?: (ratio: number) => void
+  onScrollPositionChange?: (position: { ratio: number, top: number }) => void
   scrollRef?: React.RefObject<HTMLDivElement | null>
 }
 
 export const PdfViewport: React.FC<PdfViewportProps> = ({
   children,
   onZoomDelta,
-  onScrollRatioChange,
+  onScrollPositionChange,
   scrollRef,
 }) => {
   const rafRef = React.useRef<number | null>(null)
+
+  React.useEffect(() => {
+    return () => {
+      if (rafRef.current !== null) {
+        window.cancelAnimationFrame(rafRef.current)
+      }
+    }
+  }, [])
+
   const handleScroll = (event: React.UIEvent<HTMLDivElement>) => {
-    if (!onScrollRatioChange)
+    if (!onScrollPositionChange)
       return
     const target = event.currentTarget
     const maxScroll = target.scrollHeight - target.clientHeight
     const ratio = maxScroll > 0 ? target.scrollTop / maxScroll : 0
+    const top = target.scrollTop
 
     if (rafRef.current !== null) {
       return
@@ -28,7 +38,7 @@ export const PdfViewport: React.FC<PdfViewportProps> = ({
 
     rafRef.current = window.requestAnimationFrame(() => {
       rafRef.current = null
-      onScrollRatioChange(ratio)
+      onScrollPositionChange({ ratio, top })
     })
   }
 
