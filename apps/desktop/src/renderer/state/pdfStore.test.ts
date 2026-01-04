@@ -1,5 +1,6 @@
 import type { PdfSourceId } from '@repo/core'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import '../localStorage.polyfill'
 import { usePdfStore } from './pdfStore'
 import { persistState } from './persist'
 
@@ -38,12 +39,12 @@ function resetStore() {
 
 describe('pdfStore', () => {
   beforeEach(() => {
-    window.localStorage.clear()
+    localStorage.clear()
     resetStore()
   })
 
   afterEach(() => {
-    window.localStorage.clear()
+    localStorage.clear()
     resetStore()
     vi.useRealTimers()
   })
