@@ -1,5 +1,4 @@
 import type { StromaAPI } from '../renderer/electron.d'
-import process from 'node:process'
 import { contextBridge, ipcRenderer } from 'electron'
 
 const api: StromaAPI = {
