@@ -34,5 +34,10 @@ export interface StromaAPI {
 declare global {
   interface Window {
     stroma?: StromaAPI
+    versions: {
+      node: () => string
+      chrome: () => string
+      electron: () => string
+    }
   }
 }
