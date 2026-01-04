@@ -15,6 +15,7 @@
     "lint": "pnpm run with-node-opts turbo lint",
     "test": "pnpm run with-node-opts turbo test",
     "test:watch": "pnpm run with-node-opts turbo test:watch",
+    "test:coverage": "pnpm run with-node-opts turbo test -- --coverage",
     "typecheck": "pnpm run with-node-opts turbo typecheck",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
