@@ -19,8 +19,16 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "clean": "cross-env TURBO_UI=stream turbo clean && rm -rf node_modules",
-    "knip": "knip",
     "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,mjs,json}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{css,md}": [
+      "prettier --write"
+    ]
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
