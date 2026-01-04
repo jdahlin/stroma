@@ -1,4 +1,5 @@
-import { type CommandId, commandRegistry, COMMANDS } from '@repo/core'
+import type { CommandId } from '@repo/core'
+import { commandRegistry, COMMANDS } from '@repo/core'
 import { useLayoutStore, usePdfStore, useUIStore } from '../state'
 
 const THEMES = ['light', 'dark', 'system'] as const

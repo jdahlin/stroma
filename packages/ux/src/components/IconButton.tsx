@@ -1,6 +1,7 @@
 import type { LucideIcon } from 'lucide-react'
+import type { IconSize } from './Icon'
 import React, { useState } from 'react'
-import { Icon, type IconSize } from './Icon'
+import { Icon } from './Icon'
 
 export type IconButtonSize = 'sm' | 'md' | 'lg'
 

@@ -1,5 +1,6 @@
+import type { KeyboardEvent } from './commands'
 import { beforeEach, describe, expect, it } from 'vitest'
-import { commandId, CommandRegistry, type KeyboardEvent } from './commands'
+import { commandId, CommandRegistry } from './commands'
 
 describe('commandRegistry', () => {
   let registry: CommandRegistry

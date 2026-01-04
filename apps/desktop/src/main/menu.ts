@@ -1,8 +1,9 @@
+import type { MenuItemConstructorOptions } from 'electron'
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import process from 'node:process'
 import { COMMANDS } from '@repo/core'
-import { app, BrowserWindow, dialog, ipcMain, Menu, type MenuItemConstructorOptions, shell } from 'electron'
+import { app, BrowserWindow, dialog, ipcMain, Menu, shell } from 'electron'
 
 interface UiState {
   sidebars: {
