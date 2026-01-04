@@ -21,7 +21,9 @@
     "build:icon": "./scripts/build-icon.sh",
     "pack": "pnpm run build:icon && electron-builder --dir",
     "dist": "pnpm run build:icon && electron-builder",
-    "dist:mac": "pnpm run build:icon && electron-builder --mac"
+    "dist:mac": "pnpm run build:icon && electron-builder --mac",
+    "dist:win": "pnpm run build:icon && electron-builder --win",
+    "dist:linux": "pnpm run build:icon && electron-builder --linux"
   },
   "dependencies": {
     "@repo/core": "workspace:*",

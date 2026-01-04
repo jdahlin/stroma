@@ -66,12 +66,28 @@ Pre-release versions use suffixes: `0.1.0-beta.1`, `0.1.0-rc.1`
 
 Each release produces:
 
+### macOS
 | File | Description |
 |------|-------------|
 | `Stroma-{version}-mac-x64.dmg` | Intel Mac disk image |
 | `Stroma-{version}-mac-arm64.dmg` | Apple Silicon disk image |
 | `Stroma-{version}-mac-x64.zip` | Intel Mac zip archive |
 | `Stroma-{version}-mac-arm64.zip` | Apple Silicon zip archive |
+
+### Windows
+| File | Description |
+|------|-------------|
+| `Stroma-{version}-win-x64.exe` | Windows x64 installer |
+| `Stroma-{version}-win-arm64.exe` | Windows ARM64 installer |
+
+### Linux
+| File | Description |
+|------|-------------|
+| `Stroma-{version}-x64.AppImage` | Linux x64 AppImage |
+| `Stroma-{version}-arm64.AppImage` | Linux ARM64 AppImage |
+| `stroma_{version}_amd64.deb` | Debian/Ubuntu package |
+| `Stroma-{version}-linux-x64.tar.gz` | Linux x64 tarball |
+| `Stroma-{version}-linux-arm64.tar.gz` | Linux ARM64 tarball |
 
 ## Code Signing
 
