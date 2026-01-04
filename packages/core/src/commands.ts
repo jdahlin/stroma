@@ -95,8 +95,6 @@ export class CommandRegistry {
   }
 }
 
-export const commandRegistry = new CommandRegistry()
-
 export const COMMANDS = {
   toggleCommandPalette: commandId('app.toggleCommandPalette'),
   reload: commandId('app.reload'),
@@ -126,53 +124,58 @@ function key(k: string, mods: { meta?: boolean, shift?: boolean, alt?: boolean, 
   }
 }
 
-commandRegistry.define({
-  id: COMMANDS.toggleCommandPalette,
-  label: 'Toggle Command Palette',
-  shortcut: key('k', { meta: true }),
-  category: 'App',
-})
-commandRegistry.define({
-  id: COMMANDS.reload,
-  label: 'Reload',
-  shortcut: key('r', { meta: true }),
-  category: 'App',
-})
-commandRegistry.define({ id: COMMANDS.toggleTheme, label: 'Toggle Theme', category: 'App' })
-commandRegistry.define({ id: COMMANDS.toggleRibbon, label: 'Toggle Ribbon', category: 'View' })
-commandRegistry.define({
-  id: COMMANDS.toggleLeftSidebar,
-  label: 'Toggle Left Sidebar',
-  shortcut: key('\\', { meta: true }),
-  category: 'Sidebar',
-})
-commandRegistry.define({
-  id: COMMANDS.toggleRightSidebar,
-  label: 'Toggle Right Sidebar',
-  shortcut: key('\\', { meta: true, shift: true }),
-  category: 'Sidebar',
-})
-commandRegistry.define({
-  id: COMMANDS.openPdf,
-  label: 'Open PDF',
-  shortcut: key('o', { meta: true }),
-  category: 'File',
-})
-commandRegistry.define({ id: COMMANDS.openHome, label: 'Open Home', category: 'Panes' })
-commandRegistry.define({ id: COMMANDS.openNotes, label: 'Open Notes', category: 'Panes' })
-commandRegistry.define({ id: COMMANDS.openQueue, label: 'Open Queue', category: 'Panes' })
-commandRegistry.define({ id: COMMANDS.openSearch, label: 'Open Search', category: 'Panes' })
-commandRegistry.define({ id: COMMANDS.splitRight, label: 'Split Right', category: 'Panes' })
-commandRegistry.define({ id: COMMANDS.splitDown, label: 'Split Down', category: 'Panes' })
-commandRegistry.define({
-  id: COMMANDS.newTab,
-  label: 'New Tab',
-  shortcut: key('t', { meta: true }),
-  category: 'Tabs',
-})
-commandRegistry.define({
-  id: COMMANDS.closeTab,
-  label: 'Close Tab',
-  shortcut: key('w', { meta: true }),
-  category: 'Tabs',
-})
+export function registerDefaultCommands(registry: CommandRegistry): void {
+  registry.define({
+    id: COMMANDS.toggleCommandPalette,
+    label: 'Toggle Command Palette',
+    shortcut: key('k', { meta: true }),
+    category: 'App',
+  })
+  registry.define({
+    id: COMMANDS.reload,
+    label: 'Reload',
+    shortcut: key('r', { meta: true }),
+    category: 'App',
+  })
+  registry.define({ id: COMMANDS.toggleTheme, label: 'Toggle Theme', category: 'App' })
+  registry.define({ id: COMMANDS.toggleRibbon, label: 'Toggle Ribbon', category: 'View' })
+  registry.define({
+    id: COMMANDS.toggleLeftSidebar,
+    label: 'Toggle Left Sidebar',
+    shortcut: key('\\', { meta: true }),
+    category: 'Sidebar',
+  })
+  registry.define({
+    id: COMMANDS.toggleRightSidebar,
+    label: 'Toggle Right Sidebar',
+    shortcut: key('\\', { meta: true, shift: true }),
+    category: 'Sidebar',
+  })
+  registry.define({
+    id: COMMANDS.openPdf,
+    label: 'Open PDF',
+    shortcut: key('o', { meta: true }),
+    category: 'File',
+  })
+  registry.define({ id: COMMANDS.openHome, label: 'Open Home', category: 'Panes' })
+  registry.define({ id: COMMANDS.openNotes, label: 'Open Notes', category: 'Panes' })
+  registry.define({ id: COMMANDS.openQueue, label: 'Open Queue', category: 'Panes' })
+  registry.define({ id: COMMANDS.openSearch, label: 'Open Search', category: 'Panes' })
+  registry.define({ id: COMMANDS.splitRight, label: 'Split Right', category: 'Panes' })
+  registry.define({ id: COMMANDS.splitDown, label: 'Split Down', category: 'Panes' })
+  registry.define({
+    id: COMMANDS.newTab,
+    label: 'New Tab',
+    shortcut: key('t', { meta: true }),
+    category: 'Tabs',
+  })
+  registry.define({
+    id: COMMANDS.closeTab,
+    label: 'Close Tab',
+    shortcut: key('w', { meta: true }),
+    category: 'Tabs',
+  })
+}
+
+export const commandRegistry = new CommandRegistry()
+registerDefaultCommands(commandRegistry)
