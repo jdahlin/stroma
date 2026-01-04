@@ -59,6 +59,19 @@ export function setupMenu(): void {
       label: 'File',
       submenu: [
         {
+          label: 'Open PDF...',
+          accelerator: 'CmdOrCtrl+O',
+          click: () => {
+            const window = BrowserWindow.getFocusedWindow();
+            if (!window) {
+              console.error('No focused window found');
+              return;
+            }
+            window.webContents.send('execute-command', COMMANDS.openPdf);
+          },
+        },
+        { type: 'separator' },
+        {
           label: 'New Tab',
           accelerator: 'CmdOrCtrl+T',
           click: () => {

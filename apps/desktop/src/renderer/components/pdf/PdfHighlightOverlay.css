@@ -1,0 +1,5 @@
+.pdf-highlight {
+  position: absolute;
+  background: rgba(0, 102, 204, 0.2);
+  border-radius: 2px;
+}

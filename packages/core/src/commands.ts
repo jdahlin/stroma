@@ -96,6 +96,7 @@ export const COMMANDS = {
   toggleRibbon: commandId('ribbon.toggle'),
   toggleLeftSidebar: commandId('sidebar.toggleLeft'),
   toggleRightSidebar: commandId('sidebar.toggleRight'),
+  openPdf: commandId('file.openPdf'),
   openHome: commandId('pane.openHome'),
   openNotes: commandId('pane.openNotes'),
   openQueue: commandId('pane.openQueue'),
@@ -137,6 +138,12 @@ commandRegistry.define({
   label: 'Toggle Right Sidebar',
   shortcut: key('\\', { meta: true, shift: true }),
   category: 'Sidebar',
+});
+commandRegistry.define({
+  id: COMMANDS.openPdf,
+  label: 'Open PDF',
+  shortcut: key('o', { meta: true }),
+  category: 'File',
 });
 commandRegistry.define({ id: COMMANDS.openHome, label: 'Open Home', category: 'Panes' });
 commandRegistry.define({ id: COMMANDS.openNotes, label: 'Open Notes', category: 'Panes' });

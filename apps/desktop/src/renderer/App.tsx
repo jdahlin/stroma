@@ -4,6 +4,7 @@ import { DockRoot } from './layout/DockRoot';
 import { IconButton, PanelRight } from '@repo/ux';
 import { Ribbon } from './chrome/Ribbon';
 import { Sidebar } from './chrome/Sidebar';
+import { SidebarAnchors } from './chrome/SidebarAnchors';
 import { CommandPalette } from './chrome/CommandPalette';
 import { useUIStore } from './state';
 import { registerCommands } from './commands';
@@ -21,6 +22,7 @@ export const App: React.FC = () => {
   useEffect(() => {
     return registerCommands();
   }, []);
+
 
   useEffect(() => {
     window.stroma?.setUiState?.({
@@ -67,7 +69,7 @@ export const App: React.FC = () => {
           <DockRoot />
         </main>
         <Sidebar side="right">
-          <div className="sidebar-placeholder">Right Sidebar</div>
+          <SidebarAnchors />
         </Sidebar>
       </div>
       <CommandPalette isOpen={commandPaletteOpen} onClose={toggleCommandPalette} />

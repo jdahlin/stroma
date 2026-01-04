@@ -21,3 +21,5 @@ export interface Entity {
   readonly createdAt: Date;
   readonly updatedAt: Date;
 }
+
+export * from './pdf';

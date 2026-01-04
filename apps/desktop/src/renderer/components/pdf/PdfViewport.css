@@ -1,0 +1,6 @@
+.pdf-viewport {
+  flex: 1;
+  overflow: auto;
+  background: var(--color-bg-secondary);
+  padding: 1.5rem 0;
+}

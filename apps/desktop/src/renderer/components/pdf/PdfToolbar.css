@@ -1,0 +1,35 @@
+.pdf-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-bg-primary);
+}
+
+.pdf-toolbar-title {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.pdf-toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.pdf-toolbar button {
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-secondary);
+  color: inherit;
+  padding: 0.35rem 0.6rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+
+.pdf-toolbar-zoom {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}

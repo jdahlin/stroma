@@ -1,0 +1,9 @@
+.pdf-anchor-marker {
+  position: absolute;
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 999px;
+  background: #ff9f1c;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 0 2px rgba(255, 159, 28, 0.35);
+}

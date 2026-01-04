@@ -1,0 +1,6 @@
+.pdf-selection-layer {
+  position: absolute;
+  inset: 0;
+  background: transparent;
+  pointer-events: none;
+}

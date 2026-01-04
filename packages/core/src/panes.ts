@@ -3,7 +3,7 @@ import type { Brand } from '@repo/shared';
 /**
  * Pane type identifiers. Each pane in the dock system has a unique type.
  */
-export type PaneType = 'home' | 'notes' | 'queue' | 'search';
+export type PaneType = 'home' | 'notes' | 'queue' | 'search' | 'pdf';
 
 /**
  * Unique identifier for a pane instance.
@@ -53,5 +53,10 @@ export const PANE_DEFINITIONS: Record<PaneType, PaneDefinition> = {
     type: 'search',
     displayName: 'Search',
     allowMultiple: false,
+  },
+  pdf: {
+    type: 'pdf',
+    displayName: 'PDF',
+    allowMultiple: true,
   },
 };

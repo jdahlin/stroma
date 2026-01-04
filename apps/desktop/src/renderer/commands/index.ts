@@ -1,5 +1,5 @@
 import { commandRegistry, COMMANDS, type CommandId } from '@repo/core';
-import { useUIStore, useLayoutStore } from '../state';
+import { useUIStore, useLayoutStore, usePdfStore } from '../state';
 
 const THEMES = ['light', 'dark', 'system'] as const;
 
@@ -25,6 +25,18 @@ export function registerCommands(): () => void {
     }),
     commandRegistry.register(COMMANDS.toggleRightSidebar, () => {
       useUIStore.getState().toggleSidebar('right');
+    }),
+
+    // File commands
+    commandRegistry.register(COMMANDS.openPdf, async () => {
+      const payload = await usePdfStore.getState().openPdfDialog();
+      if (!payload) return;
+
+      const paneId = useLayoutStore.getState().openPdfPane(payload.source.name);
+      if (!paneId) return;
+
+      usePdfStore.getState().setPaneData(paneId, payload);
+      usePdfStore.getState().setActivePane(paneId);
     }),
 
     // Tab commands

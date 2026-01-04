@@ -12,6 +12,7 @@ interface LayoutState {
   setApi: (api: DockviewApi) => void;
   clearLayout: () => void;
   openNewTab: () => void;
+  openPdfPane: (title?: string) => string | null;
   closeActivePanel: () => void;
   splitRight: () => void;
   splitDown: () => void;
@@ -39,6 +40,20 @@ export const useLayoutStore = create<LayoutState>()(
             title: 'Home',
           });
         }
+      },
+
+      openPdfPane: (title = 'PDF') => {
+        const { api } = get();
+        if (!api) return null;
+
+        tabCounter++;
+        const id = `pdf-${Date.now()}-${tabCounter}`;
+        api.addPanel({
+          id,
+          component: 'pdf',
+          title,
+        });
+        return id;
       },
 
       closeActivePanel: () => {

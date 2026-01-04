@@ -5,6 +5,7 @@ import { HomePane } from '../panes/HomePane';
 import { NotesPane } from '../panes/NotesPane';
 import { QueuePane } from '../panes/QueuePane';
 import { SearchPane } from '../panes/SearchPane';
+import { PdfPane } from '../panes/PdfPane';
 
 /**
  * Registry mapping pane types to their React components.
@@ -14,4 +15,5 @@ export const paneComponents: Record<PaneType, React.FC<IDockviewPanelProps>> = {
   notes: NotesPane,
   queue: QueuePane,
   search: SearchPane,
+  pdf: PdfPane,
 };
