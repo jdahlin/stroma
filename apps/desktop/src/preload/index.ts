@@ -24,3 +24,9 @@ const api: StromaAPI = {
 }
 
 contextBridge.exposeInMainWorld('stroma', api)
+
+contextBridge.exposeInMainWorld('versions', {
+  node: () => process.versions.node,
+  chrome: () => process.versions.chrome,
+  electron: () => process.versions.electron,
+})
