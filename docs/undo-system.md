@@ -31,7 +31,8 @@ The application state is a sequence of immutable transitions. The undo system al
 ## Facts, Decisions, and Open Questions
 
 ### Facts
-- The project has already refactored `pdfStore` logic into pure functions (`pdfStore.logic.ts`).
+- The project has already refactored `pdfStore` logic into pure functions (`apps/desktop/src/renderer/state/pdfStore.logic.ts`).
+.
 - Complex state exists across PDF highlights, Block Editor content, and the Reading Queue.
 
 ### Decisions
@@ -55,8 +56,8 @@ The application state is a sequence of immutable transitions. The undo system al
 - **Invariant:** The SQLite database must always reflect the *current* state of the Zustand stores.
 
 ## What related docs matter?
-- Project Goals: [`GOALS.md`](./GOALS.md)
-- Block Editor Evaluation: [`block-editor.md`](./block-editor.md)
+- Product Vision: [`product-vision.md`](./product-vision.md)
+- Editor Overview: [`editor/overview.md`](./editor/overview.md)
 - Monorepo Structure: [`MONOREPO.md`](./MONOREPO.md)
 
 ## What this doc does not cover

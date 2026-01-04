@@ -1,6 +1,8 @@
 import { defineConfig } from 'vitest/config'
 
-// Use any to avoid complex type merging issues between vite and vitest in this version
+// Use any for the exported config object to avoid complex type merging issues 
+// between different versions of Vite and Vitest types in this shared config package.
+// This ensures that consuming packages can use mergeConfig without type errors.
 export const config: any = {
   test: {
     globals: true,
@@ -20,7 +22,7 @@ export const config: any = {
         '**/*.d.ts',
       ],
       include: ['src/**'],
-      // @ts-ignore - 'all' exists in v8 provider but might missing from types in this version
+      // @ts-ignore - 'all' exists in v8 provider but might be missing from types in this version
       all: true,
     },
   },
