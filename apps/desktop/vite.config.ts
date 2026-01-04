@@ -13,6 +13,7 @@ export default defineConfig({
   },
   resolve: {
     alias: [
+      { find: /^@repo\/editor\/styles$/, replacement: resolve(__dirname, '../../packages/editor/src/styles/prosemirror.css') },
       { find: '@renderer', replacement: resolve(__dirname, 'src/renderer') },
       { find: '@repo/core', replacement: resolve(__dirname, '../../packages/core/src') },
       { find: '@repo/editor', replacement: resolve(__dirname, '../../packages/editor/src') },

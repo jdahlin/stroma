@@ -1,14 +1,34 @@
+import type { PdfAnchorId } from '@repo/core'
 import type { IDockviewPanelProps } from 'dockview'
-import React from 'react'
+import { Editor } from '@repo/editor'
+import React, { useCallback } from 'react'
 import { PaneMenu } from './PaneMenu'
+import { usePdfStore } from '../state'
 import './Pane.css'
 
 export const NotesPane: React.FC<IDockviewPanelProps> = () => {
+  const activePaneId = usePdfStore(state => state.activePaneId)
+  const focusAnchor = usePdfStore(state => state.focusAnchor)
+
+  const handlePdfReferenceClick = useCallback(
+    (anchorId: string) => {
+      if (!activePaneId) {
+        console.warn('No active PDF pane to focus.', anchorId)
+        return
+      }
+
+      focusAnchor(activePaneId, anchorId as PdfAnchorId)
+    },
+    [activePaneId, focusAnchor],
+  )
+
   return (
     <div className="pane pane-notes">
       <PaneMenu />
-      <h2>Notes</h2>
-      <p>Note editor will be implemented here.</p>
+      <Editor
+        documentId="notes"
+        onPdfReferenceClick={handlePdfReferenceClick}
+      />
     </div>
   )
 }

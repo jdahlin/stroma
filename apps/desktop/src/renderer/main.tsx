@@ -4,6 +4,7 @@ import { App } from './App'
 
 // Import UX styles from package
 import '@repo/ux/styles/index.css'
+import '@repo/editor/styles'
 import './styles/base.css'
 
 const root = document.getElementById('root')
