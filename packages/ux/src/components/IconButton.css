@@ -10,8 +10,7 @@
   transition: all var(--transition-fast);
 }
 
-.icon-button:hover:not(:disabled),
-.icon-button.is-active:not(:disabled) {
+.icon-button:hover:not(:disabled) {
   background-color: var(--color-bg-tertiary);
   color: var(--color-text-primary);
 }

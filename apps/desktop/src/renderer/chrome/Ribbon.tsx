@@ -15,7 +15,7 @@ export const Ribbon: React.FC = () => {
           icon={PanelLeft}
           label="Toggle left sidebar"
           aria-pressed={leftOpen}
-          className={leftOpen ? 'is-active' : ''}
+          className={leftOpen ? 'ribbon-button-active' : ''}
           onClick={() => toggleSidebar('left')}
         />
         <IconButton icon={Home} label="Home" />
@@ -28,7 +28,7 @@ export const Ribbon: React.FC = () => {
           icon={PanelRight}
           label="Toggle right sidebar"
           aria-pressed={rightOpen}
-          className={rightOpen ? 'is-active' : ''}
+          className={rightOpen ? 'ribbon-button-active' : ''}
           onClick={() => toggleSidebar('right')}
         />
       </div>

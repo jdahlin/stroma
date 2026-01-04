@@ -18,16 +18,9 @@ export const Button: React.FC<ButtonProps> = ({
   className = '',
   ...props
 }) => {
-  const classes = [
-    'button',
-    `button--${variant}`,
-    `button--${size}`,
-    className,
-  ].filter(Boolean).join(' ')
-
   return (
     <button
-      className={classes}
+      className={`button button--${variant} button--${size} ${className}`.trim()}
       style={style}
       disabled={disabled}
       type="button"

@@ -29,16 +29,10 @@ export const IconButton: React.FC<IconButtonProps> = ({
   className = '',
   ...props
 }) => {
-  const classes = [
-    'icon-button',
-    `icon-button--${size}`,
-    className,
-  ].filter(Boolean).join(' ')
-
   return (
     <button
       type="button"
-      className={classes}
+      className={`icon-button icon-button--${size} ${className}`.trim()}
       style={style}
       disabled={disabled}
       title={label}
