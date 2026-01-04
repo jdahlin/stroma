@@ -6,7 +6,7 @@ import { PaneMenu } from './PaneMenu'
 import { usePdfStore } from '../state'
 import './Pane.css'
 
-export const NotesPane: React.FC<IDockviewPanelProps> = () => {
+export const NotesPane: React.FC<IDockviewPanelProps> = ({ api }) => {
   const activePaneId = usePdfStore(state => state.activePaneId)
   const focusAnchor = usePdfStore(state => state.focusAnchor)
 
@@ -26,7 +26,7 @@ export const NotesPane: React.FC<IDockviewPanelProps> = () => {
     <div className="pane pane-notes">
       <PaneMenu />
       <Editor
-        documentId="notes"
+        documentId={`notes:${api.id}`}
         onPdfReferenceClick={handlePdfReferenceClick}
       />
     </div>
