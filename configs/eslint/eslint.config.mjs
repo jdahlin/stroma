@@ -1,5 +1,6 @@
 import process from 'node:process'
 import antfu from '@antfu/eslint-config'
+import electronPlugin from 'eslint-plugin-electron'
 
 export default antfu({
   react: true,
@@ -12,7 +13,12 @@ export default antfu({
   formatters: true,
 }, {
   files: ['**/*.ts', '**/*.tsx'],
+  plugins: {
+    electron: electronPlugin,
+  },
   rules: {
+    'electron/no-deprecated-apis': 'error',
+
     // Forbid inline overrides (force config-level overrides)
     'ts/ban-ts-comment': ['error', { 'ts-ignore': true, 'ts-nocheck': true, 'ts-expect-error': 'allow-with-description' }],
     'eslint-comments/no-use': ['error', { allow: [] }],
