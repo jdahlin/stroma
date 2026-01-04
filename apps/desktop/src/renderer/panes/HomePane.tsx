@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
 import type { IDockviewPanelProps } from 'dockview'
+import React, { useEffect, useState } from 'react'
 import { PaneMenu } from './PaneMenu'
 import './Pane.css'
 
@@ -43,7 +43,9 @@ export const HomePane: React.FC<IDockviewPanelProps> = () => {
           <code>{window.stroma?.versions.electron ?? 'unknown'}</code>
         </p>
         <p>
-          App: <code>{appVersion ?? 'unknown'}</code>
+          App:
+          {' '}
+          <code>{appVersion ?? 'unknown'}</code>
         </p>
       </div>
     </div>
