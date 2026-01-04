@@ -6,6 +6,7 @@ import { setupMenu } from './menu'
 import { closeStorage, initStorage, registerStorageHandlers } from './storage-ipc'
 import { createMainWindow } from './windows'
 
+app.setName('Stroma')
 app.commandLine.appendSwitch('remote-debugging-port', '9222')
 
 void app.whenReady().then(async () => {
