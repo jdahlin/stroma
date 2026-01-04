@@ -6,7 +6,7 @@
   "main": "dist/index.mjs",
   "scripts": {
     "build": "esbuild src/index.ts --bundle --platform=node --format=esm --sourcemap --tsconfig=tsconfig.json --outfile=dist/index.mjs --external:electron --external:better-sqlite3 --conditions=import",
-    "rebuild:electron": "pnpm dlx electron-rebuild@3.2.9 -f -w better-sqlite3 -v 39.2.7 --module-dir=../..",
+    "rebuild:electron": "cross-env ELECTRON_RUN_AS_NODE=1 npm_config_runtime=electron npm_config_target=39.2.7 npm_config_disturl=https://electronjs.org/headers npm_config_build_from_source=true pnpm rebuild better-sqlite3",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
