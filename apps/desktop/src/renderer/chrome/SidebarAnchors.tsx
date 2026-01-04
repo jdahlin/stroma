@@ -37,7 +37,11 @@ export const SidebarAnchors: React.FC = () => {
                   key={anchor.id}
                   type="button"
                   className="sidebar-anchor-item"
-                  onClick={() => focusAnchor(activePaneId!, anchor.id)}
+                  onClick={() => {
+                    if (activePaneId) {
+                      focusAnchor(activePaneId, anchor.id)
+                    }
+                  }}
                 >
                   <div className="sidebar-anchor-title">
                     {anchor.type === 'text' ? anchor.text : anchor.type}

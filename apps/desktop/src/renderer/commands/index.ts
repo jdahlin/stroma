@@ -16,7 +16,7 @@ export function registerCommands(): () => void {
       const { theme, setTheme } = useUIStore.getState()
       const currentIndex = THEMES.indexOf(theme)
       const nextIndex = (currentIndex + 1) % THEMES.length
-      setTheme(THEMES[nextIndex]!)
+      setTheme(THEMES[nextIndex] ?? 'light')
     }),
     commandRegistry.register(COMMANDS.toggleRibbon, () => {
       useUIStore.getState().toggleRibbon()

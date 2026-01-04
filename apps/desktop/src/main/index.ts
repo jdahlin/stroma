@@ -19,7 +19,11 @@ void app.whenReady().then(async () => {
       return null
     }
 
-    const filePath = result.filePaths[0]!
+    const filePath = result.filePaths[0]
+    if (!filePath) {
+      return null
+    }
+
     const buffer = await readFile(filePath)
     const data = buffer.buffer.slice(buffer.byteOffset, buffer.byteOffset + buffer.byteLength)
 

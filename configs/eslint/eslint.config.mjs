@@ -28,5 +28,6 @@ export default antfu({
     'ts/no-unnecessary-type-assertion': 'error',
     'ts/consistent-type-imports': ['error', { prefer: 'type-imports' }],
     'ts/no-explicit-any': 'error',
+    'ts/no-non-null-assertion': 'error',
   },
 })
