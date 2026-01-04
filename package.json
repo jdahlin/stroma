@@ -12,6 +12,7 @@
     "dev": "cross-env NODE_OPTIONS= tsx scripts/dev-desktop.ts",
     "dev:desktop": "cross-env NODE_OPTIONS= tsx scripts/dev-desktop.ts",
     "dev:editor": "pnpm --filter @repo/editor-standalone-web dev",
+    "check": "pnpm -s run with-node-opts turbo run typecheck lint test --log-prefix=none --output-logs=errors-only",
     "start": "pnpm -s --filter @repo/main exec electron .",
     "build": "pnpm -s run with-node-opts turbo build",
     "lint": "pnpm -s run with-node-opts turbo lint --log-prefix=none --output-logs=errors-only",
