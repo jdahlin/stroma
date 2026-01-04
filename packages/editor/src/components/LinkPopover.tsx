@@ -2,35 +2,11 @@ import type { Editor } from '@tiptap/core'
 import { IconButton } from '@repo/ux'
 import { Check, Link2Off, X } from 'lucide-react'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
+import './LinkPopover.css'
 
 export interface LinkPopoverProps {
   editor: Editor
   onClose: () => void
-}
-
-const popoverStyles: React.CSSProperties = {
-  position: 'absolute',
-  zIndex: 'var(--z-popover)',
-  display: 'flex',
-  alignItems: 'center',
-  gap: 'var(--space-2)',
-  padding: 'var(--space-2)',
-  backgroundColor: 'var(--color-bg-primary)',
-  border: '1px solid var(--color-border)',
-  borderRadius: 'var(--radius-md)',
-  boxShadow: 'var(--shadow-lg)',
-}
-
-const inputStyles: React.CSSProperties = {
-  width: '240px',
-  padding: 'var(--space-2)',
-  fontSize: 'var(--text-sm)',
-  fontFamily: 'inherit',
-  border: '1px solid var(--color-border)',
-  borderRadius: 'var(--radius-sm)',
-  backgroundColor: 'var(--color-bg-primary)',
-  color: 'var(--color-text-primary)',
-  outline: 'none',
 }
 
 export const LinkPopover: React.FC<LinkPopoverProps> = ({ editor, onClose }) => {
@@ -81,7 +57,7 @@ export const LinkPopover: React.FC<LinkPopoverProps> = ({ editor, onClose }) => 
   const isLink = editor.isActive('link')
 
   return (
-    <div style={popoverStyles}>
+    <div className="editor-link-popover">
       <input
         ref={inputRef}
         type="url"
@@ -89,7 +65,7 @@ export const LinkPopover: React.FC<LinkPopoverProps> = ({ editor, onClose }) => 
         onChange={e => setUrl(e.target.value)}
         onKeyDown={handleKeyDown}
         placeholder="https://example.com"
-        style={inputStyles}
+        className="editor-link-popover__input"
       />
       <IconButton
         icon={Check}

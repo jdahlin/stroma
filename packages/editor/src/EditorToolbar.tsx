@@ -23,6 +23,7 @@ import {
 import React, { useCallback, useState } from 'react'
 import { LinkPopover } from './components'
 import { useToolbarState } from './hooks'
+import './EditorToolbar.css'
 
 export interface EditorToolbarProps {
   /** TipTap editor instance */
@@ -31,31 +32,7 @@ export interface EditorToolbarProps {
   style?: React.CSSProperties
 }
 
-const toolbarStyles: React.CSSProperties = {
-  position: 'relative',
-  display: 'flex',
-  alignItems: 'center',
-  gap: 'var(--space-1)',
-  padding: 'var(--space-2)',
-  borderBottom: '1px solid var(--color-border)',
-  flexWrap: 'wrap',
-}
-
-const dividerStyles: React.CSSProperties = {
-  width: '1px',
-  height: '1.5rem',
-  backgroundColor: 'var(--color-border)',
-  margin: '0 var(--space-1)',
-}
-
-const Divider: React.FC = () => <div style={dividerStyles} />
-
-const linkPopoverStyles: React.CSSProperties = {
-  position: 'absolute',
-  top: '100%',
-  left: 'var(--space-2)',
-  marginTop: 'var(--space-1)',
-}
+const Divider: React.FC = () => <div className="editor-toolbar__divider" />
 
 /**
  * Editor toolbar with formatting controls.
@@ -105,7 +82,7 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
     return null
 
   return (
-    <div style={{ ...toolbarStyles, ...style }}>
+    <div className="editor-toolbar" style={style}>
       {/* Text formatting */}
       <IconButton
         icon={Bold}
@@ -246,7 +223,7 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
 
       {/* Link Popover */}
       {showLinkPopover && (
-        <div style={linkPopoverStyles}>
+        <div className="editor-toolbar__link-popover">
           <LinkPopover editor={editor} onClose={handleLinkPopoverClose} />
         </div>
       )}

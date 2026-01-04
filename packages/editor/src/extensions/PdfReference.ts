@@ -21,13 +21,9 @@ declare module '@tiptap/core' {
 
 export const PdfReference = Node.create<PdfReferenceOptions>({
   name: 'pdfReference',
-
   inline: true,
-
   group: 'inline',
-
   atom: true,
-
   selectable: true,
 
   addOptions() {

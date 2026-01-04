@@ -1,6 +1,7 @@
 import type { SlashCommandItem, SlashCommandSuggestionProps } from '../extensions/SlashCommand'
 import { Icon } from '@repo/ux'
 import React, { useCallback, useEffect, useImperativeHandle, useState } from 'react'
+import './SlashCommandMenu.css'
 
 export interface SlashCommandMenuRef {
   onKeyDown: (event: KeyboardEvent) => boolean
@@ -10,60 +11,6 @@ export interface SlashCommandMenuProps {
   items: SlashCommandItem[]
   command: SlashCommandSuggestionProps['command']
   menuRef?: React.RefObject<SlashCommandMenuRef | null>
-}
-
-const menuStyles: React.CSSProperties = {
-  position: 'relative',
-  backgroundColor: 'var(--color-bg-primary)',
-  border: '1px solid var(--color-border)',
-  borderRadius: 'var(--radius-md)',
-  boxShadow: 'var(--shadow-lg)',
-  overflow: 'hidden',
-  maxHeight: '300px',
-  overflowY: 'auto',
-}
-
-const itemStyles: React.CSSProperties = {
-  display: 'flex',
-  alignItems: 'center',
-  gap: 'var(--space-3)',
-  padding: 'var(--space-2) var(--space-3)',
-  cursor: 'pointer',
-  transition: 'background-color var(--transition-fast)',
-}
-
-const selectedItemStyles: React.CSSProperties = {
-  ...itemStyles,
-  backgroundColor: 'var(--color-bg-tertiary)',
-}
-
-const iconContainerStyles: React.CSSProperties = {
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  width: '2rem',
-  height: '2rem',
-  backgroundColor: 'var(--color-bg-secondary)',
-  borderRadius: 'var(--radius-sm)',
-  color: 'var(--color-text-secondary)',
-}
-
-const labelStyles: React.CSSProperties = {
-  fontSize: 'var(--text-sm)',
-  fontWeight: 500,
-  color: 'var(--color-text-primary)',
-}
-
-const descriptionStyles: React.CSSProperties = {
-  fontSize: 'var(--text-xs)',
-  color: 'var(--color-text-muted)',
-}
-
-const emptyStyles: React.CSSProperties = {
-  padding: 'var(--space-3)',
-  textAlign: 'center',
-  color: 'var(--color-text-muted)',
-  fontSize: 'var(--text-sm)',
 }
 
 export function SlashCommandMenu({ items, command, menuRef }: SlashCommandMenuProps) {
@@ -128,27 +75,31 @@ export function SlashCommandMenu({ items, command, menuRef }: SlashCommandMenuPr
 
   if (items.length === 0) {
     return (
-      <div style={menuStyles}>
-        <div style={emptyStyles}>No matching commands</div>
+      <div className="editor-slash-menu">
+        <div className="editor-slash-menu__empty">No matching commands</div>
       </div>
     )
   }
 
   return (
-    <div style={menuStyles}>
+    <div className="editor-slash-menu">
       {items.map((item, index) => (
         <div
           key={item.id}
-          style={index === selectedIndex ? selectedItemStyles : itemStyles}
+          className={
+            index === selectedIndex
+              ? 'editor-slash-menu__item editor-slash-menu__item--selected'
+              : 'editor-slash-menu__item'
+          }
           onClick={() => selectItem(index)}
           onMouseEnter={() => setSelectedIndex(index)}
         >
-          <div style={iconContainerStyles}>
+          <div className="editor-slash-menu__icon">
             <Icon icon={item.icon} size="sm" />
           </div>
           <div>
-            <div style={labelStyles}>{item.label}</div>
-            <div style={descriptionStyles}>{item.description}</div>
+            <div className="editor-slash-menu__label">{item.label}</div>
+            <div className="editor-slash-menu__description">{item.description}</div>
           </div>
         </div>
       ))}
