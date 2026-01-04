@@ -3,6 +3,8 @@
   "references": [],
   "include": [
     "src/renderer",
+    "src/main",
+    "src/preload",
     "vite.config.ts",
     "tailwind.config.ts",
     "postcss.config.ts",

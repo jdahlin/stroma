@@ -12,7 +12,7 @@
     "dev": "cross-env NODE_OPTIONS= tsx apps/desktop/scripts/dev.ts",
     "dev:desktop": "cross-env NODE_OPTIONS= tsx apps/desktop/scripts/dev.ts",
     "build": "pnpm run with-node-opts turbo build",
-    "lint": "pnpm run with-node-opts eslint .",
+    "lint": "pnpm run with-node-opts turbo lint",
     "test": "pnpm run with-node-opts turbo test",
     "test:watch": "pnpm run with-node-opts turbo test:watch",
     "typecheck": "pnpm run with-node-opts turbo typecheck",
