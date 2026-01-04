@@ -43,7 +43,7 @@ export default antfu({
     'react-hooks/exhaustive-deps': 'error',
   },
 }, {
-  files: ['apps/desktop/src/renderer/chrome/CommandPalette.tsx'],
+  files: ['apps/renderer/src/chrome/CommandPalette.tsx'],
   rules: {
     'ts/strict-boolean-expressions': 'off',
   },

@@ -23,7 +23,6 @@ async function startDev(): Promise<void> {
 
   const runPnpm = (args: string[], label: string): Promise<void> =>
     new Promise((resolve, reject) => {
-      console.log(`[${label}] Starting...`)
       const child = spawnPnpm(args, { stdio: 'inherit' })
       child.on('exit', (code) => {
         if (code === 0) {
@@ -38,9 +37,9 @@ async function startDev(): Promise<void> {
 
   // Initial builds
   await Promise.all([
-    runPnpm(['--filter', '@repo/renderer', 'build'], 'renderer build'),
-    runPnpm(['--filter', '@repo/preload', 'build'], 'preload build'),
-    runPnpm(['--filter', '@repo/main', 'build'], 'main build'),
+    runPnpm(['-s', '--filter', '@repo/renderer', 'build'], 'renderer build'),
+    runPnpm(['-s', '--filter', '@repo/preload', 'build'], 'preload build'),
+    runPnpm(['-s', '--filter', '@repo/main', 'build'], 'main build'),
   ])
 
   // Watchers

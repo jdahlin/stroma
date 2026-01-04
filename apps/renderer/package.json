@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@repo/core": "workspace:*",
+    "@repo/editor": "workspace:*",
     "@repo/ux": "workspace:*",
     "dockview": "^4.13.1",
     "pdfjs-dist": "^5.4.530",

@@ -13,6 +13,8 @@
     "electron": "39.2.7"
   },
   "devDependencies": {
+    "@repo/preload": "workspace:*",
+    "@repo/renderer": "workspace:*",
     "@repo/tsconfig": "workspace:*",
     "@types/node": "22.7.7",
     "esbuild": "^0.27.2",

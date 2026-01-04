@@ -14,7 +14,11 @@
       "@repo/shared": ["packages/shared/src/index.ts"],
       "@repo/shared/*": ["packages/shared/src/*"],
       "@repo/ux": ["packages/ux/src/index.ts"],
-      "@repo/ux/*": ["packages/ux/src/*"]
+      "@repo/ux/*": ["packages/ux/src/*"],
+      "@main": ["apps/main/src/index.ts"],
+      "@main/*": ["apps/main/src/*"],
+      "@renderer": ["apps/renderer/src/main.tsx"],
+      "@renderer/*": ["apps/renderer/src/*"]
     },
     "esModuleInterop": true,
     "strict": true,
