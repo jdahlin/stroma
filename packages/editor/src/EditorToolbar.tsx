@@ -3,10 +3,12 @@ import { IconButton } from '@repo/ux'
 import {
   Bold,
   Code,
+  Code2,
   Heading1,
   Heading2,
   Heading3,
   Italic,
+  Link,
   List,
   ListOrdered,
   Minus,
@@ -15,7 +17,8 @@ import {
   Strikethrough,
   Undo,
 } from 'lucide-react'
-import React from 'react'
+import React, { useCallback, useState } from 'react'
+import { LinkPopover } from './components'
 import { useToolbarState } from './hooks'
 
 export interface EditorToolbarProps {
@@ -26,6 +29,7 @@ export interface EditorToolbarProps {
 }
 
 const toolbarStyles: React.CSSProperties = {
+  position: 'relative',
   display: 'flex',
   alignItems: 'center',
   gap: 'var(--space-1)',
@@ -48,6 +52,13 @@ const activeButtonStyle: React.CSSProperties = {
   color: 'var(--color-text-primary)',
 }
 
+const linkPopoverStyles: React.CSSProperties = {
+  position: 'absolute',
+  top: '100%',
+  left: 'var(--space-2)',
+  marginTop: 'var(--space-1)',
+}
+
 /**
  * Editor toolbar with formatting controls.
  */
@@ -56,6 +67,15 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
   style,
 }) => {
   const state = useToolbarState(editor)
+  const [showLinkPopover, setShowLinkPopover] = useState(false)
+
+  const handleLinkClick = useCallback(() => {
+    setShowLinkPopover(true)
+  }, [])
+
+  const handleLinkPopoverClose = useCallback(() => {
+    setShowLinkPopover(false)
+  }, [])
 
   if (!editor)
     return null
@@ -146,10 +166,28 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
         style={state.isBlockquote ? activeButtonStyle : undefined}
       />
       <IconButton
+        icon={Code2}
+        label="Code Block"
+        size="sm"
+        onClick={() => editor.chain().focus().toggleCodeBlock().run()}
+        style={state.isCodeBlock ? activeButtonStyle : undefined}
+      />
+      <IconButton
         icon={Minus}
         label="Horizontal Rule"
         size="sm"
         onClick={() => editor.chain().focus().setHorizontalRule().run()}
+      />
+
+      <Divider />
+
+      {/* Insert */}
+      <IconButton
+        icon={Link}
+        label="Insert Link (Cmd+K)"
+        size="sm"
+        onClick={handleLinkClick}
+        style={state.isLink ? activeButtonStyle : undefined}
       />
 
       <Divider />
@@ -169,6 +207,13 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
         onClick={() => editor.chain().focus().redo().run()}
         disabled={!state.canRedo}
       />
+
+      {/* Link Popover */}
+      {showLinkPopover && (
+        <div style={linkPopoverStyles}>
+          <LinkPopover editor={editor} onClose={handleLinkPopoverClose} />
+        </div>
+      )}
     </div>
   )
 }
