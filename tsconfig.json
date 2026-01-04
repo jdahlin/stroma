@@ -6,7 +6,6 @@
     { "path": "./packages/core" },
     { "path": "./packages/shared" },
     { "path": "./packages/ux" },
-    { "path": "./configs/tailwind" },
     { "path": "./configs/vitest" }
   ]
 }
