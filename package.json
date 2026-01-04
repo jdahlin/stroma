@@ -21,7 +21,7 @@
     "typecheck": "pnpm -s run with-node-opts turbo typecheck --log-prefix=none --output-logs=errors-only",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "clean": "cross-env TURBO_UI=stream turbo clean && rm -rf node_modules",
+    "clean": "cross-env TURBO_UI=stream turbo clean --log-prefix=none --output-logs=errors-only && rm -rf node_modules",
     "prepare": "husky"
   },
   "lint-staged": {
