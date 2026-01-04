@@ -1,85 +1,75 @@
-repo/
-├─ apps/
-│ └─ desktop/ # Electron application (entry point + composition layer)
-│ ├─ src/
-│ │ ├─ main/ # Electron main process (native side)
-│ │ │ ├─ index.ts # App bootstrap (BrowserWindow, lifecycle)
-│ │ │ ├─ windows.ts # Window creation + options
-│ │ │ └─ menu.ts # Application menus + shortcuts
-│ │ │
-│ │ ├─ preload/ # Secure IPC bridge (contextBridge only)
-│ │ │ ├─ index.ts # Exposed APIs (typed, minimal)
-│ │ │ └─ types.ts # IPC type definitions
-│ │ │
-│ │ └─ renderer/ # UI runtime (no Node APIs)
-│ │ ├─ index.html # Single HTML entry (static, minimal)
-│ │ ├─ main.tsx # React bootstrap
-│ │ ├─ App.tsx # Application shell (chrome + dock host)
-│ │ │
-│ │ ├─ layout/ # App-level layout glue (composition)
-│ │ │ ├─ DockRoot.tsx # Dockview host instance wiring
-│ │ │ ├─ paneRegistry.ts # PaneType → component mapping
-│ │ │ └─ defaultLayout.ts # Default docking layout
-│ │ │
-│ │ ├─ state/ # Renderer state (merged from packages/state)
-│ │ │ ├─ uiStore.ts # Theme, zoom, command palette, global UI flags
-│ │ │ ├─ layoutStore.ts # Dock layout state + persistence orchestration
-│ │ │ ├─ pdfStore.ts # PDF viewing state
-│ │ │ ├─ persist.ts # Storage adapter + versioning/migrations helpers
-│ │ │ └─ index.ts # Public state surface for renderer
-│ │ │
-│ │ ├─ panes/ # Built-in panes
-│ │ │ ├─ HomePane.tsx
-│ │ │ ├─ NotesPane.tsx
-│ │ │ ├─ QueuePane.tsx
-│ │ │ └─ SearchPane.tsx
-│ │ │
-│ │ ├─ chrome/ # Global UI chrome (non-pane UI)
-│ │ │ ├─ Sidebar.tsx # Navigation + Anchors
-│ │ │ ├─ Ribbon.tsx # Left-side vertical actions
-│ │ │ └─ CommandPalette.tsx # Global command launcher
-│ │ │
-│ │ └─ styles/ # App-level style glue
-│ │ ├─ base.css # App-specific base styles
-│ │ └─ platform.css # Electron/platform tweaks
-│ │
-│ └─ package.json # Electron/Vite config
-│
-├─ packages/
-│ ├─ core/ # Pure application contracts (no UI, no Electron)
-│ │ └─ src/
-│ │ ├─ panes.ts # Pane identity + input contracts
-│ │ ├─ commands.ts # Global command definitions
-│ │ └─ model/ # Shared data models
-│ │
-│ ├─ ux/ # Design system + layout (authoritative styling + components)
-│ │ └─ src/
-│ │ ├─ styles/ # Global CSS authority
-│ │ │ ├─ tokens.css # CSS variables (colors, spacing, radii)
-│ │ │ ├─ base.css # Reset + typography baseline
-│ │ │ ├─ themes.css # Light/dark mappings
-│ │ │ ├─ dockview-theme.css # Custom theme for Dockview
-│ │ │ └─ index.css # Single import point
-│ │ │
-│ │ ├─ components/ # Reusable UI primitives (Button, Icon, etc.)
-│ │ ├─ layout/ # DockHost root component
-│ │ └─ index.ts # Public UX surface
-│ │
-│ └─ shared/ # Pure utilities, type helpers - NO dependencies
-│
-├─ configs/ # Centralized tooling configuration
-│ ├─ ts/
-│ ├─ eslint/
-│ ├─ prettier/
-│ └─ vitest/
-│
-├─ scripts/ # Repo maintenance scripts
-│
-├─ package.json # Workspace root
-├─ pnpm-workspace.yaml
-├─ pnpm-lock.yaml
-└─ turbo.json
+---
+title: "How is the monorepo structured?"
+status: implemented
+audience: [contributor, maintainer]
+last_updated: 2026-01-04
+---
 
-Simple boundary rule to keep “core pure”
-• packages/core must never import from apps/** or packages/ux.
-• Renderer may import @repo/core, but @repo/core must stay dependency-light (types/contracts).
+# How is the monorepo structured?
+This document explains the Stroma monorepo layout and the import boundaries between packages.
+
+## Who is this for?
+- Contributors navigating the codebase.
+- Maintainers enforcing boundaries.
+
+## What is the scope?
+- In scope: top-level structure and dependency rules.
+- Out of scope: detailed file-by-file listings.
+
+## What is the mental model?
+- Apps assemble features; packages provide reusable layers with strict import boundaries.
+
+## What are the key concepts?
+| Concept | Definition | Example |
+| --- | --- | --- |
+| App | A runnable product entry point. | "apps/desktop is the Electron app." |
+| Package | A reusable layer with controlled dependencies. | "packages/ux provides UI primitives." |
+| Boundary | A rule limiting imports between layers. | "@repo/core cannot import @repo/ux." |
+
+## What is the top-level layout?
+| Path | Purpose | Example |
+| --- | --- | --- |
+| `apps/` | Application entry points. | "desktop app with main/preload/renderer." |
+| `packages/` | Shared layers and features. | "core, shared, ux." |
+| `configs/` | Shared tooling config. | "TypeScript and ESLint config." |
+| `scripts/` | Repo maintenance utilities. | "Release scripts." |
+
+## What are the import boundaries?
+- `@repo/shared` has no dependencies.
+- `@repo/core` can import `@repo/shared` only.
+- `@repo/ux` can import `@repo/core` and `@repo/shared`.
+- `@main` can import `@repo/core` and `@repo/shared`.
+- `@renderer` can import `@repo/core`, `@repo/shared`, and `@repo/ux`.
+
+## Where are key app areas?
+| Area | Purpose | Example |
+| --- | --- | --- |
+| Main process | Electron lifecycle and windows. | `apps/desktop/src/main` |
+| Preload bridge | Typed IPC layer. | `apps/desktop/src/preload` |
+| Renderer UI | React UI with Dockview. | `apps/desktop/src/renderer` |
+
+## What are the facts?
+- Import boundaries are enforced by ESLint rules.
+- The renderer cannot import from `@main`.
+
+## What decisions are recorded?
+- `@repo/core` stays dependency-light and UI-free.
+
+## What are the open questions?
+- None.
+
+## What are the failure modes or edge cases?
+- A boundary violation compiles locally but breaks lint in CI.
+
+## What assumptions and invariants apply?
+- Apps are the only runtime entry points.
+- Packages remain import-stable across apps.
+
+## What related docs matter?
+- Docs index: [`README.md`](./README.md)
+- Editor docs: [`editor/README.md`](./editor/README.md)
+- PDF docs: [`pdf/README.md`](./pdf/README.md)
+- Storage docs: [`storage/README.md`](./storage/README.md)
+
+## What this doc does not cover
+- The internal file structure of each package.
