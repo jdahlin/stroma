@@ -4,11 +4,6 @@
   "private": true,
   "productName": "Stroma",
   "description": "A desktop knowledge work environment for deep reading and learning",
-  "homepage": "https://github.com/jdahlin/stroma",
-  "license": "MIT",
-  "repository": {
-    "url": "https://github.com/jdahlin/stroma"
-  },
   "author": {
     "name": "Johan Dahlin",
     "email": "jdahlin@gmail.com"

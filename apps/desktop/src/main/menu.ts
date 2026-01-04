@@ -1,8 +1,8 @@
-import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { readFileSync } from 'node:fs'
+import { join } from 'node:path'
 import process from 'node:process'
-import { app, BrowserWindow, ipcMain, Menu, type MenuItemConstructorOptions, shell } from 'electron'
-import { COMMANDS } from '@repo/core';
+import { COMMANDS } from '@repo/core'
+import { app, BrowserWindow, dialog, ipcMain, Menu, type MenuItemConstructorOptions, shell } from 'electron'
 
 interface UiState {
   sidebars: {
@@ -33,42 +33,43 @@ function updateMenuState(state: UiState): void {
   }
 }
 
-type AppMetadata = {
-  name: string;
-  version: string;
-  releaseDate: string | null;
-};
+interface AppMetadata {
+  name: string
+  version: string
+  releaseDate: string | null
+}
 
 function getAppMetadata(): AppMetadata {
   const fallback: AppMetadata = {
     name: app.name,
     version: app.getVersion(),
     releaseDate: null,
-  };
+  }
 
   try {
-    const packageJsonPath = join(app.getAppPath(), 'package.json');
+    const packageJsonPath = join(app.getAppPath(), 'package.json')
     const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf8')) as {
-      name?: string;
-      productName?: string;
-      version?: string;
-      releaseDate?: string;
-    };
+      name?: string
+      productName?: string
+      version?: string
+      releaseDate?: string
+    }
 
     return {
       name: packageJson.productName ?? packageJson.name ?? fallback.name,
       version: packageJson.version ?? fallback.version,
       releaseDate: packageJson.releaseDate ?? null,
-    };
-  } catch (error) {
-    console.warn('Failed to read app metadata:', error);
-    return fallback;
+    }
+  }
+  catch (error) {
+    console.warn('Failed to read app metadata:', error)
+    return fallback
   }
 }
 
 function showAboutDialog(): void {
-  const { name, version, releaseDate } = getAppMetadata();
-  const releaseLabel = releaseDate ?? 'unreleased';
+  const { name, version, releaseDate } = getAppMetadata()
+  const releaseLabel = releaseDate ?? 'unreleased'
 
   void dialog.showMessageBox({
     type: 'info',
@@ -76,7 +77,7 @@ function showAboutDialog(): void {
     message: name,
     detail: `Version: ${version}\nRelease date: ${releaseLabel}`,
     buttons: ['OK'],
-  });
+  })
 }
 
 export function setupMenu(): void {
@@ -92,7 +93,7 @@ export function setupMenu(): void {
               {
                 label: `About ${app.name}`,
                 click: () => {
-                  showAboutDialog();
+                  showAboutDialog()
                 },
               },
               { type: 'separator' as const },
@@ -279,7 +280,7 @@ export function setupMenu(): void {
               {
                 label: `About ${app.name}`,
                 click: () => {
-                  showAboutDialog();
+                  showAboutDialog()
                 },
               },
               { type: 'separator' as const },
