@@ -6,7 +6,7 @@ import { Ribbon } from './chrome/Ribbon';
 import { Sidebar } from './chrome/Sidebar';
 import { SidebarAnchors } from './chrome/SidebarAnchors';
 import { CommandPalette } from './chrome/CommandPalette';
-import { useUIStore } from './state';
+import { useLayoutStore, useUIStore } from './state';
 import { registerCommands } from './commands';
 import './App.css';
 
@@ -36,6 +36,15 @@ export const App: React.FC = () => {
 
   useEffect(() => {
     const handleKeyDown = async (e: KeyboardEvent) => {
+      if (e.metaKey && !e.shiftKey && !e.altKey) {
+        const index = Number(e.key);
+        if (Number.isInteger(index) && index >= 1 && index <= 5) {
+          useLayoutStore.getState().activateTabAtIndex(index - 1);
+          e.preventDefault();
+          return;
+        }
+      }
+
       const executed = await commandRegistry.executeFromShortcut(e);
       if (executed) {
         e.preventDefault();

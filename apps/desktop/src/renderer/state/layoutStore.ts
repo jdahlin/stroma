@@ -14,6 +14,7 @@ interface LayoutState {
   openNewTab: () => void;
   openPdfPane: (title?: string) => string | null;
   closeActivePanel: () => void;
+  activateTabAtIndex: (index: number) => void;
   splitRight: () => void;
   splitDown: () => void;
 }
@@ -61,6 +62,17 @@ export const useLayoutStore = create<LayoutState>()(
         if (api?.activePanel) {
           api.activePanel.api.close();
         }
+      },
+
+      activateTabAtIndex: (index) => {
+        const { api } = get();
+        const group = api?.activeGroup;
+        if (!group) return;
+
+        const panel = group.panels[index];
+        if (!panel) return;
+
+        panel.api.setActive();
       },
 
       splitRight: () => {
