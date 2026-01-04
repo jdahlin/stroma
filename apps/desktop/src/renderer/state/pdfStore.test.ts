@@ -3,6 +3,20 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { usePdfStore } from './pdfStore'
 import { persistState } from './persist'
 
+// Mock localStorage if it's missing methods
+if (typeof localStorage.clear !== 'function') {
+  const store = new Map<string, string>()
+  const mock = {
+    getItem: vi.fn((key: string) => store.get(key) ?? null),
+    setItem: vi.fn((key: string, value: string) => store.set(key, value)),
+    clear: vi.fn(() => store.clear()),
+    removeItem: vi.fn((key: string) => store.delete(key)),
+    length: 0,
+    key: vi.fn((index: number) => Array.from(store.keys())[index] ?? null),
+  }
+  Object.defineProperty(window, 'localStorage', { value: mock, writable: true })
+}
+
 const STORAGE_KEY = 'stroma-pdf-panes'
 
 function createPayload() {
@@ -38,12 +52,12 @@ function resetStore() {
 
 describe('pdfStore', () => {
   beforeEach(() => {
-    localStorage.clear()
+    window.localStorage.clear()
     resetStore()
   })
 
   afterEach(() => {
-    localStorage.clear()
+    window.localStorage.clear()
     resetStore()
     vi.useRealTimers()
   })
