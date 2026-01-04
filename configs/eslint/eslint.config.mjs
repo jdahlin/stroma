@@ -30,5 +30,8 @@ export default antfu({
     'ts/no-explicit-any': 'error',
     'ts/no-non-null-assertion': 'error',
     'ts/no-unsafe-assignment': 'error',
+    'ts/no-unsafe-call': 'error',
+    'ts/no-unsafe-member-access': 'error',
+    'ts/no-unsafe-return': 'error',
   },
 })
