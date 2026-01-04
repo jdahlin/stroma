@@ -21,9 +21,12 @@ export interface PdfOpenPayload {
   data: Uint8Array
 }
 
-export interface PdfState {
+export interface PdfData {
   panes: Record<string, PdfPaneState>
   activePaneId: string | null
+}
+
+export interface PdfActions {
   openPdfDialog: () => Promise<PdfOpenPayload | null>
   restorePane: (paneId: string) => Promise<PdfOpenPayload | null>
   setPaneData: (paneId: string, payload: PdfOpenPayload) => void
@@ -37,3 +40,5 @@ export interface PdfState {
   flushPanePersistence: (paneId: string) => void
   setScale: (paneId: string, scale: number) => void
 }
+
+export interface PdfState extends PdfData, PdfActions {}
