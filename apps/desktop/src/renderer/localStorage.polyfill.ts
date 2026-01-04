@@ -29,7 +29,7 @@ class MemoryStorage implements Storage {
   }
 }
 
-// In test environments, we always want a fresh in-memory implementation 
+// In test environments, we always want a fresh in-memory implementation
 // to avoid environment-specific issues and warnings.
 if (typeof window !== 'undefined') {
   Object.defineProperty(window, 'localStorage', {
