@@ -29,10 +29,12 @@ class MemoryStorage implements Storage {
   }
 }
 
-// Polyfill localStorage if it's missing or incomplete in the environment
-if (typeof window !== 'undefined' && (typeof window.localStorage === 'undefined' || typeof window.localStorage.clear !== 'function')) {
+// In test environments, we always want a fresh in-memory implementation 
+// to avoid environment-specific issues and warnings.
+if (typeof window !== 'undefined') {
   Object.defineProperty(window, 'localStorage', {
     value: new MemoryStorage(),
     writable: true,
+    configurable: true,
   })
 }
