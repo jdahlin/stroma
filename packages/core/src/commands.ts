@@ -103,6 +103,7 @@ export const COMMANDS = {
   toggleLeftSidebar: commandId('sidebar.toggleLeft'),
   toggleRightSidebar: commandId('sidebar.toggleRight'),
   openPdf: commandId('file.openPdf'),
+  newNote: commandId('note.new'),
   openHome: commandId('pane.openHome'),
   openNotes: commandId('pane.openNotes'),
   openQueue: commandId('pane.openQueue'),
@@ -156,6 +157,12 @@ export function registerDefaultCommands(registry: CommandRegistry): void {
     label: 'Open PDF',
     shortcut: key('o', { meta: true }),
     category: 'File',
+  })
+  registry.define({
+    id: COMMANDS.newNote,
+    label: 'New Note',
+    shortcut: key('n', { meta: true }),
+    category: 'Notes',
   })
   registry.define({ id: COMMANDS.openHome, label: 'Open Home', category: 'Panes' })
   registry.define({ id: COMMANDS.openNotes, label: 'Open Notes', category: 'Panes' })

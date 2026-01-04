@@ -1,13 +1,17 @@
 /* Panes */
 
 .pane {
+  display: flex;
+  flex-direction: column;
   padding: var(--space-4);
   height: 100%;
+  min-height: 0;
   overflow-y: scroll;
   overflow-x: hidden;
   scrollbar-gutter: stable both-edges;
   background: var(--color-bg-primary);
   position: relative;
+  box-sizing: border-box;
 }
 
 .pane h1,

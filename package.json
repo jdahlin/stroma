@@ -11,6 +11,7 @@
     "with-node-opts": "cross-env TURBO_UI=stream NODE_OPTIONS=\"--max-old-space-size=4096 --throw-deprecation --disable-warning=DEP0169\" ELECTRON_RUN_AS_NODE=1",
     "dev": "cross-env NODE_OPTIONS= tsx apps/desktop/scripts/dev.ts",
     "dev:desktop": "cross-env NODE_OPTIONS= tsx apps/desktop/scripts/dev.ts",
+    "dev:editor": "pnpm --filter @repo/editor-dev dev",
     "build": "pnpm run with-node-opts turbo build",
     "lint": "pnpm run with-node-opts turbo lint",
     "test": "pnpm run with-node-opts turbo test",

@@ -29,7 +29,6 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
   // Focus input when opened
   useEffect(() => {
     if (isOpen) {
-      setQuery('')
       inputRef.current?.focus()
     }
   }, [isOpen])

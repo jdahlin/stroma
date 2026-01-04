@@ -40,6 +40,15 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
 }) => {
   const [doc, setDoc] = useState<PDFDocumentProxy | null>(null)
   const [basePageWidth, setBasePageWidth] = useState<number | null>(null)
+  const [prevDoc, setPrevDoc] = useState<PDFDocumentProxy | null>(null)
+
+  // Sync basePageWidth when doc becomes null
+  if (doc !== prevDoc) {
+    setPrevDoc(doc)
+    if (!doc) {
+      setBasePageWidth(null)
+    }
+  }
   const scrollRef = useRef<HTMLDivElement>(null)
   const fitRafRef = useRef<number | null>(null)
   const fitDebounceRef = useRef<number | null>(null)
@@ -77,7 +86,6 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
 
   useEffect(() => {
     if (!doc) {
-      setBasePageWidth(null)
       return
     }
 

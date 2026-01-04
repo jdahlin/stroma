@@ -115,6 +115,19 @@ export function setupMenu(): void {
       label: 'File',
       submenu: [
         {
+          label: 'New Note',
+          accelerator: 'CmdOrCtrl+N',
+          click: () => {
+            const window = BrowserWindow.getFocusedWindow()
+            if (!window) {
+              console.error('No focused window found')
+              return
+            }
+            window.webContents.send('execute-command', COMMANDS.newNote)
+          },
+        },
+        { type: 'separator' },
+        {
           label: 'Open PDF...',
           accelerator: 'CmdOrCtrl+O',
           click: () => {

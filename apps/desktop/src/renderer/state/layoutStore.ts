@@ -12,6 +12,7 @@ interface LayoutState {
   setApi: (api: DockviewApi) => void
   clearLayout: () => void
   openNewTab: () => void
+  openNotesPane: () => void
   openPdfPane: (title?: string) => string | null
   closeActivePanel: () => void
   activateTabAtIndex: (index: number) => void
@@ -41,6 +42,19 @@ export const useLayoutStore = create<LayoutState>()(
             title: 'Home',
           })
         }
+      },
+
+      openNotesPane: () => {
+        const { api } = get()
+        if (!api)
+          return
+
+        tabCounter++
+        api.addPanel({
+          id: `notes-${Date.now()}-${tabCounter}`,
+          component: 'notes',
+          title: 'Notes',
+        })
       },
 
       openPdfPane: (title = 'PDF') => {
