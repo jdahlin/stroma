@@ -42,8 +42,15 @@ jobs:
       - name: Install librsvg (for icon conversion)
         run: brew install librsvg
 
+      - name: Debug environment
+        run: |
+          echo "pnpm version: $(pnpm --version)"
+          echo "node version: $(node --version)"
+          echo "Current directory: $(pwd)"
+          ls -la
+
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --frozen-lockfile 2>&1 || (echo "Install failed, showing lockfile header:" && head -20 pnpm-lock.yaml && exit 1)
 
       - name: Build application
         run: pnpm build
