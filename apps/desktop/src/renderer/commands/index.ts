@@ -45,6 +45,11 @@ export function registerCommands(): () => void {
       usePdfStore.getState().setActivePane(paneId)
     }),
 
+    // Notes commands
+    commandRegistry.register(COMMANDS.newNote, () => {
+      useLayoutStore.getState().openNotesPane()
+    }),
+
     // Tab commands
     commandRegistry.register(COMMANDS.newTab, () => {
       useLayoutStore.getState().openNewTab()
@@ -58,7 +63,7 @@ export function registerCommands(): () => void {
       // TODO: switch to or open home pane
     }),
     commandRegistry.register(COMMANDS.openNotes, () => {
-      // TODO: switch to or open notes pane
+      useLayoutStore.getState().openNotesPane()
     }),
     commandRegistry.register(COMMANDS.openQueue, () => {
       // TODO: switch to or open queue pane

@@ -3,18 +3,11 @@ import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 
 export default defineConfig({
-  clearScreen: false,
   plugins: [react()],
-  root: 'src/renderer',
-  base: './',
-  build: {
-    outDir: '../../dist/renderer',
-    emptyOutDir: true,
-  },
   resolve: {
     alias: [
       { find: /^@repo\/editor\/styles$/, replacement: resolve(__dirname, '../../packages/editor/src/styles/prosemirror.css') },
-      { find: '@renderer', replacement: resolve(__dirname, 'src/renderer') },
+      { find: /^@repo\/ux\/styles$/, replacement: resolve(__dirname, '../../packages/ux/src/styles/index.css') },
       { find: '@repo/core', replacement: resolve(__dirname, '../../packages/core/src') },
       { find: '@repo/editor', replacement: resolve(__dirname, '../../packages/editor/src') },
       { find: '@repo/shared', replacement: resolve(__dirname, '../../packages/shared/src') },
@@ -22,14 +15,6 @@ export default defineConfig({
     ],
   },
   server: {
-    port: 5173,
-    fs: {
-      allow: [resolve(__dirname, '../..')],
-    },
-  },
-  css: {
-    postcss: {
-      plugins: [],
-    },
+    port: 5174,
   },
 })

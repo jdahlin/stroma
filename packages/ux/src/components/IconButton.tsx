@@ -8,10 +8,11 @@ export type IconButtonSize = 'sm' | 'md' | 'lg'
 
 export interface IconButtonProps
   extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'children'> {
-  icon: LucideIcon
-  size?: IconButtonSize
+  'icon': LucideIcon
+  'size'?: IconButtonSize
   /** Accessible label for screen readers */
-  label: string
+  'label': string
+  'data-active'?: boolean
 }
 
 const iconSizeMap: Record<IconButtonSize, IconSize> = {
