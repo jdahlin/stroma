@@ -1,6 +1,6 @@
 {
   "name": "@repo/desktop",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "private": true,
   "productName": "Stroma",
   "description": "A desktop knowledge work environment for deep reading and learning",
@@ -64,5 +64,6 @@
     "tsx": "^4.19.2",
     "typescript": "5.9.3",
     "vite": "^6.0.7"
-  }
+  },
+  "releaseDate": "2026-01-04"
 }
