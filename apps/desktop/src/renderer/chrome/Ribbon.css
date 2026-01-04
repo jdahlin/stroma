@@ -25,7 +25,7 @@
   gap: 0.25rem;
 }
 
-.ribbon-button-active {
-  background-color: var(--color-bg-tertiary) !important;
-  color: var(--color-text-primary) !important;
+.ribbon .icon-button.ribbon-button-active {
+  background-color: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
 }
