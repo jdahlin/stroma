@@ -37,7 +37,7 @@ echo "Commits: $(git rev-list --count $RANGE)"
 git shortlog -sne $RANGE
 git log --oneline $RANGE
 
-node -e "const fs=require('fs');const p='$PACKAGE_JSON';const v=process.argv[1];const j=JSON.parse(fs.readFileSync(p,'utf8'));j.version=v;fs.writeFileSync(p,JSON.stringify(j,null,2)+'\n');" "$VERSION"
+node -e "const fs=require('fs');const p='$PACKAGE_JSON';const v=process.argv[1];const d=new Date().toISOString().slice(0,10);const j=JSON.parse(fs.readFileSync(p,'utf8'));j.version=v;j.releaseDate=d;fs.writeFileSync(p,JSON.stringify(j,null,2)+'\n');" "$VERSION"
 
 if git diff --quiet -- "$PACKAGE_JSON"; then
   echo "No version change in $PACKAGE_JSON"
