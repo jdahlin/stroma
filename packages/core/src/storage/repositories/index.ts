@@ -3,3 +3,4 @@
  */
 
 export * from './references'
+export * from './anchors'
