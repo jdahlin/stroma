@@ -1,4 +1,5 @@
-import type { PdfSource, PdfSourceId, PdfState } from './pdfStore.types'
+import type { PdfAnchorId, PdfSource, PdfSourceId } from '@repo/core'
+import type { PdfData, PdfState } from './pdfStore.types'
 import { describe, expect, it } from 'vitest'
 import {
   computeAddTextAnchor,
@@ -6,36 +7,39 @@ import {
   computeSetPaneData,
   computeSetScale,
   computeSetScrollPosition,
-  getStoredScrollPosition,
   normalizeScrollPosition,
 } from './pdfStore.logic'
 
 const mockDate = new Date('2025-01-01T00:00:00.000Z')
 
-const createInitialState = (): PdfState => ({
-  panes: {},
-  activePaneId: null,
-  openPdfDialog: async () => null,
-  restorePane: async () => null,
-  setPaneData: () => {},
-  removePane: () => {},
-  setActivePane: () => {},
-  bumpScrollRestoreToken: () => {},
-  addTextAnchor: () => {},
-  focusAnchor: () => {},
-  clearFocus: () => {},
-  setScrollPosition: () => {},
-  flushPanePersistence: () => {},
-  setScale: () => {},
-})
+function createInitialState(): PdfState {
+  return {
+    panes: {},
+    activePaneId: null,
+    openPdfDialog: async () => null,
+    restorePane: async () => null,
+    setPaneData: () => {},
+    removePane: () => {},
+    setActivePane: () => {},
+    bumpScrollRestoreToken: () => {},
+    addTextAnchor: () => {},
+    focusAnchor: () => {},
+    clearFocus: () => {},
+    setScrollPosition: () => {},
+    flushPanePersistence: () => {},
+    setScale: () => {},
+  }
+}
 
-const createMockSource = (id: string): PdfSource => ({
-  id: id as PdfSourceId,
-  name: 'Test PDF',
-  path: '/tmp/test.pdf',
-  createdAt: mockDate,
-  updatedAt: mockDate,
-})
+function createMockSource(id: string): PdfSource {
+  return {
+    id: id as PdfSourceId,
+    name: 'Test PDF',
+    path: '/tmp/test.pdf',
+    createdAt: mockDate,
+    updatedAt: mockDate,
+  }
+}
 
 describe('pdfStore logic', () => {
   describe('normalizeScrollPosition', () => {
@@ -50,7 +54,7 @@ describe('pdfStore logic', () => {
     })
 
     it('returns null for invalid values', () => {
-      expect(normalizeScrollPosition({ ratio: NaN, top: 100, scale: 1 })).toBeNull()
+      expect(normalizeScrollPosition({ ratio: Number.NaN, top: 100, scale: 1 })).toBeNull()
       expect(normalizeScrollPosition({ ratio: 0.5, top: 100, scale: 0 })).toBeNull()
     })
   })
@@ -61,7 +65,7 @@ describe('pdfStore logic', () => {
       const source = createMockSource('src-1')
       const payload = { source, data: new Uint8Array([1, 2, 3]) }
 
-      const result = computeSetPaneData(state, 'pane-1', payload)
+      const result: Partial<PdfData> = computeSetPaneData(state, 'pane-1', payload)
 
       expect(result.panes?.['pane-1']).toBeDefined()
       expect(result.panes?.['pane-1']?.source).toBe(source)
@@ -77,7 +81,7 @@ describe('pdfStore logic', () => {
         scrollPosition: { ratio: 0.8, top: 500, scale: 2 },
       }
 
-      const result = computeSetPaneData(state, 'pane-1', { source, data: new Uint8Array() }, stored)
+      const result: Partial<PdfData> = computeSetPaneData(state, 'pane-1', { source, data: new Uint8Array() }, stored)
 
       expect(result.panes?.['pane-1']?.scrollPosition).toEqual(stored.scrollPosition)
     })
@@ -101,7 +105,7 @@ describe('pdfStore logic', () => {
         },
       }
 
-      const result = computeRemovePane(state, 'pane-1')
+      const result: Partial<PdfData> = computeRemovePane(state, 'pane-1')
       expect(result.panes).toEqual({})
     })
 
@@ -122,7 +126,7 @@ describe('pdfStore logic', () => {
         },
       }
 
-      const result = computeRemovePane(state, 'pane-1')
+      const result: Partial<PdfData> = computeRemovePane(state, 'pane-1')
       expect(result.activePaneId).toBeNull()
     })
   })
@@ -145,10 +149,16 @@ describe('pdfStore logic', () => {
         },
       }
 
-      const result = computeAddTextAnchor(state, paneId, 0, 'test text', [], 'anchor-1' as any)
+      const result: Partial<PdfData> = computeAddTextAnchor(state, paneId, 0, 'test text', [], 'anchor-1' as PdfAnchorId)
       const anchors = result.panes?.[paneId]?.anchors
       expect(anchors).toHaveLength(1)
-      expect(anchors?.[0]?.text).toBe('test text')
+      const anchor = anchors?.[0]
+      if (anchor?.type === 'text') {
+        expect(anchor.text).toBe('test text')
+      }
+      else {
+        throw new Error('Expected text anchor')
+      }
     })
   })
 
@@ -178,7 +188,8 @@ describe('pdfStore logic', () => {
       expect(computeSetScrollPosition(state, paneId, { ratio: 0.500001, top: 100.1, scale: 1 })).toBeNull()
 
       // Outside tolerance
-      expect(computeSetScrollPosition(state, paneId, { ratio: 0.51, top: 100, scale: 1 })).not.toBeNull()
+      const result: Partial<PdfData> | null = computeSetScrollPosition(state, paneId, { ratio: 0.51, top: 100, scale: 1 })
+      expect(result).not.toBeNull()
     })
   })
 
@@ -200,9 +211,14 @@ describe('pdfStore logic', () => {
         },
       }
 
-      expect(computeSetScale(state, paneId, 2.5)?.panes?.[paneId]?.scale).toBe(2.5)
-      expect(computeSetScale(state, paneId, 10)?.panes?.[paneId]?.scale).toBe(3) // clamped to 3
-      expect(computeSetScale(state, paneId, 0.1)?.panes?.[paneId]?.scale).toBe(0.5) // clamped to 0.5
+      const result1: Partial<PdfData> | null = computeSetScale(state, paneId, 2.5)
+      expect(result1?.panes?.[paneId]?.scale).toBe(2.5)
+
+      const result2: Partial<PdfData> | null = computeSetScale(state, paneId, 10)
+      expect(result2?.panes?.[paneId]?.scale).toBe(3) // clamped to 3
+
+      const result3: Partial<PdfData> | null = computeSetScale(state, paneId, 0.1)
+      expect(result3?.panes?.[paneId]?.scale).toBe(0.5) // clamped to 0.5
     })
   })
 })

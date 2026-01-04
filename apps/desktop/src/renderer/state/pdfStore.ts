@@ -1,5 +1,5 @@
-import type { PdfAnchorId, PdfSource, PdfSourceId, PdfTextAnchor } from '@repo/core'
-import type { PdfPaneState, PdfScrollPosition, PdfState } from './pdfStore.types'
+import type { PdfSource } from '@repo/core'
+import type { PdfScrollPosition, PdfState } from './pdfStore.types'
 import { create } from 'zustand'
 import {
   computeAddTextAnchor,
@@ -7,26 +7,11 @@ import {
   computeSetPaneData,
   computeSetScale,
   computeSetScrollPosition,
-  createAnchorId,
   createSourceId,
-  getStoredScrollPosition,
   loadPaneMap,
   normalizeScrollPosition,
   savePaneMap,
-  type StoredPaneMap,
-  type StoredPdfReference,
 } from './pdfStore.logic'
-import { persistState, restoreState } from './persist'
-
-const PANE_PDF_KEY = 'stroma-pdf-panes'
-
-function loadPaneMap(): StoredPaneMap {
-  return restoreState<StoredPaneMap>(PANE_PDF_KEY) ?? {}
-}
-
-function savePaneMap(next: StoredPaneMap): void {
-  persistState(PANE_PDF_KEY, next)
-}
 
 interface ScrollPersistRecord {
   position: PdfScrollPosition
@@ -123,8 +108,10 @@ export const usePdfStore = create<PdfState>((set, get) => ({
     const stored = paneMap[paneId]
 
     const nextState = computeSetPaneData(get(), paneId, payload, stored)
+    const paneState = nextState.panes?.[paneId]
+    if (!paneState)
+      return
 
-    const paneState = nextState.panes![paneId]!
     paneMap[paneId] = {
       path: payload.source.path,
       name: payload.source.name,
@@ -235,10 +222,11 @@ export const usePdfStore = create<PdfState>((set, get) => ({
 
   setScale: (paneId, scale) => {
     const next = computeSetScale(get(), paneId, scale)
-    if (!next)
+    const nextPane = next?.panes?.[paneId]
+    if (!next || !nextPane)
       return
 
-    const clamped = next.panes![paneId]!.scale
+    const clamped = nextPane.scale
     const paneMap = loadPaneMap()
     const stored = paneMap[paneId]
     if (stored && Math.abs((stored.scale ?? 1) - clamped) >= 0.001) {
