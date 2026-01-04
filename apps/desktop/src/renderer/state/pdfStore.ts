@@ -201,7 +201,7 @@ export const usePdfStore = create<PdfState>((set, get) => ({
     scheduleScrollPersistence(paneId, normalized)
 
     set((state) => {
-      const next = computeSetScrollPosition(state, paneId, position)
+      const next = computeSetScrollPosition(state, paneId, normalized)
       return next ?? state
     })
   },
