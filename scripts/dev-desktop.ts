@@ -45,7 +45,23 @@ async function startDev(): Promise<void> {
   // Watchers
   const rendererDev: ChildProcess = spawnPnpm(['--filter', '@repo/renderer', 'dev'])
   const preloadWatch: ChildProcess = spawnPnpm(['--filter', '@repo/preload', 'exec', 'esbuild', 'src/index.ts', '--bundle', '--platform=node', '--format=esm', '--sourcemap', '--tsconfig=tsconfig.json', '--outfile=dist/index.mjs', '--external:electron', '--conditions=import', '--watch'])
-  const mainWatch: ChildProcess = spawnPnpm(['--filter', '@repo/main', 'exec', 'esbuild', 'src/index.ts', '--bundle', '--platform=node', '--format=esm', '--sourcemap', '--tsconfig=tsconfig.json', '--outfile=dist/index.mjs', '--external:electron', '--conditions=import', '--watch'])
+  const mainWatch: ChildProcess = spawnPnpm([
+    '--filter',
+    '@repo/main',
+    'exec',
+    'esbuild',
+    'src/index.ts',
+    '--bundle',
+    '--platform=node',
+    '--format=esm',
+    '--sourcemap',
+    '--tsconfig=tsconfig.json',
+    '--outfile=dist/index.mjs',
+    '--external:electron',
+    '--external:better-sqlite3',
+    '--conditions=import',
+    '--watch',
+  ])
 
   let electron: ChildProcess | null = null
   let restartTimer: NodeJS.Timeout | null = null
