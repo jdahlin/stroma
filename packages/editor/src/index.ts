@@ -15,8 +15,8 @@ export {
   type SlashCommandItem,
   slashCommandItems,
   type SlashCommandOptions,
-  type SlashCommandSuggestionProps,
   slashCommandSuggestion,
+  type SlashCommandSuggestionProps,
 } from './extensions'
 
 // Hooks

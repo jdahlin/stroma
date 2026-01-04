@@ -78,23 +78,15 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
   const handleImageInsert = useCallback(() => {
     if (!editor)
       return
-    const url = window.prompt('Image URL')
-    if (!url)
-      return
-    editor.chain().focus().setImage({ src: url }).run()
+    editor
+      .chain()
+      .focus()
+      .setImage({ src: 'https://via.placeholder.com/640x360' })
+      .run()
   }, [editor])
 
   const handlePdfReferenceInsert = useCallback(() => {
     if (!editor)
-      return
-    const sourceName = window.prompt('PDF name')
-    if (!sourceName)
-      return
-    const pageInput = window.prompt('Page number (1-based)', '1')
-    if (!pageInput)
-      return
-    const pageNumber = Number(pageInput)
-    if (!Number.isFinite(pageNumber) || pageNumber < 1)
       return
 
     editor
@@ -103,8 +95,8 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
       .insertPdfReference({
         anchorId: crypto.randomUUID() as PdfAnchorId,
         sourceId: crypto.randomUUID() as PdfSourceId,
-        sourceName: sourceName.trim() || 'PDF',
-        pageIndex: pageNumber - 1,
+        sourceName: 'PDF',
+        pageIndex: 0,
       })
       .run()
   }, [editor])

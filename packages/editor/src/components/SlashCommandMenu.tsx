@@ -68,7 +68,7 @@ const emptyStyles: React.CSSProperties = {
 export const SlashCommandMenu = React.forwardRef<
   SlashCommandMenuRef,
   SlashCommandMenuProps
->(function SlashCommandMenu({ items, command }, ref) {
+>(({ items, command }, ref) => {
   const [selectedIndex, setSelectedIndex] = useState(0)
 
   // Reset selection when items change

@@ -135,7 +135,7 @@ export const Section = Node.create<SectionOptions>({
     return {
       // Allow Backspace at start of section to unwrap content
       Backspace: ({ editor }) => {
-        const { selection, doc } = editor.state
+        const { selection } = editor.state
         const { empty, $anchor } = selection
 
         if (!empty)

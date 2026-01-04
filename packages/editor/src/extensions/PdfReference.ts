@@ -62,7 +62,7 @@ export const PdfReference = Node.create<PdfReferenceOptions>({
       },
       pageIndex: {
         default: 0,
-        parseHTML: element => {
+        parseHTML: (element) => {
           const value = element.getAttribute('data-page-index')
           return value ? Number(value) : 0
         },
@@ -73,7 +73,7 @@ export const PdfReference = Node.create<PdfReferenceOptions>({
       previewText: {
         default: null,
         parseHTML: element => element.getAttribute('data-preview-text'),
-        renderHTML: attributes => {
+        renderHTML: (attributes) => {
           if (!attributes.previewText)
             return {}
           return { 'data-preview-text': attributes.previewText }

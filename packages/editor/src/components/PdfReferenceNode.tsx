@@ -70,7 +70,7 @@ export function PdfReferenceNode({ node, extension }: NodeViewProps) {
     >
       <Icon icon={FileText} size="sm" />
       <span style={nameStyles}>{sourceName}</span>
-      <span style={pageBadgeStyles}>p.{pageIndex + 1}</span>
+      <span style={pageBadgeStyles}>{`p.${pageIndex + 1}`}</span>
     </NodeViewWrapper>
   )
 }

@@ -2,8 +2,8 @@ import type { PdfAnchorId } from '@repo/core'
 import type { IDockviewPanelProps } from 'dockview'
 import { Editor } from '@repo/editor'
 import React, { useCallback } from 'react'
-import { PaneMenu } from './PaneMenu'
 import { usePdfStore } from '../state'
+import { PaneMenu } from './PaneMenu'
 import './Pane.css'
 
 export const NotesPane: React.FC<IDockviewPanelProps> = ({ api }) => {
