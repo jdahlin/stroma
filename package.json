@@ -4,7 +4,7 @@
   "packageManager": "pnpm@10.11.1",
   "type": "module",
   "scripts": {
-    "with-node-opts": "cross-env TURBO_UI=stream NODE_OPTIONS='--max-old-space-size=4096 --throw-deprecation --disable-warning=DEP0169' ELECTRON_RUN_AS_NODE=1",
+    "with-node-opts": "cross-env TURBO_UI=stream NODE_OPTIONS=\"--max-old-space-size=4096 --throw-deprecation --disable-warning=DEP0169\" ELECTRON_RUN_AS_NODE=1",
     "dev": "cross-env NODE_OPTIONS= tsx apps/desktop/scripts/dev.ts",
     "dev:desktop": "cross-env NODE_OPTIONS= tsx apps/desktop/scripts/dev.ts",
     "build": "pnpm run with-node-opts turbo build",
