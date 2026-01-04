@@ -7,7 +7,7 @@ import type {
   Note,
   NoteContentType,
   UpdateNoteInput,
-} from '../types'
+} from '@repo/core'
 
 import { getDb, now } from '../db'
 

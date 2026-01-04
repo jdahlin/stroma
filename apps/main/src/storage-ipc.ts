@@ -3,7 +3,6 @@
  * Thin wrapper around @repo/storage that exposes operations via IPC.
  */
 
-<<<<<<< HEAD:apps/main/src/storage-ipc.ts
 import type {
   CreateAnchorInput,
   CreateNoteInput,

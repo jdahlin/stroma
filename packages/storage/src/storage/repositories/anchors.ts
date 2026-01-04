@@ -9,7 +9,7 @@ import type {
   CreatePdfTextAnchorInput,
   PdfTextAnchorFull,
   PdfTextAnchorRect,
-} from '../types'
+} from '@repo/core'
 
 import { getDb, now } from '../db'
 

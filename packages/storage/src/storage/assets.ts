@@ -2,8 +2,8 @@
  * Asset storage - content-addressable file storage for PDFs and other binaries.
  */
 
+import type { ReferenceWithAsset } from '@repo/core'
 import type { Buffer } from 'node:buffer'
-import type { ReferenceWithAsset } from './types'
 
 import { createHash } from 'node:crypto'
 import { existsSync, mkdirSync } from 'node:fs'

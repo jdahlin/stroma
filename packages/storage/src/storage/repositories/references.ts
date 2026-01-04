@@ -9,7 +9,7 @@ import type {
   ReferenceAsset,
   ReferenceWithAsset,
   UpdateReferenceInput,
-} from '../types'
+} from '@repo/core'
 
 import { getDb, now } from '../db'
 
