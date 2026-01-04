@@ -1,0 +1,10 @@
+{
+  "extends": "@repo/tsconfig/base.json",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "noEmit": false,
+    "outDir": "dist"
+  },
+  "include": ["src", "vitest.config.ts"]
+}
