@@ -1,21 +1,10 @@
 import type { SuggestionOptions, SuggestionProps } from '@tiptap/suggestion'
 import type { SlashCommandMenuRef } from '../components/SlashCommandMenu'
-import type { SlashCommandItem, SlashCommandSuggestionProps } from './SlashCommand'
+import type { SlashCommandItem } from './SlashCommand'
 import React from 'react'
 import { createRoot } from 'react-dom/client'
 import { SlashCommandMenu } from '../components/SlashCommandMenu'
 import { slashCommandItems } from './SlashCommand'
-
-// Create a simple inline component wrapper
-interface PopupComponentProps {
-  items: SlashCommandItem[]
-  command: SlashCommandSuggestionProps['command']
-  menuRef: React.RefObject<SlashCommandMenuRef | null>
-}
-
-function PopupComponent({ items, command, menuRef }: PopupComponentProps) {
-  return <SlashCommandMenu ref={menuRef} items={items} command={command} />
-}
 
 export const slashCommandSuggestion: Omit<SuggestionOptions<SlashCommandItem>, 'editor'> = {
   char: '/',
@@ -65,7 +54,7 @@ export const slashCommandSuggestion: Omit<SuggestionOptions<SlashCommandItem>, '
         root = createRoot(popup)
         menuRef = { current: null }
         root.render(
-          <PopupComponent
+          <SlashCommandMenu
             items={props.items}
             command={props.command}
             menuRef={menuRef}
@@ -89,7 +78,7 @@ export const slashCommandSuggestion: Omit<SuggestionOptions<SlashCommandItem>, '
 
         // Re-render with new props
         root.render(
-          <PopupComponent
+          <SlashCommandMenu
             items={props.items}
             command={props.command}
             menuRef={menuRef}

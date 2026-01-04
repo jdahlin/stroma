@@ -9,6 +9,7 @@ export interface SlashCommandMenuRef {
 export interface SlashCommandMenuProps {
   items: SlashCommandItem[]
   command: SlashCommandSuggestionProps['command']
+  menuRef?: React.RefObject<SlashCommandMenuRef | null>
 }
 
 const menuStyles: React.CSSProperties = {
@@ -65,10 +66,7 @@ const emptyStyles: React.CSSProperties = {
   fontSize: 'var(--text-sm)',
 }
 
-export const SlashCommandMenu = React.forwardRef<
-  SlashCommandMenuRef,
-  SlashCommandMenuProps
->(({ items, command }, ref) => {
+export function SlashCommandMenu({ items, command, menuRef }: SlashCommandMenuProps) {
   const [selectedIndex, setSelectedIndex] = useState(0)
 
   // Reset selection when items change
@@ -107,7 +105,7 @@ export const SlashCommandMenu = React.forwardRef<
     selectItem(selectedIndex)
   }, [items.length, selectItem, selectedIndex])
 
-  useImperativeHandle(ref, () => ({
+  useImperativeHandle(menuRef, () => ({
     onKeyDown: (event: KeyboardEvent) => {
       if (event.key === 'ArrowUp') {
         upHandler()
@@ -156,6 +154,6 @@ export const SlashCommandMenu = React.forwardRef<
       ))}
     </div>
   )
-})
+}
 
 SlashCommandMenu.displayName = 'SlashCommandMenu'
