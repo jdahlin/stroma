@@ -1,7 +1,13 @@
 {
   "name": "@repo/desktop",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": true,
+  "productName": "Stroma",
+  "description": "A desktop knowledge work environment for deep reading and learning",
+  "author": {
+    "name": "Johan Dahlin",
+    "email": "jdahlin@gmail.com"
+  },
   "main": "dist/main/index.js",
   "scripts": {
     "dev": "tsx scripts/dev.ts",
@@ -11,7 +17,11 @@
     "build:renderer": "vite build",
     "start": "electron .",
     "typecheck": "tsc --noEmit",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist release",
+    "build:icon": "./scripts/build-icon.sh",
+    "pack": "pnpm run build:icon && electron-builder --dir",
+    "dist": "pnpm run build:icon && electron-builder",
+    "dist:mac": "pnpm run build:icon && electron-builder --mac"
   },
   "dependencies": {
     "@repo/core": "workspace:*",
@@ -24,6 +34,7 @@
     "zustand": "^5.0.2"
   },
   "devDependencies": {
+    "electron-builder": "^25.1.8",
     "@repo/tailwind-config": "workspace:*",
     "@repo/tsconfig": "workspace:*",
     "@types/node": "22.7.7",

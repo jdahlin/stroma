@@ -1,0 +1,57 @@
+# electron-builder configuration
+# https://www.electron.build/configuration/configuration
+
+appId: com.stroma.desktop
+productName: Stroma
+copyright: Copyright (c) 2024 Stroma
+
+directories:
+  buildResources: build
+  output: release/${version}
+
+files:
+  - dist/**/*
+  - package.json
+  - "!node_modules"
+
+# Don't include node_modules - everything is bundled
+includeSubNodeModules: false
+
+asar: true
+
+mac:
+  category: public.app-category.productivity
+  target:
+    - target: dmg
+      arch:
+        - x64
+        - arm64
+    - target: zip
+      arch:
+        - x64
+        - arm64
+  icon: build/icon.icns
+  hardenedRuntime: true
+  gatekeeperAssess: false
+  entitlements: build/entitlements.mac.plist
+  entitlementsInherit: build/entitlements.mac.plist
+
+dmg:
+  contents:
+    - x: 130
+      y: 220
+    - x: 410
+      y: 220
+      type: link
+      path: /Applications
+  window:
+    width: 540
+    height: 380
+
+publish:
+  provider: github
+  owner: jdahlin
+  repo: stroma
+  releaseType: release
+
+artifactName: "${productName}-${version}-${os}-${arch}.${ext}"

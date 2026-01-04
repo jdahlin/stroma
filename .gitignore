@@ -32,3 +32,9 @@ coverage/
 
 # Electron
 release/
+*.tgz
+
+# Generated icons (built from icon.svg)
+apps/desktop/build/icon.icns
+apps/desktop/build/icon.png
+apps/desktop/build/icon.iconset/
