@@ -65,7 +65,10 @@ const emptyStyles: React.CSSProperties = {
   fontSize: 'var(--text-sm)',
 }
 
-export function SlashCommandMenu({ ref, items, command }: SlashCommandMenuProps & { ref?: React.RefObject<SlashCommandMenuRef | null> }) {
+export const SlashCommandMenu = React.forwardRef<
+  SlashCommandMenuRef,
+  SlashCommandMenuProps
+>(function SlashCommandMenu({ items, command }, ref) {
   const [selectedIndex, setSelectedIndex] = useState(0)
 
   // Reset selection when items change
@@ -84,6 +87,8 @@ export function SlashCommandMenu({ ref, items, command }: SlashCommandMenuProps 
   )
 
   const upHandler = useCallback(() => {
+    if (items.length === 0)
+      return
     setSelectedIndex((prev) => {
       const newIndex = prev - 1
       return newIndex < 0 ? items.length - 1 : newIndex
@@ -91,12 +96,16 @@ export function SlashCommandMenu({ ref, items, command }: SlashCommandMenuProps 
   }, [items.length])
 
   const downHandler = useCallback(() => {
+    if (items.length === 0)
+      return
     setSelectedIndex(prev => (prev + 1) % items.length)
   }, [items.length])
 
   const enterHandler = useCallback(() => {
+    if (items.length === 0)
+      return
     selectItem(selectedIndex)
-  }, [selectItem, selectedIndex])
+  }, [items.length, selectItem, selectedIndex])
 
   useImperativeHandle(ref, () => ({
     onKeyDown: (event: KeyboardEvent) => {
@@ -147,6 +156,6 @@ export function SlashCommandMenu({ ref, items, command }: SlashCommandMenuProps 
       ))}
     </div>
   )
-}
+})
 
 SlashCommandMenu.displayName = 'SlashCommandMenu'

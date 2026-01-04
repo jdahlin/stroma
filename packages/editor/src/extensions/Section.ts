@@ -34,6 +34,7 @@ export const Section = Node.create<SectionOptions>({
 
   defining: true,
 
+  draggable: true,
   addOptions() {
     return {
       HTMLAttributes: {},
