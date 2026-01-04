@@ -9,10 +9,9 @@ interface PdfHighlightOverlayProps {
 export const PdfHighlightOverlay: React.FC<PdfHighlightOverlayProps> = ({ anchor }) => {
   return (
     <>
-      {anchor.rects.map((rect, index) => (
+      {anchor.rects.map(rect => (
         <div
-          // eslint-disable-next-line react/no-array-index-key
-          key={`${anchor.id}-${index}`}
+          key={`${anchor.id}-${rect.x}-${rect.y}-${rect.width}-${rect.height}`}
           className="pdf-highlight"
           data-anchor-id={anchor.id}
           style={{

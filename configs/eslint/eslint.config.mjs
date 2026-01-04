@@ -13,6 +13,10 @@ export default antfu({
 }, {
   files: ['**/*.ts', '**/*.tsx'],
   rules: {
+    // Forbid inline overrides (force config-level overrides)
+    'ts/ban-ts-comment': ['error', { 'ts-ignore': true, 'ts-nocheck': true, 'ts-expect-error': 'allow-with-description' }],
+    'eslint-comments/no-use': ['error', { allow: [] }],
+
     // async correctness (LLM bug magnets)
     'ts/no-floating-promises': 'error',
     'ts/no-misused-promises': ['error', { checksVoidReturn: true }],
