@@ -29,5 +29,6 @@ export default antfu({
     'ts/consistent-type-imports': ['error', { prefer: 'type-imports' }],
     'ts/no-explicit-any': 'error',
     'ts/no-non-null-assertion': 'error',
+    'ts/no-unsafe-assignment': 'error',
   },
 })

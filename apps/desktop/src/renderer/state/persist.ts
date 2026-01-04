@@ -33,7 +33,7 @@ export function restoreState<T>(key: string): T | null {
     if (!raw)
       return null
 
-    const payload: PersistedState<T> = JSON.parse(raw)
+    const payload = JSON.parse(raw) as unknown as PersistedState<T>
 
     if (payload.version !== STORAGE_VERSION) {
       console.warn(
