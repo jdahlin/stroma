@@ -3,6 +3,17 @@
  * Thin wrapper around @repo/storage that exposes operations via IPC.
  */
 
+<<<<<<< HEAD:apps/main/src/storage-ipc.ts
+import type {
+  CreateAnchorInput,
+  CreateNoteInput,
+  CreatePdfTextAnchorInput,
+  CreateReferenceAssetInput,
+  CreateReferenceInput,
+  UpdateNoteInput,
+  UpdateReferenceInput,
+} from '@repo/core'
+
 import { Buffer } from 'node:buffer'
 import { join } from 'node:path'
 import { app, ipcMain } from 'electron'
@@ -36,13 +47,6 @@ import {
   resolveAssetUri,
   updateNote,
   updateReference,
-  type CreateAnchorInput,
-  type CreateNoteInput,
-  type CreatePdfTextAnchorInput,
-  type CreateReferenceAssetInput,
-  type CreateReferenceInput,
-  type UpdateNoteInput,
-  type UpdateReferenceInput,
 } from '@repo/storage'
 
 /**

@@ -2,17 +2,16 @@
  * Anchors repository - CRUD operations for anchors (highlights, selections).
  */
 
-import { getDb, now } from '../db'
 import type {
   Anchor,
   AnchorKind,
   CreateAnchorInput,
   CreatePdfTextAnchorInput,
-  PdfAnchorData,
-  PdfTextAnchorData,
   PdfTextAnchorFull,
   PdfTextAnchorRect,
 } from '../types'
+
+import { getDb, now } from '../db'
 
 /**
  * Create a new anchor with auto-generated local_no.

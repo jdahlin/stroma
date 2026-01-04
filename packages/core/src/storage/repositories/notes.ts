@@ -2,13 +2,14 @@
  * Notes repository - CRUD operations for notes (editor content).
  */
 
-import { getDb, now } from '../db'
 import type {
   CreateNoteInput,
   Note,
   NoteContentType,
   UpdateNoteInput,
 } from '../types'
+
+import { getDb, now } from '../db'
 
 /**
  * Create a new note with auto-generated local_no.

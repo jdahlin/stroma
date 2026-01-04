@@ -2,13 +2,15 @@
  * Asset storage - content-addressable file storage for PDFs and other binaries.
  */
 
+import type { Buffer } from 'node:buffer'
+import type { ReferenceWithAsset } from './types'
+
 import { createHash } from 'node:crypto'
-import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from 'node:fs'
-import { copyFile, mkdir, readFile, stat, writeFile } from 'node:fs/promises'
+import { existsSync, mkdirSync } from 'node:fs'
+import { readFile, writeFile } from 'node:fs/promises'
 import { basename, dirname, join } from 'node:path'
-import { getDb } from './db'
+
 import { createReference, createReferenceAsset } from './repositories/references'
-import type { Reference, ReferenceWithAsset } from './types'
 
 const ASSET_URI_PREFIX = 'app-asset://blobs/'
 
@@ -93,7 +95,7 @@ export function uriToHash(uri: string): string | null {
  */
 export function resolveAssetUri(uri: string): string | null {
   const hash = uriToHash(uri)
-  if (!hash) {
+  if (hash === null) {
     return null
   }
   const path = getAssetPath(hash)

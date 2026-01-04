@@ -2,7 +2,6 @@
  * References repository - CRUD operations for source documents.
  */
 
-import { getDb, now } from '../db'
 import type {
   CreateReferenceAssetInput,
   CreateReferenceInput,
@@ -11,6 +10,8 @@ import type {
   ReferenceWithAsset,
   UpdateReferenceInput,
 } from '../types'
+
+import { getDb, now } from '../db'
 
 /**
  * Create a new reference.
@@ -262,7 +263,13 @@ function rowToReferenceAsset(row: ReferenceAssetRow): ReferenceAsset {
 function rowToReferenceWithAsset(row: ReferenceWithAssetRow): ReferenceWithAsset {
   const ref = rowToReference(row)
 
-  if (row.asset_id === null) {
+  if (
+    row.asset_id === null
+    || row.asset_uri === null
+    || row.asset_kind === null
+    || row.asset_created_at === null
+    || row.asset_updated_at === null
+  ) {
     return { ...ref, asset: null }
   }
 
@@ -272,12 +279,12 @@ function rowToReferenceWithAsset(row: ReferenceWithAssetRow): ReferenceWithAsset
       id: row.asset_id,
       referenceId: ref.id,
       kind: row.asset_kind as ReferenceAsset['kind'],
-      uri: row.asset_uri!,
+      uri: row.asset_uri,
       contentHash: row.asset_content_hash,
       byteSize: row.asset_byte_size,
       metadataJson: row.asset_metadata_json,
-      createdAt: row.asset_created_at!,
-      updatedAt: row.asset_updated_at!,
+      createdAt: row.asset_created_at,
+      updatedAt: row.asset_updated_at,
     },
   }
 }
