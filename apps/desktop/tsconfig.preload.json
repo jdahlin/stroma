@@ -1,9 +1,0 @@
-{
-  "extends": "@repo/tsconfig/node.json",
-  "compilerOptions": {
-    "composite": true,
-    "noEmit": true,
-    "outDir": "dist/preload"
-  },
-  "include": ["src/preload", "src/electron.d.ts"]
-}

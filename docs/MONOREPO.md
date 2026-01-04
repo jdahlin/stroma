@@ -22,38 +22,40 @@ This document explains the Stroma monorepo layout and the import boundaries betw
 ## What are the key concepts?
 | Concept | Definition | Example |
 | --- | --- | --- |
-| App | A runnable product entry point. | "apps/desktop is the Electron app." |
+| App | A runnable product entry point. | "apps/main is the Electron entry point." |
 | Package | A reusable layer with controlled dependencies. | "packages/ux provides UI primitives." |
 | Boundary | A rule limiting imports between layers. | "@repo/core cannot import @repo/ux." |
 
 ## What is the top-level layout?
 | Path | Purpose | Example |
 | --- | --- | --- |
-| `apps/` | Application entry points. | "desktop app with main/preload/renderer." |
-| `packages/` | Shared layers and features. | "core, shared, ux." |
+| `apps/` | Application entry points. | "main, preload, renderer, editor-standalone-web." |
+| `packages/` | Shared layers and features. | "core, shared, ux, editor." |
 | `configs/` | Shared tooling config. | "TypeScript and ESLint config." |
-| `scripts/` | Repo maintenance utilities. | "Release scripts." |
+| `scripts/` | Repo maintenance utilities. | "Release and development scripts." |
 
 ## What are the import boundaries?
 - `@repo/shared` has no dependencies.
 - `@repo/core` can import `@repo/shared` only.
 - `@repo/ux` can import `@repo/core` and `@repo/shared`.
-- `@main` can import `@repo/core` and `@repo/shared`.
-- `@renderer` can import `@repo/core`, `@repo/shared`, and `@repo/ux`.
+- `@repo/main` can import `@repo/core` and `@repo/shared`.
+- `@repo/renderer` can import `@repo/core`, `@repo/shared`, and `@repo/ux`.
 
-## Where are key app areas?
-| Area | Purpose | Example |
+## Where are key apps?
+| Area | Purpose | Location |
 | --- | --- | --- |
-| Main process | Electron lifecycle and windows. | `apps/desktop/src/main` |
-| Preload bridge | Typed IPC layer. | `apps/desktop/src/preload` |
-| Renderer UI | React UI with Dockview. | `apps/desktop/src/renderer` |
+| Main process | Electron lifecycle and windows. | `apps/main` |
+| Preload bridge | Typed IPC layer. | `apps/preload` |
+| Renderer UI | React UI with Dockview. | `apps/renderer` |
+| Standalone Editor | Web-based editor playground. | `apps/editor-standalone-web` |
 
 ## What are the facts?
 - Import boundaries are enforced by ESLint rules.
-- The renderer cannot import from `@main`.
+- The renderer cannot import from the main process.
 
 ## What decisions are recorded?
 - `@repo/core` stays dependency-light and UI-free.
+- Desktop application is split into three packages (main, preload, renderer) to improve build isolation.
 
 ## What are the open questions?
 - None.

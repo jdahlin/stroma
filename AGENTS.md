@@ -36,17 +36,17 @@ pnpm --filter @repo/desktop dev   # Start Electron app in dev mode
 | `@repo/core`   | `packages/core`             | `@repo/shared`                           | `@repo/ux`, `@main`, `@renderer`               |
 | `@repo/ux`     | `packages/ux`               | `@repo/core`, `@repo/shared`             | `@main`, `@renderer`                           |
 | `@main`        | `apps/desktop/src/main`     | `@repo/core`, `@repo/shared`             | `@repo/ux`, `@renderer`                        |
-| `@renderer`    | `apps/desktop/src/renderer` | `@repo/core`, `@repo/shared`, `@repo/ux` | `@main`                                        |
+| `@renderer`    | `apps/renderer/src`         | `@repo/core`, `@repo/shared`, `@repo/ux` | `@main`                                        |
 
 Import boundaries are enforced by ESLint rules in `configs/eslint/boundaries.mjs`.
 
 ## Monorepo Structure
 
 ```
-apps/desktop/              # Electron application
-  src/main/               # Electron main process (Node.js)
-  src/preload/            # IPC bridge (contextBridge)
-  src/renderer/           # React UI (no Node APIs)
+apps/main/                 # Electron main process
+apps/preload/              # IPC bridge
+apps/renderer/             # React UI
+apps/editor-standalone-web/ # Standalone editor playground
 
 packages/shared/           # Pure utilities, type helpers - NO dependencies
 packages/core/             # Domain types/contracts - can import @repo/shared

@@ -21,11 +21,11 @@ export default repoConfig.append(
     ...uxBoundaries,
   },
   {
-    files: ['apps/desktop/src/main/**'],
+    files: ['apps/main/src/**'],
     ...mainBoundaries,
   },
   {
-    files: ['apps/desktop/src/renderer/**'],
+    files: ['apps/renderer/src/**'],
     ...rendererBoundaries,
   },
   {
@@ -37,7 +37,7 @@ export default repoConfig.append(
     // 2. We access the global `process` object directly to expose version information
     //    (node, chrome, electron) to the renderer via `contextBridge`.
     // Therefore, we disable the standard ESM-only and no-global-process rules for this file.
-    files: ['apps/desktop/src/preload/index.ts'],
+    files: ['apps/preload/src/index.ts'],
     rules: {
       'ts/no-require-imports': 'off',
       'node/prefer-global/process': 'off',

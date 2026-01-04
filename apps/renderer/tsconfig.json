@@ -2,11 +2,8 @@
   "extends": "@repo/tsconfig/react.json",
   "references": [],
   "include": [
-    "src/renderer",
-    "src/main",
-    "src/preload",
+    "src",
     "vite.config.ts",
-    "vitest.config.ts",
-    "scripts"
+    "vitest.config.ts"
   ]
 }

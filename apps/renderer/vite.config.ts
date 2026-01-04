@@ -5,16 +5,16 @@ import { defineConfig } from 'vite'
 export default defineConfig({
   clearScreen: false,
   plugins: [react()],
-  root: 'src/renderer',
+  root: '.',
   base: './',
   build: {
-    outDir: '../../dist/renderer',
+    outDir: 'dist',
     emptyOutDir: true,
   },
   resolve: {
     alias: [
       { find: /^@repo\/editor\/styles$/, replacement: resolve(__dirname, '../../packages/editor/src/styles/prosemirror.css') },
-      { find: '@renderer', replacement: resolve(__dirname, 'src/renderer') },
+      { find: '@renderer', replacement: resolve(__dirname, 'src') },
       { find: '@repo/core', replacement: resolve(__dirname, '../../packages/core/src') },
       { find: '@repo/editor', replacement: resolve(__dirname, '../../packages/editor/src') },
       { find: '@repo/shared', replacement: resolve(__dirname, '../../packages/shared/src') },

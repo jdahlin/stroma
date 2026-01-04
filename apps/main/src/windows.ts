@@ -12,7 +12,7 @@ export function createMainWindow(): BrowserWindow {
     minWidth: 800,
     minHeight: 600,
     webPreferences: {
-      preload: join(__dirname, '../preload/index.mjs'),
+      preload: join(__dirname, '../../preload/dist/index.mjs'),
       contextIsolation: true,
       nodeIntegration: false,
       sandbox: true,
@@ -33,7 +33,7 @@ export function createMainWindow(): BrowserWindow {
     win.webContents.openDevTools()
   }
   else {
-    void win.loadFile(join(__dirname, '../renderer/index.html'))
+    void win.loadFile(join(__dirname, '../../renderer/dist/index.html'))
   }
 
   return win
