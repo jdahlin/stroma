@@ -67,5 +67,24 @@ export function useToolbarState(editor: Editor | null): ToolbarState {
     }
   }, [])
 
-  return useEditorState(editor, selector) ?? defaultState
+  const isEqual = useCallback((a: ToolbarState, b: ToolbarState) => {
+    return (
+      a.isBold === b.isBold
+      && a.isItalic === b.isItalic
+      && a.isStrike === b.isStrike
+      && a.isCode === b.isCode
+      && a.isHeading1 === b.isHeading1
+      && a.isHeading2 === b.isHeading2
+      && a.isHeading3 === b.isHeading3
+      && a.isBulletList === b.isBulletList
+      && a.isOrderedList === b.isOrderedList
+      && a.isBlockquote === b.isBlockquote
+      && a.isCodeBlock === b.isCodeBlock
+      && a.isLink === b.isLink
+      && a.canUndo === b.canUndo
+      && a.canRedo === b.canRedo
+    )
+  }, [])
+
+  return useEditorState(editor, selector, isEqual) ?? defaultState
 }

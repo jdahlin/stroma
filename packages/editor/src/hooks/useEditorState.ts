@@ -1,6 +1,6 @@
 import type { Editor } from '@tiptap/core'
 import type { DocumentContent } from '../types'
-import { useCallback, useSyncExternalStore } from 'react'
+import { useCallback, useRef, useSyncExternalStore } from 'react'
 
 /**
  * Subscribe to editor state changes using React's useSyncExternalStore.
@@ -9,7 +9,10 @@ import { useCallback, useSyncExternalStore } from 'react'
 export function useEditorState<T>(
   editor: Editor | null,
   selector: (editor: Editor) => T,
+  isEqual: (a: T, b: T) => boolean = Object.is,
 ): T | null {
+  const lastSnapshotRef = useRef<T | null>(null)
+
   const subscribe = useCallback(
     (callback: () => void) => {
       if (!editor)
@@ -31,8 +34,15 @@ export function useEditorState<T>(
   const getSnapshot = useCallback(() => {
     if (!editor)
       return null
-    return selector(editor)
-  }, [editor, selector])
+    const nextValue = selector(editor)
+    const lastValue = lastSnapshotRef.current
+
+    if (lastValue !== null && isEqual(lastValue, nextValue))
+      return lastValue
+
+    lastSnapshotRef.current = nextValue
+    return nextValue
+  }, [editor, isEqual, selector])
 
   return useSyncExternalStore(subscribe, getSnapshot, getSnapshot)
 }
