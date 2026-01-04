@@ -11,7 +11,13 @@ export const config: any = {
     coverage: {
       provider: 'v8',
       reporter: ['text', 'html'],
-      exclude: ['**/node_modules/**', '**/dist/**', '**/*.test.{ts,tsx}'],
+      exclude: [
+        '**/node_modules/**',
+        '**/dist/**',
+        '**/*.test.{ts,tsx}',
+        '**/*.css',
+        '**/*.d.ts',
+      ],
       include: ['src/**'],
       // @ts-ignore - 'all' exists in v8 provider but might missing from types in this version
       all: true,
