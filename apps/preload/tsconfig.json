@@ -1,0 +1,8 @@
+{
+  "extends": "@repo/tsconfig/node.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "outDir": "dist"
+  },
+  "include": ["src", "src/electron.d.ts"]
+}

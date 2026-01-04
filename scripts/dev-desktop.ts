@@ -1,42 +1,32 @@
 import type { ChildProcess } from 'node:child_process'
 import type { FSWatcher } from 'node:fs'
-import type { ViteDevServer } from 'vite'
 import { spawn } from 'node:child_process'
 import { watch } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import process from 'node:process'
 import { fileURLToPath } from 'node:url'
-import { createServer } from 'vite'
 
 async function startDev(): Promise<void> {
   const scriptDir = dirname(fileURLToPath(import.meta.url))
-  const appRoot = resolve(scriptDir, '..')
-  process.chdir(appRoot)
+  const projectRoot = resolve(scriptDir, '..')
+  process.chdir(projectRoot)
 
-  process.env.VITE_CLEAR_SCREEN = 'false'
-
-  // Start Vite dev server
-  const vite: ViteDevServer = await createServer({
-    configFile: 'vite.config.ts',
-    server: { port: 5173 },
-  })
-  await vite.listen()
-
-  // Build main and preload in watch mode
-  const spawnPnpmExec = (
+  // Build and watch renderer, preload, and main using pnpm filters
+  const spawnPnpm = (
     args: string[],
     options?: { env?: NodeJS.ProcessEnv, stdio?: 'inherit' | 'pipe' },
   ): ChildProcess =>
-    spawn('pnpm', ['exec', ...args], {
+    spawn('pnpm', args, {
       stdio: options?.stdio ?? 'inherit',
       env: options?.env ? { ...process.env, ...options.env } : process.env,
     })
 
-  const runPnpmExec = (args: string[], label: string): Promise<void> =>
+  const runPnpm = (args: string[], label: string): Promise<void> =>
     new Promise((resolve, reject) => {
-      const child = spawnPnpmExec(args, { stdio: 'inherit' })
+      const child = spawnPnpm(args, { stdio: 'inherit' })
       child.on('exit', (code) => {
         if (code === 0) {
+          console.log(`[${label}] Completed.`)
           resolve()
         }
         else {
@@ -45,37 +35,17 @@ async function startDev(): Promise<void> {
       })
     })
 
-  const buildMainArgs = [
-    'esbuild',
-    'src/main/index.ts',
-    '--bundle',
-    '--platform=node',
-    '--format=esm',
-    '--sourcemap',
-    '--tsconfig=tsconfig.main.json',
-    '--outfile=dist/main/index.mjs',
-    '--external:electron',
-    '--log-level=error',
-  ]
+  // Initial builds
+  await Promise.all([
+    runPnpm(['-s', '--filter', '@repo/renderer', 'build'], 'renderer build'),
+    runPnpm(['-s', '--filter', '@repo/preload', 'build'], 'preload build'),
+    runPnpm(['-s', '--filter', '@repo/main', 'build'], 'main build'),
+  ])
 
-  const buildPreloadArgs = [
-    'esbuild',
-    'src/preload/index.ts',
-    '--bundle',
-    '--platform=node',
-    '--format=esm',
-    '--sourcemap',
-    '--tsconfig=tsconfig.preload.json',
-    '--outfile=dist/preload/index.mjs',
-    '--external:electron',
-    '--log-level=error',
-  ]
-
-  await runPnpmExec(buildMainArgs, 'main build')
-  await runPnpmExec(buildPreloadArgs, 'preload build')
-
-  const mainWatch: ChildProcess = spawnPnpmExec([...buildMainArgs, '--watch'])
-  const preloadWatch: ChildProcess = spawnPnpmExec([...buildPreloadArgs, '--watch'])
+  // Watchers
+  const rendererDev: ChildProcess = spawnPnpm(['--filter', '@repo/renderer', 'dev'])
+  const preloadWatch: ChildProcess = spawnPnpm(['--filter', '@repo/preload', 'exec', 'esbuild', 'src/index.ts', '--bundle', '--platform=node', '--format=esm', '--sourcemap', '--tsconfig=tsconfig.json', '--outfile=dist/index.mjs', '--external:electron', '--conditions=import', '--watch'])
+  const mainWatch: ChildProcess = spawnPnpm(['--filter', '@repo/main', 'exec', 'esbuild', 'src/index.ts', '--bundle', '--platform=node', '--format=esm', '--sourcemap', '--tsconfig=tsconfig.json', '--outfile=dist/index.mjs', '--external:electron', '--conditions=import', '--watch'])
 
   let electron: ChildProcess | null = null
   let restartTimer: NodeJS.Timeout | null = null
@@ -92,14 +62,14 @@ async function startDev(): Promise<void> {
     if (electron) {
       electron.kill()
     }
-    mainWatch.kill()
+    rendererDev.kill()
     preloadWatch.kill()
-    void vite.close()
+    mainWatch.kill()
     process.exit()
   }
 
   const startElectron = (): void => {
-    electron = spawnPnpmExec(['electron', '.'], {
+    electron = spawnPnpm(['--filter', '@repo/main', 'exec', 'electron', '.'], {
       env: { VITE_DEV_SERVER_URL: 'http://localhost:5173' },
     })
     electron.on('close', () => {
@@ -136,13 +106,17 @@ async function startDev(): Promise<void> {
     }, 200)
   }
 
-  const watchDirs = [resolve(appRoot, 'dist/main'), resolve(appRoot, 'dist/preload')]
+  // Watch built files to restart electron
+  const watchDirs = [
+    resolve(projectRoot, 'apps/main/dist'),
+    resolve(projectRoot, 'apps/preload/dist')
+  ]
   watchers = watchDirs.map(dir => watch(dir, { persistent: true }, scheduleRestart))
 
   startElectron()
   setTimeout(() => {
     restartEnabled = true
-  }, 500)
+  }, 1000)
 
   process.on('SIGINT', cleanup)
   process.on('SIGTERM', cleanup)

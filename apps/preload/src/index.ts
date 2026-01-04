@@ -1,6 +1,6 @@
-import type { StromaAPI } from '../renderer/electron.d'
-
-const { contextBridge, ipcRenderer } = require('electron')
+import type { IpcRendererEvent } from 'electron'
+import type { StromaAPI } from './electron.d'
+import { contextBridge, ipcRenderer } from 'electron'
 
 const api: StromaAPI = {
   platform: process.platform,
@@ -11,15 +11,18 @@ const api: StromaAPI = {
   },
   appVersion: () => ipcRenderer.invoke('app:get-version'),
   openPdfDialog: () => ipcRenderer.invoke('pdf:open-dialog'),
-  openPdfByPath: path => ipcRenderer.invoke('pdf:open-path', path),
-  onCommand: (callback) => {
-    const subscription = (_event: Electron.IpcRendererEvent, id: string) => callback(id)
+  openPdfByPath: (path: string) => ipcRenderer.invoke('pdf:open-path', path),
+  onCommand: (callback: (id: string) => void) => {
+    const subscription = (_event: IpcRendererEvent, id: string) => callback(id)
     ipcRenderer.on('execute-command', subscription)
     return () => {
       ipcRenderer.removeListener('execute-command', subscription)
     }
   },
-  setUiState: (state) => {
+  setUiState: (state: {
+    sidebars: { left: { open: boolean }, right: { open: boolean } }
+    ribbonOpen: boolean
+  }) => {
     ipcRenderer.send('ui-state', state)
   },
 }

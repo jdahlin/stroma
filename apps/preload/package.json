@@ -1,0 +1,17 @@
+{
+  "name": "@repo/preload",
+  "type": "module",
+  "version": "0.1.6",
+  "private": true,
+  "scripts": {
+    "build": "esbuild src/index.ts --bundle --platform=node --format=esm --sourcemap --tsconfig=tsconfig.json --outfile=dist/index.mjs --external:electron --conditions=import",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@repo/tsconfig": "workspace:*",
+    "@types/node": "22.7.7",
+    "electron": "39.2.7",
+    "esbuild": "^0.27.2",
+    "typescript": "5.9.3"
+  }
+}

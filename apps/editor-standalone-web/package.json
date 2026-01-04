@@ -1,5 +1,5 @@
 {
-  "name": "@repo/editor-dev",
+  "name": "@repo/editor-standalone-web",
   "type": "module",
   "version": "0.0.0",
   "private": true,

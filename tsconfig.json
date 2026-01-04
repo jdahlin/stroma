@@ -1,8 +1,9 @@
 {
   "references": [
-    { "path": "./apps/desktop/tsconfig.json" },
-    { "path": "./apps/desktop/tsconfig.main.json" },
-    { "path": "./apps/desktop/tsconfig.preload.json" },
+    { "path": "./apps/main" },
+    { "path": "./apps/renderer" },
+    { "path": "./apps/preload" },
+    { "path": "./apps/editor-standalone-web" },
     { "path": "./packages/core" },
     { "path": "./packages/shared" },
     { "path": "./packages/ux" },
