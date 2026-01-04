@@ -1,13 +1,14 @@
+import { app, BrowserWindow, dialog, ipcMain } from 'electron'
+import process from 'node:process'
 import { readFile } from 'node:fs/promises'
 import { basename } from 'node:path'
-import process from 'node:process'
-import { app, BrowserWindow, dialog, ipcMain } from 'electron'
 import { setupMenu } from './menu'
 import { createMainWindow } from './windows'
 
 app.commandLine.appendSwitch('remote-debugging-port', '9222')
 
 void app.whenReady().then(async () => {
+  ipcMain.handle('app:get-version', () => app.getVersion());
   ipcMain.handle('pdf:open-dialog', async () => {
     const result = await dialog.showOpenDialog({
       properties: ['openFile'],

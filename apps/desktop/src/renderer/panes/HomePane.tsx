@@ -1,9 +1,31 @@
+import React, { useEffect, useState } from 'react'
 import type { IDockviewPanelProps } from 'dockview'
-import React from 'react'
 import { PaneMenu } from './PaneMenu'
 import './Pane.css'
 
 export const HomePane: React.FC<IDockviewPanelProps> = () => {
+  const [appVersion, setAppVersion] = useState<string | null>(null)
+
+  useEffect(() => {
+    let isMounted = true
+    window.stroma
+      ?.appVersion()
+      .then((version) => {
+        if (isMounted) {
+          setAppVersion(version)
+        }
+      })
+      .catch(() => {
+        if (isMounted) {
+          setAppVersion('unknown')
+        }
+      })
+
+    return () => {
+      isMounted = false
+    }
+  }, [])
+
   return (
     <div className="pane pane-home">
       <PaneMenu />
@@ -19,6 +41,9 @@ export const HomePane: React.FC<IDockviewPanelProps> = () => {
           Electron:
           {' '}
           <code>{window.stroma?.versions.electron ?? 'unknown'}</code>
+        </p>
+        <p>
+          App: <code>{appVersion ?? 'unknown'}</code>
         </p>
       </div>
     </div>

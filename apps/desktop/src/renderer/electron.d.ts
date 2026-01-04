@@ -7,7 +7,8 @@ export interface StromaAPI {
     node: string
     chrome: string
     electron: string
-  }
+  };
+  appVersion: () => Promise<string>
   openPdfDialog: () => Promise<
     | {
       path: string
