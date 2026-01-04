@@ -1,4 +1,4 @@
-import type { DockviewApi } from 'dockview';
+import type { DockviewApi } from 'dockview'
 
 /**
  * Creates the default layout when no saved layout exists.
@@ -9,5 +9,5 @@ export function createDefaultLayout(api: DockviewApi): void {
     id: 'home',
     component: 'home',
     title: 'Home',
-  });
+  })
 }

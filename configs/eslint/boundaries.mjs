@@ -3,14 +3,8 @@
  * Each package should extend the appropriate boundary config.
  */
 
-import type { Linter } from 'eslint';
-
-interface BoundaryConfig {
-  rules: Linter.RulesRecord;
-}
-
 // @repo/shared - Cannot import anything from other packages
-export const sharedBoundaries: BoundaryConfig = {
+export const sharedBoundaries = {
   rules: {
     'no-restricted-imports': [
       'error',
@@ -33,10 +27,10 @@ export const sharedBoundaries: BoundaryConfig = {
       },
     ],
   },
-};
+}
 
 // @repo/core - Can only import from @repo/shared
-export const coreBoundaries: BoundaryConfig = {
+export const coreBoundaries = {
   rules: {
     'no-restricted-imports': [
       'error',
@@ -52,10 +46,10 @@ export const coreBoundaries: BoundaryConfig = {
       },
     ],
   },
-};
+}
 
 // @repo/ux - Can import from @repo/core and @repo/shared
-export const uxBoundaries: BoundaryConfig = {
+export const uxBoundaries = {
   rules: {
     'no-restricted-imports': [
       'error',
@@ -70,10 +64,10 @@ export const uxBoundaries: BoundaryConfig = {
       },
     ],
   },
-};
+}
 
 // @main - Can import from @repo/core and @repo/shared, NOT @repo/ux or @renderer
-export const mainBoundaries: BoundaryConfig = {
+export const mainBoundaries = {
   rules: {
     'no-restricted-imports': [
       'error',
@@ -88,10 +82,10 @@ export const mainBoundaries: BoundaryConfig = {
       },
     ],
   },
-};
+}
 
 // @renderer - Can import from @repo/core, @repo/shared, @repo/ux, NOT @main
-export const rendererBoundaries: BoundaryConfig = {
+export const rendererBoundaries = {
   rules: {
     'no-restricted-imports': [
       'error',
@@ -100,4 +94,4 @@ export const rendererBoundaries: BoundaryConfig = {
       },
     ],
   },
-};
+}

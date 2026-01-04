@@ -3,22 +3,23 @@
  * Used by Zustand persist middleware.
  */
 
-const STORAGE_VERSION = 1;
+const STORAGE_VERSION = 1
 
 interface PersistedState<T> {
-  version: number;
-  data: T;
+  version: number
+  data: T
 }
 
 /**
  * Persist data to localStorage with versioning.
  */
 export function persistState<T>(key: string, data: T): void {
-  const payload: PersistedState<T> = { version: STORAGE_VERSION, data };
+  const payload: PersistedState<T> = { version: STORAGE_VERSION, data }
   try {
-    localStorage.setItem(key, JSON.stringify(payload));
-  } catch (e) {
-    console.error(`Failed to persist state for key "${key}":`, e);
+    localStorage.setItem(key, JSON.stringify(payload))
+  }
+  catch (e) {
+    console.error(`Failed to persist state for key "${key}":`, e)
   }
 }
 
@@ -28,23 +29,25 @@ export function persistState<T>(key: string, data: T): void {
  */
 export function restoreState<T>(key: string): T | null {
   try {
-    const raw = localStorage.getItem(key);
-    if (!raw) return null;
+    const raw = localStorage.getItem(key)
+    if (!raw)
+      return null
 
-    const payload: PersistedState<T> = JSON.parse(raw);
+    const payload: PersistedState<T> = JSON.parse(raw)
 
     if (payload.version !== STORAGE_VERSION) {
       console.warn(
-        `State version mismatch for "${key}": expected ${STORAGE_VERSION}, got ${payload.version}`
-      );
+        `State version mismatch for "${key}": expected ${STORAGE_VERSION}, got ${payload.version}`,
+      )
       // Could implement migrations here in the future
-      return null;
+      return null
     }
 
-    return payload.data;
-  } catch (e) {
-    console.error(`Failed to restore state for key "${key}":`, e);
-    return null;
+    return payload.data
+  }
+  catch (e) {
+    console.error(`Failed to restore state for key "${key}":`, e)
+    return null
   }
 }
 
@@ -52,5 +55,5 @@ export function restoreState<T>(key: string): T | null {
  * Clear persisted state for a key.
  */
 export function clearPersistedState(key: string): void {
-  localStorage.removeItem(key);
+  localStorage.removeItem(key)
 }

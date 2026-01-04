@@ -1,5 +1,6 @@
-import { contextBridge, ipcRenderer } from 'electron';
-import type { StromaAPI } from '../renderer/electron.d';
+import type { StromaAPI } from '../renderer/electron.d'
+import process from 'node:process'
+import { contextBridge, ipcRenderer } from 'electron'
 
 const api: StromaAPI = {
   platform: process.platform,
@@ -9,17 +10,17 @@ const api: StromaAPI = {
     electron: process.versions.electron,
   },
   openPdfDialog: () => ipcRenderer.invoke('pdf:open-dialog'),
-  openPdfByPath: (path) => ipcRenderer.invoke('pdf:open-path', path),
+  openPdfByPath: path => ipcRenderer.invoke('pdf:open-path', path),
   onCommand: (callback) => {
-    const subscription = (_event: Electron.IpcRendererEvent, id: string) => callback(id);
-    ipcRenderer.on('execute-command', subscription);
+    const subscription = (_event: Electron.IpcRendererEvent, id: string) => callback(id)
+    ipcRenderer.on('execute-command', subscription)
     return () => {
-      ipcRenderer.removeListener('execute-command', subscription);
-    };
+      ipcRenderer.removeListener('execute-command', subscription)
+    }
   },
   setUiState: (state) => {
-    ipcRenderer.send('ui-state', state);
+    ipcRenderer.send('ui-state', state)
   },
-};
+}
 
-contextBridge.exposeInMainWorld('stroma', api);
+contextBridge.exposeInMainWorld('stroma', api)

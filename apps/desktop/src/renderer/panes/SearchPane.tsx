@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import type { IDockviewPanelProps } from 'dockview';
-import { PaneMenu } from './PaneMenu';
-import './Pane.css';
+import type { IDockviewPanelProps } from 'dockview'
+import React, { useState } from 'react'
+import { PaneMenu } from './PaneMenu'
+import './Pane.css'
 
 export const SearchPane: React.FC<IDockviewPanelProps> = () => {
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState('')
 
   return (
     <div className="pane pane-search">
@@ -13,11 +13,16 @@ export const SearchPane: React.FC<IDockviewPanelProps> = () => {
       <input
         type="text"
         value={query}
-        onChange={(e) => setQuery(e.target.value)}
+        onChange={e => setQuery(e.target.value)}
         placeholder="Search your knowledge..."
         className="search-input"
       />
-      {query && <p>Searching for: {query}</p>}
+      {query && (
+        <p>
+          Searching for:
+          {query}
+        </p>
+      )}
     </div>
-  );
-};
+  )
+}

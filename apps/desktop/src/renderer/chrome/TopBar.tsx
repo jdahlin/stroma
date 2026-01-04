@@ -1,5 +1,5 @@
-import React from 'react';
-import './TopBar.css';
+import React from 'react'
+import './TopBar.css'
 
 export const TopBar: React.FC = () => {
   return (
@@ -9,5 +9,5 @@ export const TopBar: React.FC = () => {
         <span className="app-title">Stroma</span>
       </div>
     </header>
-  );
-};
+  )
+}

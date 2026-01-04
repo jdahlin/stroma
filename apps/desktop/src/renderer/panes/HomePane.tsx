@@ -1,7 +1,7 @@
-import React from 'react';
-import type { IDockviewPanelProps } from 'dockview';
-import { PaneMenu } from './PaneMenu';
-import './Pane.css';
+import type { IDockviewPanelProps } from 'dockview'
+import React from 'react'
+import { PaneMenu } from './PaneMenu'
+import './Pane.css'
 
 export const HomePane: React.FC<IDockviewPanelProps> = () => {
   return (
@@ -11,12 +11,16 @@ export const HomePane: React.FC<IDockviewPanelProps> = () => {
       <p>Your knowledge work environment.</p>
       <div className="home-info">
         <p>
-          Platform: <code>{window.stroma?.platform ?? 'unknown'}</code>
+          Platform:
+          {' '}
+          <code>{window.stroma?.platform ?? 'unknown'}</code>
         </p>
         <p>
-          Electron: <code>{window.stroma?.versions.electron ?? 'unknown'}</code>
+          Electron:
+          {' '}
+          <code>{window.stroma?.versions.electron ?? 'unknown'}</code>
         </p>
       </div>
     </div>
-  );
-};
+  )
+}

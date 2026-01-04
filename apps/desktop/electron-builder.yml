@@ -12,7 +12,7 @@ directories:
 files:
   - dist/**/*
   - package.json
-  - "!node_modules"
+  - '!node_modules'
 
 # Don't include node_modules - everything is bundled
 includeSubNodeModules: false
@@ -91,7 +91,7 @@ deb:
     - libuuid1
 
 appImage:
-  artifactName: "${productName}-${version}-${arch}.${ext}"
+  artifactName: '${productName}-${version}-${arch}.${ext}'
 
 publish:
   provider: github
@@ -99,4 +99,4 @@ publish:
   repo: stroma
   releaseType: release
 
-artifactName: "${productName}-${version}-${os}-${arch}.${ext}"
+artifactName: '${productName}-${version}-${os}-${arch}.${ext}'

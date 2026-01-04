@@ -1,11 +1,11 @@
-import React from 'react';
+import React from 'react'
 
-export type ButtonVariant = 'primary' | 'secondary' | 'ghost';
-export type ButtonSize = 'sm' | 'md' | 'lg';
+export type ButtonVariant = 'primary' | 'secondary' | 'ghost'
+export type ButtonSize = 'sm' | 'md' | 'lg'
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: ButtonVariant;
-  size?: ButtonSize;
+  variant?: ButtonVariant
+  size?: ButtonSize
 }
 
 const variantStyles: Record<ButtonVariant, React.CSSProperties> = {
@@ -24,7 +24,7 @@ const variantStyles: Record<ButtonVariant, React.CSSProperties> = {
     color: 'var(--color-text-primary)',
     border: 'none',
   },
-};
+}
 
 const sizeStyles: Record<ButtonSize, React.CSSProperties> = {
   sm: {
@@ -39,7 +39,7 @@ const sizeStyles: Record<ButtonSize, React.CSSProperties> = {
     padding: 'var(--space-3) var(--space-6)',
     fontSize: 'var(--text-lg)',
   },
-};
+}
 
 const baseStyles: React.CSSProperties = {
   display: 'inline-flex',
@@ -49,7 +49,7 @@ const baseStyles: React.CSSProperties = {
   fontWeight: 500,
   cursor: 'pointer',
   transition: 'all var(--transition-fast)',
-};
+}
 
 export const Button: React.FC<ButtonProps> = ({
   variant = 'primary',
@@ -70,9 +70,10 @@ export const Button: React.FC<ButtonProps> = ({
         ...style,
       }}
       disabled={disabled}
+      type="button"
       {...props}
     >
       {children}
     </button>
-  );
-};
+  )
+}

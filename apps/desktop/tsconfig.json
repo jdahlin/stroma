@@ -1,5 +1,11 @@
 {
   "extends": "@repo/tsconfig/react.json",
-  "include": ["src/renderer"],
-  "references": []
+  "references": [],
+  "include": [
+    "src/renderer",
+    "vite.config.ts",
+    "tailwind.config.ts",
+    "postcss.config.ts",
+    "scripts"
+  ]
 }

@@ -1,4 +1,4 @@
-import type { Config } from 'tailwindcss';
+import type { Config } from 'tailwindcss'
 
 export default {
   content: ['../../packages/ux/src/**/*.{ts,tsx}', '../../apps/desktop/src/renderer/**/*.{ts,tsx}'],
@@ -61,4 +61,4 @@ export default {
     },
   },
   plugins: [],
-} satisfies Config;
+} satisfies Config

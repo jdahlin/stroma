@@ -1,20 +1,20 @@
-import React from 'react';
-import type { LucideIcon } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react'
+import React from 'react'
 
-export type IconSize = 'sm' | 'md' | 'lg';
+export type IconSize = 'sm' | 'md' | 'lg'
 
 export interface IconProps {
-  icon: LucideIcon;
-  size?: IconSize;
-  className?: string;
-  style?: React.CSSProperties;
+  icon: LucideIcon
+  size?: IconSize
+  className?: string
+  style?: React.CSSProperties
 }
 
 const sizeMap: Record<IconSize, string> = {
   sm: '1rem',
   md: '1.25rem',
   lg: '1.5rem',
-};
+}
 
 export const Icon: React.FC<IconProps> = ({
   icon: LucideIcon,
@@ -22,7 +22,7 @@ export const Icon: React.FC<IconProps> = ({
   className,
   style,
 }) => {
-  const iconSize = sizeMap[size];
+  const iconSize = sizeMap[size]
 
   return (
     <LucideIcon
@@ -33,22 +33,22 @@ export const Icon: React.FC<IconProps> = ({
         ...style,
       }}
     />
-  );
-};
+  )
+}
 
 // Re-export commonly used icons for convenience
 export {
-  FileText,
-  Search,
-  Settings,
-  ChevronLeft,
   ChevronDown,
+  ChevronLeft,
   ChevronRight,
-  PanelLeft,
-  PanelRight,
+  FileText,
+  FolderOpen,
   Home,
   ListTodo,
-  FolderOpen,
+  PanelLeft,
+  PanelRight,
   Plus,
+  Search,
+  Settings,
   X,
-} from 'lucide-react';
+} from 'lucide-react'

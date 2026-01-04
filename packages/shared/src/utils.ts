@@ -2,7 +2,7 @@
  * Clamps a number between a minimum and maximum value.
  */
 export function clamp(value: number, min: number, max: number): number {
-  return Math.min(Math.max(value, min), max);
+  return Math.min(Math.max(value, min), max)
 }
 
 /**
@@ -11,10 +11,10 @@ export function clamp(value: number, min: number, max: number): number {
  */
 export function generateId(): string {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-    const r = (Math.random() * 16) | 0;
-    const v = c === 'x' ? r : (r & 0x3) | 0x8;
-    return v.toString(16);
-  });
+    const r = (Math.random() * 16) | 0
+    const v = c === 'x' ? r : (r & 0x3) | 0x8
+    return v.toString(16)
+  })
 }
 
 /**
@@ -28,12 +28,12 @@ export function noop(): void {
  * Identity function. Returns the input unchanged.
  */
 export function identity<T>(value: T): T {
-  return value;
+  return value
 }
 
 /**
  * Checks if a value is defined (not null or undefined).
  */
 export function isDefined<T>(value: T | null | undefined): value is T {
-  return value !== null && value !== undefined;
+  return value !== null && value !== undefined
 }

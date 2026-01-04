@@ -2,10 +2,10 @@
   "extends": "@repo/tsconfig/node.json",
   "compilerOptions": {
     "composite": true,
-    "outDir": "dist/main",
-    "noEmit": true,
     "module": "ESNext",
-    "moduleResolution": "bundler"
+    "moduleResolution": "bundler",
+    "noEmit": true,
+    "outDir": "dist/main"
   },
   "include": ["src/main"]
 }

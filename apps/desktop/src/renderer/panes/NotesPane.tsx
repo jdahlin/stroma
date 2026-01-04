@@ -1,7 +1,7 @@
-import React from 'react';
-import type { IDockviewPanelProps } from 'dockview';
-import { PaneMenu } from './PaneMenu';
-import './Pane.css';
+import type { IDockviewPanelProps } from 'dockview'
+import React from 'react'
+import { PaneMenu } from './PaneMenu'
+import './Pane.css'
 
 export const NotesPane: React.FC<IDockviewPanelProps> = () => {
   return (
@@ -10,5 +10,5 @@ export const NotesPane: React.FC<IDockviewPanelProps> = () => {
       <h2>Notes</h2>
       <p>Note editor will be implemented here.</p>
     </div>
-  );
-};
+  )
+}
