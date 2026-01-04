@@ -42,7 +42,7 @@ export const DockHost: React.FC<DockHostProps> = ({
 
   return (
     <DockviewReact
-      className={`${stromaTheme.className}${className ? ` ${className}` : ''}`}
+      className={`${stromaTheme.className}${className !== undefined ? ` ${className}` : ''}`}
       onReady={handleReady}
       components={components}
       prefixHeaderActionsComponent={prefixHeaderActionsComponent}

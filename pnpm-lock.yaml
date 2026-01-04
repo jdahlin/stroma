@@ -148,6 +148,9 @@ importers:
       eslint:
         specifier: ^9.17.0
         version: 9.39.2(jiti@1.21.7)
+      eslint-plugin-electron:
+        specifier: ^7.0.0
+        version: 7.0.0(eslint@9.39.2(jiti@1.21.7))
       typescript:
         specifier: ^5.9.0
         version: 5.9.3
@@ -2308,6 +2311,12 @@ packages:
     peerDependencies:
       eslint: '*'
 
+  eslint-plugin-electron@7.0.0:
+    resolution: {integrity: sha512-VPWbLwWwoIzyR7Tz1XQoD1tOkq80E1IozUvWlZCAcul07uiyohMeu3A+bU90EKthwxogznZr5iI8LzuEQbdeGQ==}
+    engines: {node: '>=0.10.0'}
+    peerDependencies:
+      eslint: '>=0.8.0'
+
   eslint-plugin-es-x@7.8.0:
     resolution: {integrity: sha512-7Ds8+wAAoV3T+LAKeu39Y5BzXCrGKrcISfgKEqTS4BDN8SFEDQd0S43jiQ8vIa3wUKD07qitZdfzlenSi8/0qQ==}
     engines: {node: ^14.18.0 || >=16.0.0}
@@ -3913,6 +3922,10 @@ packages:
   require-from-string@2.0.2:
     resolution: {integrity: sha512-Xf0nWe6RseziFMu+Ap9biiUbmplq6S9/p+7w7YXP/JBHhrUDDUhwa+vANyubuqfZWTveU//DYVGsDG7RKL/vEw==}
     engines: {node: '>=0.10.0'}
+
+  requireindex@1.1.0:
+    resolution: {integrity: sha512-LBnkqsDE7BZKvqylbmn7lTIVdpx4K/QCduRATpO5R+wtPmky/a8pN1bO2D6wXppn1497AJF9mNjqAXr6bdl9jg==}
+    engines: {node: '>=0.10.5'}
 
   resedit@1.7.2:
     resolution: {integrity: sha512-vHjcY2MlAITJhC0eRD/Vv8Vlgmu9Sd3LX9zZvtGzU5ZImdTN3+d6e/4mnTyV8vEbyf1sgNIrWxhWlrys52OkEA==}
@@ -6982,6 +6995,11 @@ snapshots:
       '@es-joy/jsdoccomment': 0.50.2
       eslint: 9.39.2(jiti@1.21.7)
 
+  eslint-plugin-electron@7.0.0(eslint@9.39.2(jiti@1.21.7)):
+    dependencies:
+      eslint: 9.39.2(jiti@1.21.7)
+      requireindex: 1.1.0
+
   eslint-plugin-es-x@7.8.0(eslint@9.39.2(jiti@1.21.7)):
     dependencies:
       '@eslint-community/eslint-utils': 4.9.1(eslint@9.39.2(jiti@1.21.7))
@@ -9001,6 +9019,8 @@ snapshots:
   require-directory@2.1.1: {}
 
   require-from-string@2.0.2: {}
+
+  requireindex@1.1.0: {}
 
   resedit@1.7.2:
     dependencies:

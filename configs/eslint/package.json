@@ -21,6 +21,7 @@
   },
   "devDependencies": {
     "eslint": "^9.17.0",
+    "eslint-plugin-electron": "^7.0.0",
     "typescript": "^5.9.0"
   }
 }

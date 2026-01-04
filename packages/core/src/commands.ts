@@ -27,7 +27,7 @@ export type CommandHandler = () => void | Promise<void>
 
 function shortcutMatches(shortcut: KeyboardEvent, event: KeyboardEvent): boolean {
   const keyMatches = event.key.toLowerCase() === shortcut.key.toLowerCase()
-  const codeMatches = shortcut.code && event.code === shortcut.code
+  const codeMatches = shortcut.code !== undefined && event.code === shortcut.code
 
   if (!keyMatches && !codeMatches)
     return false

@@ -1,5 +1,6 @@
 import process from 'node:process'
 import antfu from '@antfu/eslint-config'
+import electronPlugin from 'eslint-plugin-electron'
 
 export default antfu({
   react: true,
@@ -12,7 +13,12 @@ export default antfu({
   formatters: true,
 }, {
   files: ['**/*.ts', '**/*.tsx'],
+  plugins: {
+    electron: electronPlugin,
+  },
   rules: {
+    'electron/no-deprecated-apis': 'error',
+
     // Forbid inline overrides (force config-level overrides)
     'ts/ban-ts-comment': ['error', { 'ts-ignore': true, 'ts-nocheck': true, 'ts-expect-error': 'allow-with-description' }],
     'eslint-comments/no-use': ['error', { allow: [] }],
@@ -27,5 +33,20 @@ export default antfu({
     'ts/switch-exhaustiveness-check': 'error',
     'ts/no-unnecessary-type-assertion': 'error',
     'ts/consistent-type-imports': ['error', { prefer: 'type-imports' }],
+    'ts/no-explicit-any': 'error',
+    'ts/no-non-null-assertion': 'error',
+    'ts/no-unsafe-assignment': 'error',
+    'ts/no-unsafe-call': 'error',
+    'ts/no-unsafe-member-access': 'error',
+    'ts/no-unsafe-return': 'error',
+    'ts/strict-boolean-expressions': 'error',
+    'react/no-leaked-conditional-rendering': 'error',
+    'react/no-nested-components': 'error',
+    'react-hooks/exhaustive-deps': 'error',
+  },
+}, {
+  files: ['apps/desktop/src/renderer/chrome/CommandPalette.tsx'],
+  rules: {
+    'ts/strict-boolean-expressions': 'off',
   },
 })

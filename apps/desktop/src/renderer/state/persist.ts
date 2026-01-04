@@ -30,10 +30,10 @@ export function persistState<T>(key: string, data: T): void {
 export function restoreState<T>(key: string): T | null {
   try {
     const raw = localStorage.getItem(key)
-    if (!raw)
+    if (raw === null)
       return null
 
-    const payload: PersistedState<T> = JSON.parse(raw)
+    const payload = JSON.parse(raw) as unknown as PersistedState<T>
 
     if (payload.version !== STORAGE_VERSION) {
       console.warn(

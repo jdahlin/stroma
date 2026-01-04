@@ -25,7 +25,7 @@ export function createMainWindow(): BrowserWindow {
   })
 
   // Load from Vite dev server or built files
-  if (process.env.VITE_DEV_SERVER_URL) {
+  if (process.env.VITE_DEV_SERVER_URL !== undefined) {
     void win.loadURL(process.env.VITE_DEV_SERVER_URL)
     win.webContents.openDevTools()
   }

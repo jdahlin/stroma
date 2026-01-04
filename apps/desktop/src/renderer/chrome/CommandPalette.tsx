@@ -45,8 +45,11 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
           value={query}
           onChange={e => setQuery(e.target.value)}
           onKeyDown={(e) => {
-            if (e.key === 'Enter' && filteredCommands[0]) {
-              void executeCommand(filteredCommands[0].id)
+            if (e.key === 'Enter') {
+              const first = filteredCommands[0]
+              if (first !== undefined) {
+                void executeCommand(first.id)
+              }
             }
           }}
           placeholder="Type a command..."
