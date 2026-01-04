@@ -12,10 +12,6 @@
       "cache": false,
       "persistent": true
     },
-    "lint": {
-      "dependsOn": ["^build"],
-      "env": ["ELECTRON_RUN_AS_NODE"]
-    },
     "test": {
       "dependsOn": ["^build"],
       "env": ["ELECTRON_RUN_AS_NODE"]
