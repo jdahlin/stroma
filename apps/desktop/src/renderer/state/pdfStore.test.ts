@@ -1,14 +1,15 @@
+import type { PdfSourceId } from '@repo/core'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { persistState } from './persist'
 import { usePdfStore } from './pdfStore'
+import { persistState } from './persist'
 
 const STORAGE_KEY = 'stroma-pdf-panes'
 
-const createPayload = () => {
+function createPayload() {
   const now = new Date('2025-01-01T00:00:00.000Z')
   return {
     source: {
-      id: 'source-1',
+      id: 'source-1' as PdfSourceId,
       name: 'Test PDF',
       path: '/tmp/test.pdf',
       createdAt: now,
@@ -18,17 +19,17 @@ const createPayload = () => {
   }
 }
 
-const readStoredPane = (paneId: string) => {
+function readStoredPane(paneId: string) {
   const raw = localStorage.getItem(STORAGE_KEY)
-  if (!raw)
+  if (raw === null)
     return null
   const parsed = JSON.parse(raw) as { data: Record<string, unknown> }
   const data = parsed.data as Record<string, { scrollPosition?: unknown }>
   return data[paneId]
 }
 
-const resetStore = () => {
-  usePdfStore.setState((state) => ({
+function resetStore() {
+  usePdfStore.setState(state => ({
     ...state,
     panes: {},
     activePaneId: null,

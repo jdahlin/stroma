@@ -101,7 +101,7 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
 
   useEffect(() => {
     const viewport = scrollRef.current
-    if (!viewport || !basePageWidth || !onFitWidthScaleChange)
+    if (!viewport || basePageWidth === null || !onFitWidthScaleChange)
       return
 
     const updateScale = (width: number) => {

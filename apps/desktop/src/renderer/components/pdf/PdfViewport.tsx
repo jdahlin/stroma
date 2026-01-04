@@ -17,19 +17,12 @@ export const PdfViewport: React.FC<PdfViewportProps> = ({
   const rafRef = React.useRef<number | null>(null)
   const viewportRef = React.useRef<HTMLDivElement | null>(null)
 
-  const setRefs = React.useCallback(
-    (node: HTMLDivElement | null) => {
-      viewportRef.current = node
-      if (!scrollRef)
-        return
-      if (typeof scrollRef === 'function') {
-        scrollRef(node)
-      } else {
-        scrollRef.current = node
-      }
-    },
-    [scrollRef],
-  )
+  const setRefs = React.useCallback((node: HTMLDivElement | null) => {
+    viewportRef.current = node
+    if (scrollRef) {
+      scrollRef.current = node
+    }
+  }, [scrollRef])
 
   React.useEffect(() => {
     return () => {

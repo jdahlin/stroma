@@ -19,7 +19,7 @@ interface StoredPdfReference {
 
 type StoredPaneMap = Record<string, StoredPdfReference>
 
-type ScrollPersistRecord = {
+interface ScrollPersistRecord {
   position: PdfScrollPosition
   timeoutId: number
 }

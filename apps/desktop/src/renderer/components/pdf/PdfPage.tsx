@@ -1,5 +1,5 @@
 import type { PdfAnchor, PdfRect } from '@repo/core'
-import type { PDFDocumentProxy } from 'pdfjs-dist/types/src/display/api'
+import type { PDFDocumentProxy, RenderTask } from 'pdfjs-dist/types/src/display/api'
 import { setLayerDimensions, TextLayer } from 'pdfjs-dist/legacy/build/pdf'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { PdfOverlayLayer } from './PdfOverlayLayer'
@@ -36,7 +36,7 @@ export const PdfPage: React.FC<PdfPageProps> = ({
     if (!doc)
       return
     let cancelled = false
-    let renderTask: { cancel: () => void } | null = null
+    let renderTask: RenderTask | null = null
 
     const renderPage = async () => {
       const page = await doc.getPage(pageNumber)
