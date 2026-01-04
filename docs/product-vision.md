@@ -111,4 +111,13 @@ Guiding principles
 • Keyboard over mouse
 • Longevity over novelty
 
+## See also
+
+- Docs index: [`docs/README.md`](./README.md)
+- MVP roadmap: [`roadmap-mvp.md`](./roadmap-mvp.md)
+- Storage plan: [`storage/README.md`](./storage/README.md)
+- Editor docs: [`editor/README.md`](./editor/README.md)
+- PDF docs: [`pdf/README.md`](./pdf/README.md)
+
 If you want, the next useful artifact would be a one-page “user flow” showing how a PDF moves through the system from import to long-term knowledge.
+See `docs/storage/README.md` for the storage plan.

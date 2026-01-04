@@ -41,3 +41,7 @@ Terminal:
 xattr -dr com.apple.quarantine /path/to/Stroma.app
 open /path/to/Stroma.app
 ```
+
+## Docs
+
+- Docs index: [`docs/README.md`](./docs/README.md)
