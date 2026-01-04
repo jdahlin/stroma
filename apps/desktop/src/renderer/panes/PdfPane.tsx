@@ -23,6 +23,15 @@ export const PdfPane: React.FC<IDockviewPanelProps> = ({ api }) => {
   const bumpScrollRestoreToken = usePdfStore(state => state.bumpScrollRestoreToken)
 
   const [loadState, setLoadState] = useState<'idle' | 'loading' | 'ready' | 'error'>('idle')
+  const [prevData, setPrevData] = useState<Uint8Array | undefined>(paneState?.data)
+
+  // Sync loadState when data changes
+  if (paneState?.data !== prevData) {
+    setPrevData(paneState?.data)
+    if (paneState?.data) {
+      setLoadState('loading')
+    }
+  }
   const skipCleanupRef = useRef(true)
   const isUnloadingRef = useRef(false)
   const scale = paneState?.scale ?? 1
@@ -109,12 +118,6 @@ export const PdfPane: React.FC<IDockviewPanelProps> = ({ api }) => {
     }
     void restore()
   }, [api, paneId, paneState, restorePane, setPaneData])
-
-  useEffect(() => {
-    if (!paneState?.data)
-      return
-    setLoadState('loading')
-  }, [paneState?.data])
 
   const handleLoadStateChange = useCallback((state: 'loading' | 'ready' | 'error') => {
     if (state === 'loading')

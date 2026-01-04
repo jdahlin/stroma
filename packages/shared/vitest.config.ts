@@ -1,4 +1,4 @@
-import baseConfig from '@repo/vitest-config'
+import { config } from '@repo/vitest-config'
 import { defineConfig, mergeConfig } from 'vitest/config'
 
-export default mergeConfig(baseConfig, defineConfig({}))
+export default defineConfig(mergeConfig(config, {}))

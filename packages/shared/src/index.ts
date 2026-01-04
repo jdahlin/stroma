@@ -1,2 +1,2 @@
-export * from './types'
+export * from './shared.types'
 export * from './utils'
