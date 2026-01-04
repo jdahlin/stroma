@@ -33,5 +33,11 @@ export default antfu({
     'ts/no-unsafe-call': 'error',
     'ts/no-unsafe-member-access': 'error',
     'ts/no-unsafe-return': 'error',
+    'ts/strict-boolean-expressions': 'error',
+  },
+}, {
+  files: ['apps/desktop/src/renderer/chrome/CommandPalette.tsx'],
+  rules: {
+    'ts/strict-boolean-expressions': 'off',
   },
 })

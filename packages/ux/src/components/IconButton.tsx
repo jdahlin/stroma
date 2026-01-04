@@ -66,9 +66,9 @@ export const IconButton: React.FC<IconButtonProps> = ({
     ...baseStyles,
     width: buttonSize,
     height: buttonSize,
-    ...(isHovered && !disabled ? hoverStyles : {}),
-    ...(isActive && !disabled ? activeStyles : {}),
-    ...(disabled ? disabledStyles : {}),
+    ...(isHovered && !(disabled === true) ? hoverStyles : {}),
+    ...(isActive && !(disabled === true) ? activeStyles : {}),
+    ...(disabled === true ? disabledStyles : {}),
     ...style,
   }
 

@@ -65,8 +65,8 @@ export const Button: React.FC<ButtonProps> = ({
         ...baseStyles,
         ...variantStyles[variant],
         ...sizeStyles[size],
-        opacity: disabled ? 0.5 : 1,
-        cursor: disabled ? 'not-allowed' : 'pointer',
+        opacity: disabled === true ? 0.5 : 1,
+        cursor: disabled === true ? 'not-allowed' : 'pointer',
         ...style,
       }}
       disabled={disabled}

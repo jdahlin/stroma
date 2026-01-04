@@ -4,7 +4,7 @@ import './SidebarAnchors.css'
 
 export const SidebarAnchors: React.FC = () => {
   const activePaneId = usePdfStore(state => state.activePaneId)
-  const paneState = usePdfStore(state => (activePaneId ? state.panes[activePaneId] : undefined))
+  const paneState = usePdfStore(state => (activePaneId !== null ? state.panes[activePaneId] : undefined))
   const focusAnchor = usePdfStore(state => state.focusAnchor)
 
   if (!paneState) {
@@ -38,7 +38,7 @@ export const SidebarAnchors: React.FC = () => {
                   type="button"
                   className="sidebar-anchor-item"
                   onClick={() => {
-                    if (activePaneId) {
+                    if (activePaneId !== null) {
                       focusAnchor(activePaneId, anchor.id)
                     }
                   }}

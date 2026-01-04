@@ -20,7 +20,7 @@ void app.whenReady().then(async () => {
     }
 
     const filePath = result.filePaths[0]
-    if (!filePath) {
+    if (filePath === undefined) {
       return null
     }
 

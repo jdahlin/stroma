@@ -37,7 +37,7 @@ export function registerCommands(): () => void {
         return
 
       const paneId = useLayoutStore.getState().openPdfPane(payload.source.name)
-      if (!paneId)
+      if (paneId === undefined)
         return
 
       usePdfStore.getState().setPaneData(paneId, payload)

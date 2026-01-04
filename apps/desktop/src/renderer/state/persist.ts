@@ -30,7 +30,7 @@ export function persistState<T>(key: string, data: T): void {
 export function restoreState<T>(key: string): T | null {
   try {
     const raw = localStorage.getItem(key)
-    if (!raw)
+    if (raw === null)
       return null
 
     const payload = JSON.parse(raw) as unknown as PersistedState<T>
