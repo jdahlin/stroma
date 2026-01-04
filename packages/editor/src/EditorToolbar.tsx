@@ -1,3 +1,4 @@
+import type { PdfAnchorId, PdfSourceId } from '@repo/core'
 import type { Editor } from '@tiptap/core'
 import { IconButton } from '@repo/ux'
 import {
@@ -75,6 +76,8 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
   }, [])
 
   const handleImageInsert = useCallback(() => {
+    if (!editor)
+      return
     const url = window.prompt('Image URL')
     if (!url)
       return
@@ -82,6 +85,8 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
   }, [editor])
 
   const handlePdfReferenceInsert = useCallback(() => {
+    if (!editor)
+      return
     const sourceName = window.prompt('PDF name')
     if (!sourceName)
       return
@@ -96,8 +101,8 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
       .chain()
       .focus()
       .insertPdfReference({
-        anchorId: crypto.randomUUID(),
-        sourceId: crypto.randomUUID(),
+        anchorId: crypto.randomUUID() as PdfAnchorId,
+        sourceId: crypto.randomUUID() as PdfSourceId,
         sourceName: sourceName.trim() || 'PDF',
         pageIndex: pageNumber - 1,
       })
