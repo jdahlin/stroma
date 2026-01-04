@@ -35,6 +35,7 @@ export default antfu({
     'ts/no-unsafe-return': 'error',
     'ts/strict-boolean-expressions': 'error',
     'react/no-leaked-conditional-rendering': 'error',
+    'react/no-nested-components': 'error',
   },
 }, {
   files: ['apps/desktop/src/renderer/chrome/CommandPalette.tsx'],
