@@ -1,3 +1,3 @@
-export * from './panes';
-export * from './commands';
-export * from './model';
+export * from './commands'
+export * from './model'
+export * from './panes'

@@ -1,17 +1,17 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { TextLayer, setLayerDimensions } from 'pdfjs-dist/legacy/build/pdf';
-import type { PDFDocumentProxy } from 'pdfjs-dist/types/src/display/api';
-import type { PdfAnchor, PdfRect } from '@repo/core';
-import { PdfSelectionLayer } from './PdfSelectionLayer';
-import { PdfOverlayLayer } from './PdfOverlayLayer';
-import './PdfPage.css';
+import type { PdfAnchor, PdfRect } from '@repo/core'
+import type { PDFDocumentProxy } from 'pdfjs-dist/types/src/display/api'
+import { setLayerDimensions, TextLayer } from 'pdfjs-dist/legacy/build/pdf'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
+import { PdfOverlayLayer } from './PdfOverlayLayer'
+import { PdfSelectionLayer } from './PdfSelectionLayer'
+import './PdfPage.css'
 
 interface PdfPageProps {
-  doc: PDFDocumentProxy | null;
-  pageNumber: number;
-  scale: number;
-  anchors: PdfAnchor[];
-  onCreateTextAnchor: (pageIndex: number, text: string, rects: PdfRect[]) => void;
+  doc: PDFDocumentProxy | null
+  pageNumber: number
+  scale: number
+  anchors: PdfAnchor[]
+  onCreateTextAnchor: (pageIndex: number, text: string, rects: PdfRect[]) => void
 }
 
 export const PdfPage: React.FC<PdfPageProps> = ({
@@ -21,58 +21,79 @@ export const PdfPage: React.FC<PdfPageProps> = ({
   anchors,
   onCreateTextAnchor,
 }) => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const textLayerRef = useRef<HTMLDivElement>(null);
-  const pageRef = useRef<HTMLDivElement>(null);
-  const [pageSize, setPageSize] = useState<{ width: number; height: number } | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const textLayerRef = useRef<HTMLDivElement>(null)
+  const pageRef = useRef<HTMLDivElement>(null)
+  const [pageSize, setPageSize] = useState<{ width: number, height: number } | null>(null)
 
-  const pageIndex = pageNumber - 1;
+  const pageIndex = pageNumber - 1
 
   const pageAnchors = useMemo(() => {
-    return anchors.filter((anchor) => anchor.pageIndex === pageIndex);
-  }, [anchors, pageIndex]);
+    return anchors.filter(anchor => anchor.pageIndex === pageIndex)
+  }, [anchors, pageIndex])
 
   useEffect(() => {
-    if (!doc) return;
-    let cancelled = false;
+    if (!doc)
+      return
+    let cancelled = false
 
     const renderPage = async () => {
-      const page = await doc.getPage(pageNumber);
-      const viewport = page.getViewport({ scale });
-      if (cancelled) return;
+      const page = await doc.getPage(pageNumber)
+      const viewport = page.getViewport({ scale })
+      if (cancelled)
+        return
 
-      setPageSize({ width: viewport.width, height: viewport.height });
+      setPageSize({ width: viewport.width, height: viewport.height })
 
-      const canvas = canvasRef.current;
-      if (!canvas) return;
-      const context = canvas.getContext('2d');
-      if (!context) return;
+      const canvas = canvasRef.current
+      if (!canvas)
+        return
+      const context = canvas.getContext('2d')
+      if (!context)
+        return
 
-      canvas.width = viewport.width;
-      canvas.height = viewport.height;
+      canvas.width = viewport.width
+      canvas.height = viewport.height
 
-      await page.render({ canvasContext: context, viewport }).promise;
-
-      const textLayer = textLayerRef.current;
-      if (textLayer) {
-        textLayer.innerHTML = '';
-        setLayerDimensions(textLayer, viewport);
-        const textContent = await page.getTextContent();
-        const layer = new TextLayer({
-          textContentSource: textContent,
-          container: textLayer,
-          viewport,
-        });
-        await layer.render();
+      const renderContext = {
+        canvasContext: context,
+        viewport,
+        canvas: context.canvas,
       }
-    };
 
-    void renderPage();
+      try {
+        const renderTask = page.render(renderContext)
+        await renderTask.promise
+
+        if (cancelled)
+          return
+
+        const textLayer = textLayerRef.current
+        if (textLayer) {
+          textLayer.innerHTML = ''
+          setLayerDimensions(textLayer, viewport)
+          const textContent = await page.getTextContent()
+          const layer = new TextLayer({
+            textContentSource: textContent,
+            container: textLayer,
+            viewport,
+          })
+          await layer.render()
+        }
+      }
+      catch (error) {
+        if (!cancelled) {
+          console.error(error)
+        }
+      }
+    }
+
+    void renderPage()
 
     return () => {
-      cancelled = true;
-    };
-  }, [doc, pageNumber, scale]);
+      cancelled = true
+    }
+  }, [doc, pageNumber, scale])
 
   const pageStyle: React.CSSProperties | undefined = pageSize
     ? {
@@ -80,7 +101,7 @@ export const PdfPage: React.FC<PdfPageProps> = ({
         height: pageSize.height,
         ['--scale-factor' as string]: scale,
       }
-    : { ['--scale-factor' as string]: scale };
+    : { ['--scale-factor' as string]: scale }
 
   return (
     <div
@@ -94,5 +115,5 @@ export const PdfPage: React.FC<PdfPageProps> = ({
       <PdfSelectionLayer pageRef={pageRef} onCreateTextAnchor={onCreateTextAnchor} />
       <PdfOverlayLayer anchors={pageAnchors} />
     </div>
-  );
-};
+  )
+}

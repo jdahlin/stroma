@@ -4,18 +4,19 @@
   "private": true,
   "productName": "Stroma",
   "description": "A desktop knowledge work environment for deep reading and learning",
-  "homepage": "https://github.com/jdahlin/stroma",
-  "license": "MIT",
-  "repository": {
-    "url": "https://github.com/jdahlin/stroma",
-  },
   "author": {
     "name": "Johan Dahlin",
     "email": "jdahlin@gmail.com"
   },
+  "license": "MIT",
+  "homepage": "https://github.com/jdahlin/stroma",
+  "repository": {
+    "url": "https://github.com/jdahlin/stroma"
+  },
   "main": "dist/main/index.js",
   "scripts": {
     "dev": "tsx scripts/dev.ts",
+    "lint": "eslint .",
     "build": "pnpm run build:main && pnpm run build:preload && pnpm run build:renderer",
     "build:main": "esbuild src/main/index.ts --bundle --platform=node --format=cjs --sourcemap --tsconfig=tsconfig.main.json --outfile=dist/main/index.js --external:electron --conditions=import",
     "build:preload": "esbuild src/preload/index.ts --bundle --platform=node --format=cjs --sourcemap --tsconfig=tsconfig.preload.json --outfile=dist/preload/index.js --external:electron --conditions=import",
@@ -41,7 +42,6 @@
     "zustand": "^5.0.2"
   },
   "devDependencies": {
-    "electron-builder": "^25.1.8",
     "@repo/tailwind-config": "workspace:*",
     "@repo/tsconfig": "workspace:*",
     "@types/node": "22.7.7",
@@ -50,6 +50,7 @@
     "@vitejs/plugin-react": "^4.3.4",
     "autoprefixer": "^10.4.20",
     "electron": "39.2.7",
+    "electron-builder": "^25.1.8",
     "esbuild": "^0.27.0",
     "node-abi": "4.24.0",
     "postcss": "^8.5.0",

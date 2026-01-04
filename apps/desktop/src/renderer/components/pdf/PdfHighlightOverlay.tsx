@@ -1,9 +1,9 @@
-import React from 'react';
-import type { PdfTextAnchor } from '@repo/core';
-import './PdfHighlightOverlay.css';
+import type { PdfTextAnchor } from '@repo/core'
+import React from 'react'
+import './PdfHighlightOverlay.css'
 
 interface PdfHighlightOverlayProps {
-  anchor: PdfTextAnchor;
+  anchor: PdfTextAnchor
 }
 
 export const PdfHighlightOverlay: React.FC<PdfHighlightOverlayProps> = ({ anchor }) => {
@@ -11,6 +11,7 @@ export const PdfHighlightOverlay: React.FC<PdfHighlightOverlayProps> = ({ anchor
     <>
       {anchor.rects.map((rect, index) => (
         <div
+          // eslint-disable-next-line react/no-array-index-key
           key={`${anchor.id}-${index}`}
           className="pdf-highlight"
           data-anchor-id={anchor.id}
@@ -23,5 +24,5 @@ export const PdfHighlightOverlay: React.FC<PdfHighlightOverlayProps> = ({ anchor
         />
       ))}
     </>
-  );
-};
+  )
+}

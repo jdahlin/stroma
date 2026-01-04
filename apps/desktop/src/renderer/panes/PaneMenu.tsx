@@ -1,39 +1,39 @@
-import React, { useEffect, useRef, useState } from 'react';
-import './Pane.css';
+import React, { useEffect, useRef, useState } from 'react'
+import './Pane.css'
 
 export const PaneMenu: React.FC = () => {
-  const [open, setOpen] = useState(false);
-  const rootRef = useRef<HTMLDivElement>(null);
+  const [open, setOpen] = useState(false)
+  const rootRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (!open) {
-      return;
+      return
     }
 
     const handlePointerDown = (event: MouseEvent) => {
       if (!rootRef.current) {
-        return;
+        return
       }
 
       if (!rootRef.current.contains(event.target as Node)) {
-        setOpen(false);
+        setOpen(false)
       }
-    };
+    }
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
-        setOpen(false);
+        setOpen(false)
       }
-    };
+    }
 
-    document.addEventListener('mousedown', handlePointerDown);
-    document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener('mousedown', handlePointerDown)
+    document.addEventListener('keydown', handleKeyDown)
 
     return () => {
-      document.removeEventListener('mousedown', handlePointerDown);
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [open]);
+      document.removeEventListener('mousedown', handlePointerDown)
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [open])
 
   return (
     <div className="pane-menu" ref={rootRef}>
@@ -42,7 +42,7 @@ export const PaneMenu: React.FC = () => {
         className="pane-menu-button"
         aria-haspopup="menu"
         aria-expanded={open}
-        onClick={() => setOpen((value) => !value)}
+        onClick={() => setOpen(value => !value)}
       >
         <span className="pane-menu-icon" aria-hidden="true" />
       </button>
@@ -54,5 +54,5 @@ export const PaneMenu: React.FC = () => {
         </div>
       )}
     </div>
-  );
-};
+  )
+}

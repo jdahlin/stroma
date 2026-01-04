@@ -1,11 +1,21 @@
 /* Offset the leftmost tab strip where it can sit under window controls. */
-.app-content:not(:has(.sidebar-left.is-open)) .dockview-theme-stroma .dv-split-view-container.dv-horizontal > .dv-view-container:first-child > .dv-view:first-child .dv-groupview .dv-scrollable,
-.app-content:not(:has(.sidebar-left.is-open)) .dockview-theme-stroma .dv-split-view-container.dv-horizontal > .dv-view-container:nth-child(2) > .dv-view:first-child .dv-groupview .dv-scrollable {
+.app-content:not(:has(.sidebar-left.is-open))
+  .dockview-theme-stroma
+  .dv-split-view-container.dv-horizontal
+  > .dv-view-container:first-child
+  > .dv-view:first-child
+  .dv-groupview
+  .dv-scrollable,
+.app-content:not(:has(.sidebar-left.is-open))
+  .dockview-theme-stroma
+  .dv-split-view-container.dv-horizontal
+  > .dv-view-container:nth-child(2)
+  > .dv-view:first-child
+  .dv-groupview
+  .dv-scrollable {
   /* calculate margin from traffic lights base, plus ribbon and sidebar offsets */
   margin-left: calc(
-    var(--stroma-traffic-offset, 40px) +
-    var(--ribbon-offset, 0px) +
-    var(--sidebar-offset, 0px)
+    var(--stroma-traffic-offset, 40px) + var(--ribbon-offset, 0px) + var(--sidebar-offset, 0px)
   ) !important;
 }
 

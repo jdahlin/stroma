@@ -3,8 +3,8 @@
  * In Dockview v4, gap is handled via CSS custom properties.
  */
 export interface StromaTheme {
-  name: string;
-  className: string;
+  name: string
+  className: string
 }
 
 /**
@@ -14,4 +14,4 @@ export interface StromaTheme {
 export const stromaTheme: StromaTheme = {
   name: 'stroma',
   className: 'dockview-theme-stroma',
-};
+}

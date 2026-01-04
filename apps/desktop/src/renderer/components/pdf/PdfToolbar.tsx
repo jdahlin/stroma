@@ -1,12 +1,12 @@
-import React from 'react';
-import './PdfToolbar.css';
+import React from 'react'
+import './PdfToolbar.css'
 
 interface PdfToolbarProps {
-  title: string;
-  scale: number;
-  onZoomIn: () => void;
-  onZoomOut: () => void;
-  onOpenPdf: () => void;
+  title: string
+  scale: number
+  onZoomIn: () => void
+  onZoomOut: () => void
+  onOpenPdf: () => void
 }
 
 export const PdfToolbar: React.FC<PdfToolbarProps> = ({
@@ -27,12 +27,15 @@ export const PdfToolbar: React.FC<PdfToolbarProps> = ({
           <button type="button" onClick={onZoomOut}>
             -
           </button>
-          <span>{Math.round(scale * 100)}%</span>
+          <span>
+            {Math.round(scale * 100)}
+            %
+          </span>
           <button type="button" onClick={onZoomIn}>
             +
           </button>
         </div>
       </div>
     </div>
-  );
-};
+  )
+}

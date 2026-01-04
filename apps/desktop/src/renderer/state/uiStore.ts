@@ -1,28 +1,28 @@
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { create } from 'zustand'
+import { persist } from 'zustand/middleware'
 
-export type Theme = 'light' | 'dark' | 'system';
-export type SidebarSide = 'left' | 'right';
+export type Theme = 'light' | 'dark' | 'system'
+export type SidebarSide = 'left' | 'right'
 
 interface SidebarState {
-  open: boolean;
-  width: number; // in rem
+  open: boolean
+  width: number // in rem
 }
 
 interface UIState {
-  theme: Theme;
-  sidebars: Record<SidebarSide, SidebarState>;
-  ribbonOpen: boolean;
-  commandPaletteOpen: boolean;
-  setTheme: (theme: Theme) => void;
-  getSidebar: (side: SidebarSide) => SidebarState;
-  toggleSidebar: (side: SidebarSide) => void;
-  setSidebarWidth: (side: SidebarSide, width: number) => void;
-  toggleRibbon: () => void;
-  toggleCommandPalette: () => void;
+  theme: Theme
+  sidebars: Record<SidebarSide, SidebarState>
+  ribbonOpen: boolean
+  commandPaletteOpen: boolean
+  setTheme: (theme: Theme) => void
+  getSidebar: (side: SidebarSide) => SidebarState
+  toggleSidebar: (side: SidebarSide) => void
+  setSidebarWidth: (side: SidebarSide, width: number) => void
+  toggleRibbon: () => void
+  toggleCommandPalette: () => void
 }
 
-const DEFAULT_SIDEBAR_WIDTH = 15; // rem
+const DEFAULT_SIDEBAR_WIDTH = 15 // rem
 
 export const useUIStore = create<UIState>()(
   persist(
@@ -35,12 +35,12 @@ export const useUIStore = create<UIState>()(
       ribbonOpen: true,
       commandPaletteOpen: false,
 
-      setTheme: (theme) => set({ theme }),
+      setTheme: theme => set({ theme }),
 
-      getSidebar: (side) => get().sidebars[side],
+      getSidebar: side => get().sidebars[side],
 
-      toggleSidebar: (side) =>
-        set((state) => ({
+      toggleSidebar: side =>
+        set(state => ({
           sidebars: {
             ...state.sidebars,
             [side]: {
@@ -51,7 +51,7 @@ export const useUIStore = create<UIState>()(
         })),
 
       setSidebarWidth: (side, width) =>
-        set((state) => ({
+        set(state => ({
           sidebars: {
             ...state.sidebars,
             [side]: {
@@ -62,22 +62,22 @@ export const useUIStore = create<UIState>()(
         })),
 
       toggleRibbon: () =>
-        set((state) => ({
+        set(state => ({
           ribbonOpen: !state.ribbonOpen,
         })),
 
       toggleCommandPalette: () =>
-        set((state) => ({
+        set(state => ({
           commandPaletteOpen: !state.commandPaletteOpen,
         })),
     }),
     {
       name: 'stroma-ui',
-      partialize: (state) => ({
+      partialize: state => ({
         theme: state.theme,
         sidebars: state.sidebars,
         ribbonOpen: state.ribbonOpen,
       }),
-    }
-  )
-);
+    },
+  ),
+)

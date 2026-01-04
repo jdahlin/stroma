@@ -1,9 +1,9 @@
-import React from 'react';
-import type { PdfPointAnchor } from '@repo/core';
-import './PdfAnchorMarker.css';
+import type { PdfPointAnchor } from '@repo/core'
+import React from 'react'
+import './PdfAnchorMarker.css'
 
 interface PdfAnchorMarkerProps {
-  anchor: PdfPointAnchor;
+  anchor: PdfPointAnchor
 }
 
 export const PdfAnchorMarker: React.FC<PdfAnchorMarkerProps> = ({ anchor }) => {
@@ -16,5 +16,5 @@ export const PdfAnchorMarker: React.FC<PdfAnchorMarkerProps> = ({ anchor }) => {
         top: `${anchor.point.y * 100}%`,
       }}
     />
-  );
-};
+  )
+}

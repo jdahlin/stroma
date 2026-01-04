@@ -1,12 +1,12 @@
-import React from 'react';
-import { IconButton, Home, FileText, Search, Settings, PanelLeft, PanelRight } from '@repo/ux';
-import { useUIStore } from '../state';
-import './Ribbon.css';
+import { FileText, Home, IconButton, PanelLeft, PanelRight, Search, Settings } from '@repo/ux'
+import React from 'react'
+import { useUIStore } from '../state'
+import './Ribbon.css'
 
 export const Ribbon: React.FC = () => {
-  const { toggleSidebar, sidebars } = useUIStore();
-  const leftOpen = sidebars.left.open;
-  const rightOpen = sidebars.right.open;
+  const { toggleSidebar, sidebars } = useUIStore()
+  const leftOpen = sidebars.left.open
+  const rightOpen = sidebars.right.open
 
   return (
     <aside className="ribbon">
@@ -47,5 +47,5 @@ export const Ribbon: React.FC = () => {
         />
       </div>
     </aside>
-  );
-};
+  )
+}

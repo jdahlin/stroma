@@ -1,22 +1,22 @@
-import React, { useState } from 'react';
-import type { LucideIcon } from 'lucide-react';
-import { Icon, type IconSize } from './Icon';
+import type { LucideIcon } from 'lucide-react'
+import React, { useState } from 'react'
+import { Icon, type IconSize } from './Icon'
 
-export type IconButtonSize = 'sm' | 'md' | 'lg';
+export type IconButtonSize = 'sm' | 'md' | 'lg'
 
 export interface IconButtonProps
   extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'children'> {
-  icon: LucideIcon;
-  size?: IconButtonSize;
+  icon: LucideIcon
+  size?: IconButtonSize
   /** Accessible label for screen readers */
-  label: string;
+  label: string
 }
 
-const sizeStyles: Record<IconButtonSize, { button: string; icon: IconSize }> = {
+const sizeStyles: Record<IconButtonSize, { button: string, icon: IconSize }> = {
   sm: { button: '1.75rem', icon: 'sm' },
   md: { button: '2.25rem', icon: 'md' },
   lg: { button: '2.75rem', icon: 'lg' },
-};
+}
 
 const baseStyles: React.CSSProperties = {
   display: 'flex',
@@ -28,21 +28,21 @@ const baseStyles: React.CSSProperties = {
   borderRadius: 'var(--radius-sm)',
   cursor: 'pointer',
   transition: 'all var(--transition-fast)',
-};
+}
 
 const hoverStyles: React.CSSProperties = {
   backgroundColor: 'var(--color-bg-tertiary)',
   color: 'var(--color-text-primary)',
-};
+}
 
 const activeStyles: React.CSSProperties = {
   backgroundColor: 'var(--color-bg-active)',
-};
+}
 
 const disabledStyles: React.CSSProperties = {
   opacity: 0.5,
   cursor: 'not-allowed',
-};
+}
 
 export const IconButton: React.FC<IconButtonProps> = ({
   icon,
@@ -56,11 +56,11 @@ export const IconButton: React.FC<IconButtonProps> = ({
   onMouseUp,
   ...props
 }) => {
-  const [isHovered, setIsHovered] = useState(false);
-  const [isActive, setIsActive] = useState(false);
+  const [isHovered, setIsHovered] = useState(false)
+  const [isActive, setIsActive] = useState(false)
 
-  const sizeConfig = sizeStyles[size];
-  const buttonSize = sizeConfig.button;
+  const sizeConfig = sizeStyles[size]
+  const buttonSize = sizeConfig.button
 
   const computedStyle: React.CSSProperties = {
     ...baseStyles,
@@ -70,7 +70,7 @@ export const IconButton: React.FC<IconButtonProps> = ({
     ...(isActive && !disabled ? activeStyles : {}),
     ...(disabled ? disabledStyles : {}),
     ...style,
-  };
+  }
 
   return (
     <button
@@ -80,25 +80,25 @@ export const IconButton: React.FC<IconButtonProps> = ({
       title={label}
       aria-label={label}
       onMouseEnter={(e) => {
-        setIsHovered(true);
-        onMouseEnter?.(e);
+        setIsHovered(true)
+        onMouseEnter?.(e)
       }}
       onMouseLeave={(e) => {
-        setIsHovered(false);
-        setIsActive(false);
-        onMouseLeave?.(e);
+        setIsHovered(false)
+        setIsActive(false)
+        onMouseLeave?.(e)
       }}
       onMouseDown={(e) => {
-        setIsActive(true);
-        onMouseDown?.(e);
+        setIsActive(true)
+        onMouseDown?.(e)
       }}
       onMouseUp={(e) => {
-        setIsActive(false);
-        onMouseUp?.(e);
+        setIsActive(false)
+        onMouseUp?.(e)
       }}
       {...props}
     >
       <Icon icon={icon} size={sizeConfig.icon} />
     </button>
-  );
-};
+  )
+}

@@ -1,10 +1,10 @@
 {
   "name": "@repo/vitest-config",
+  "type": "module",
   "version": "0.0.0",
   "private": true,
-  "type": "module",
-  "main": "vitest.config.ts",
   "exports": {
     ".": "./vitest.config.ts"
-  }
+  },
+  "main": "vitest.config.ts"
 }

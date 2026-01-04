@@ -1,37 +1,38 @@
-import { Menu, app, shell, BrowserWindow, ipcMain, type MenuItemConstructorOptions } from 'electron';
-import { COMMANDS } from '@repo/core';
+import process from 'node:process'
+import { COMMANDS } from '@repo/core'
+import { app, BrowserWindow, ipcMain, Menu, type MenuItemConstructorOptions, shell } from 'electron'
 
-type UiState = {
+interface UiState {
   sidebars: {
-    left: { open: boolean };
-    right: { open: boolean };
-  };
-  ribbonOpen: boolean;
-};
+    left: { open: boolean }
+    right: { open: boolean }
+  }
+  ribbonOpen: boolean
+}
 
 function updateMenuState(state: UiState): void {
-  const menu = Menu.getApplicationMenu();
+  const menu = Menu.getApplicationMenu()
   if (!menu) {
-    return;
+    return
   }
 
-  const leftItem = menu.getMenuItemById('sidebar-left');
-  const rightItem = menu.getMenuItemById('sidebar-right');
-  const ribbonItem = menu.getMenuItemById('ribbon-toggle');
+  const leftItem = menu.getMenuItemById('sidebar-left')
+  const rightItem = menu.getMenuItemById('sidebar-right')
+  const ribbonItem = menu.getMenuItemById('ribbon-toggle')
 
   if (leftItem) {
-    leftItem.checked = state.sidebars.left.open;
+    leftItem.checked = state.sidebars.left.open
   }
   if (rightItem) {
-    rightItem.checked = state.sidebars.right.open;
+    rightItem.checked = state.sidebars.right.open
   }
   if (ribbonItem) {
-    ribbonItem.checked = state.ribbonOpen;
+    ribbonItem.checked = state.ribbonOpen
   }
 }
 
 export function setupMenu(): void {
-  const isMac = process.platform === 'darwin';
+  const isMac = process.platform === 'darwin'
 
   const template: MenuItemConstructorOptions[] = [
     // App menu (macOS only)
@@ -62,12 +63,12 @@ export function setupMenu(): void {
           label: 'Open PDF...',
           accelerator: 'CmdOrCtrl+O',
           click: () => {
-            const window = BrowserWindow.getFocusedWindow();
+            const window = BrowserWindow.getFocusedWindow()
             if (!window) {
-              console.error('No focused window found');
-              return;
+              console.error('No focused window found')
+              return
             }
-            window.webContents.send('execute-command', COMMANDS.openPdf);
+            window.webContents.send('execute-command', COMMANDS.openPdf)
           },
         },
         { type: 'separator' },
@@ -75,24 +76,24 @@ export function setupMenu(): void {
           label: 'New Tab',
           accelerator: 'CmdOrCtrl+T',
           click: () => {
-            const window = BrowserWindow.getFocusedWindow();
+            const window = BrowserWindow.getFocusedWindow()
             if (!window) {
-              console.error('No focused window found');
-              return;
+              console.error('No focused window found')
+              return
             }
-            window.webContents.send('execute-command', COMMANDS.newTab);
+            window.webContents.send('execute-command', COMMANDS.newTab)
           },
         },
         {
           label: 'Close Tab',
           accelerator: 'CmdOrCtrl+W',
           click: () => {
-            const window = BrowserWindow.getFocusedWindow();
+            const window = BrowserWindow.getFocusedWindow()
             if (!window) {
-              console.error('No focused window found');
-              return;
+              console.error('No focused window found')
+              return
             }
-            window.webContents.send('execute-command', COMMANDS.closeTab);
+            window.webContents.send('execute-command', COMMANDS.closeTab)
           },
         },
         { type: 'separator' },
@@ -131,23 +132,23 @@ export function setupMenu(): void {
         {
           label: 'Split Right',
           click: () => {
-            const window = BrowserWindow.getFocusedWindow();
+            const window = BrowserWindow.getFocusedWindow()
             if (!window) {
-              console.error('No focused window found');
-              return;
+              console.error('No focused window found')
+              return
             }
-            window.webContents.send('execute-command', COMMANDS.splitRight);
+            window.webContents.send('execute-command', COMMANDS.splitRight)
           },
         },
         {
           label: 'Split Down',
           click: () => {
-            const window = BrowserWindow.getFocusedWindow();
+            const window = BrowserWindow.getFocusedWindow()
             if (!window) {
-              console.error('No focused window found');
-              return;
+              console.error('No focused window found')
+              return
             }
-            window.webContents.send('execute-command', COMMANDS.splitDown);
+            window.webContents.send('execute-command', COMMANDS.splitDown)
           },
         },
         { type: 'separator' },
@@ -157,12 +158,12 @@ export function setupMenu(): void {
           type: 'checkbox',
           checked: true,
           click: () => {
-            const window = BrowserWindow.getFocusedWindow();
+            const window = BrowserWindow.getFocusedWindow()
             if (!window) {
-              console.error('No focused window found');
-              return;
+              console.error('No focused window found')
+              return
             }
-            window.webContents.send('execute-command', COMMANDS.toggleRibbon);
+            window.webContents.send('execute-command', COMMANDS.toggleRibbon)
           },
         },
         {
@@ -172,12 +173,12 @@ export function setupMenu(): void {
           accelerator: 'CmdOrCtrl+\\',
           checked: true,
           click: () => {
-            const window = BrowserWindow.getFocusedWindow();
+            const window = BrowserWindow.getFocusedWindow()
             if (!window) {
-              console.error('No focused window found');
-              return;
+              console.error('No focused window found')
+              return
             }
-            window.webContents.send('execute-command', COMMANDS.toggleLeftSidebar);
+            window.webContents.send('execute-command', COMMANDS.toggleLeftSidebar)
           },
         },
         {
@@ -187,12 +188,12 @@ export function setupMenu(): void {
           accelerator: 'CmdOrCtrl+Shift+\\',
           checked: true,
           click: () => {
-            const window = BrowserWindow.getFocusedWindow();
+            const window = BrowserWindow.getFocusedWindow()
             if (!window) {
-              console.error('No focused window found');
-              return;
+              console.error('No focused window found')
+              return
             }
-            window.webContents.send('execute-command', COMMANDS.toggleRightSidebar);
+            window.webContents.send('execute-command', COMMANDS.toggleRightSidebar)
           },
         },
         { type: 'separator' },
@@ -222,18 +223,18 @@ export function setupMenu(): void {
       submenu: [
         {
           label: 'Learn More',
-          click: async () => {
-            await shell.openExternal('https://github.com/your-repo/stroma');
+          click: () => {
+            void shell.openExternal('https://github.com/your-repo/stroma')
           },
         },
       ],
     },
-  ];
+  ]
 
-  const menu = Menu.buildFromTemplate(template);
-  Menu.setApplicationMenu(menu);
+  const menu = Menu.buildFromTemplate(template)
+  Menu.setApplicationMenu(menu)
 
   ipcMain.on('ui-state', (_event, state: UiState) => {
-    updateMenuState(state);
-  });
+    updateMenuState(state)
+  })
 }

@@ -1,9 +1,9 @@
-import React from 'react';
-import type { PdfFigureAnchor } from '@repo/core';
-import './PdfFigureOverlay.css';
+import type { PdfFigureAnchor } from '@repo/core'
+import React from 'react'
+import './PdfFigureOverlay.css'
 
 interface PdfFigureOverlayProps {
-  anchor: PdfFigureAnchor;
+  anchor: PdfFigureAnchor
 }
 
 export const PdfFigureOverlay: React.FC<PdfFigureOverlayProps> = ({ anchor }) => {
@@ -18,5 +18,5 @@ export const PdfFigureOverlay: React.FC<PdfFigureOverlayProps> = ({ anchor }) =>
         height: `${anchor.rect.height * 100}%`,
       }}
     />
-  );
-};
+  )
+}
