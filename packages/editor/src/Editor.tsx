@@ -8,6 +8,8 @@ const containerStyles: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'column',
   height: '100%',
+  flex: 1,
+  minHeight: 0,
   backgroundColor: 'var(--color-bg-primary)',
 }
 
