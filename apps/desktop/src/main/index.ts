@@ -7,6 +7,7 @@ import { setupMenu } from './menu';
 app.commandLine.appendSwitch('remote-debugging-port', '9222');
 
 app.whenReady().then(() => {
+  ipcMain.handle('app:get-version', () => app.getVersion());
   ipcMain.handle('pdf:open-dialog', async () => {
     const result = await dialog.showOpenDialog({
       properties: ['openFile'],

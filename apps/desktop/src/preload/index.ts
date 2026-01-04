@@ -8,6 +8,7 @@ const api: StromaAPI = {
     chrome: process.versions.chrome,
     electron: process.versions.electron,
   },
+  appVersion: () => ipcRenderer.invoke('app:get-version'),
   openPdfDialog: () => ipcRenderer.invoke('pdf:open-dialog'),
   openPdfByPath: (path) => ipcRenderer.invoke('pdf:open-path', path),
   onCommand: (callback) => {
