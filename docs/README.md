@@ -26,6 +26,9 @@ This document explains how Stroma documentation is organized and where to start.
 | Feature docs | Editor, PDF, and storage slices. | "Read PDF docs for anchor behavior." |
 | Project docs | Repository and release process. | "Use the monorepo map for structure." |
 
+## Where are system design docs?
+- Undo-Redo System: [`undo-system.md`](./undo-system.md)
+
 ## Where should I start?
 - Product direction: [`product-vision.md`](./product-vision.md)
 - MVP roadmap: [`roadmap-mvp.md`](./roadmap-mvp.md)
