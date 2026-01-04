@@ -15,6 +15,10 @@ export const sharedBoundaries = {
             message: '@repo/shared cannot import from @repo/core',
           },
           {
+            group: ['@repo/storage', '@repo/storage/*'],
+            message: '@repo/shared cannot import from @repo/storage',
+          },
+          {
             group: ['@repo/ux', '@repo/ux/*'],
             message: '@repo/shared cannot import from @repo/ux',
           },
@@ -36,6 +40,7 @@ export const coreBoundaries = {
       'error',
       {
         patterns: [
+          { group: ['@repo/storage', '@repo/storage/*'], message: '@repo/core cannot import from @repo/storage' },
           { group: ['@repo/ux', '@repo/ux/*'], message: '@repo/core cannot import from @repo/ux' },
           { group: ['@main', '@main/*'], message: '@repo/core cannot import from @main' },
           {
@@ -55,6 +60,7 @@ export const uxBoundaries = {
       'error',
       {
         patterns: [
+          { group: ['@repo/storage', '@repo/storage/*'], message: '@repo/ux cannot import from @repo/storage' },
           { group: ['@main', '@main/*'], message: '@repo/ux cannot import from @main' },
           {
             group: ['@renderer', '@renderer/*'],
@@ -84,13 +90,35 @@ export const mainBoundaries = {
   },
 }
 
+// @repo/storage - Can import from @repo/core and @repo/shared (Node-only)
+export const storageBoundaries = {
+  rules: {
+    'no-restricted-imports': [
+      'error',
+      {
+        patterns: [
+          { group: ['@repo/ux', '@repo/ux/*'], message: '@repo/storage cannot import from @repo/ux' },
+          { group: ['@main', '@main/*'], message: '@repo/storage cannot import from @main' },
+          {
+            group: ['@renderer', '@renderer/*'],
+            message: '@repo/storage cannot import from @renderer',
+          },
+        ],
+      },
+    ],
+  },
+}
+
 // @renderer - Can import from @repo/core, @repo/shared, @repo/ux, NOT @main
 export const rendererBoundaries = {
   rules: {
     'no-restricted-imports': [
       'error',
       {
-        patterns: [{ group: ['@main', '@main/*'], message: '@renderer cannot import from @main' }],
+        patterns: [
+          { group: ['@main', '@main/*'], message: '@renderer cannot import from @main' },
+          { group: ['@repo/storage', '@repo/storage/*'], message: '@renderer cannot import from @repo/storage' },
+        ],
       },
     ],
   },
