@@ -18,16 +18,17 @@
     "typecheck": "pnpm run with-node-opts turbo typecheck",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "clean": "cross-env TURBO_UI=stream turbo clean && rm -rf node_modules"
+    "clean": "cross-env TURBO_UI=stream turbo clean && rm -rf node_modules",
+    "knip": "knip"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
-    "@testing-library/dom": "^10.4.0",
-    "@testing-library/react": "^16.2.0",
+    "@vitest/coverage-v8": "^4.0.16",
     "@vitest/ui": "^4.0.16",
     "cross-env": "^10.1.0",
     "eslint": "^9.17.0",
     "jsdom": "^27.4.0",
+    "knip": "^5.79.0",
     "prettier": "^3.4.2",
     "tsx": "^4.19.2",
     "turbo": "^2.3.3",

@@ -50,10 +50,3 @@ export function restoreState<T>(key: string): T | null {
     return null
   }
 }
-
-/**
- * Clear persisted state for a key.
- */
-export function clearPersistedState(key: string): void {
-  localStorage.removeItem(key)
-}
