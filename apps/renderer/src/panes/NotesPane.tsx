@@ -25,6 +25,7 @@ export const NotesPane: React.FC<IDockviewPanelProps> = ({ api }) => {
   const saveTimerRef = useRef<number | null>(null)
   const noteIdRef = useRef<number | null>(null)
   const referenceIdRef = useRef<number | null>(referenceId)
+  const titleRef = useRef<string>('Notes')
 
   const handlePdfReferenceClick = useCallback(
     (anchorId: string) => {
@@ -51,6 +52,36 @@ export const NotesPane: React.FC<IDockviewPanelProps> = ({ api }) => {
     return undefined
   }, [])
 
+  const extractTitle = useCallback((doc?: DocumentContent): string | null => {
+    if (!doc || !Array.isArray(doc.content) || doc.content.length === 0) {
+      return null
+    }
+
+    const collectText = (node: DocumentContent): string => {
+      if (node.type === 'text' && typeof node.text === 'string') {
+        return node.text
+      }
+      if (!Array.isArray(node.content)) {
+        return ''
+      }
+      return node.content.map(child => collectText(child)).join('')
+    }
+
+    const firstNode = doc.content[0]
+    const text = firstNode ? collectText(firstNode) : ''
+    const firstLine = text.split('\n').map(line => line.trim()).find(Boolean) ?? null
+    return firstLine && firstLine.length > 0 ? firstLine : null
+  }, [])
+
+  const setPaneTitle = useCallback((nextTitle: string | null) => {
+    const title = nextTitle && nextTitle.trim().length > 0 ? nextTitle.trim() : 'Notes'
+    if (titleRef.current === title) {
+      return
+    }
+    titleRef.current = title
+    api.setTitle(title)
+  }, [api])
+
   useEffect(() => {
     noteIdRef.current = noteId
   }, [noteId])
@@ -61,7 +92,10 @@ export const NotesPane: React.FC<IDockviewPanelProps> = ({ api }) => {
       window.clearTimeout(saveTimerRef.current)
       saveTimerRef.current = null
     }
-  }, [referenceId])
+    if (referenceId === null) {
+      setPaneTitle('Notes')
+    }
+  }, [referenceId, setPaneTitle])
 
   useEffect(() => {
     let cancelled = false
@@ -71,6 +105,7 @@ export const NotesPane: React.FC<IDockviewPanelProps> = ({ api }) => {
         setContent(undefined)
         setNoteId(null)
         setEditorKey(`notes:${api.id}:empty`)
+        setPaneTitle('Notes')
         return
       }
 
@@ -79,6 +114,7 @@ export const NotesPane: React.FC<IDockviewPanelProps> = ({ api }) => {
         setContent(undefined)
         setNoteId(null)
         setEditorKey(`notes:${api.id}:${referenceId}:missing`)
+        setPaneTitle('Notes')
         return
       }
 
@@ -88,8 +124,11 @@ export const NotesPane: React.FC<IDockviewPanelProps> = ({ api }) => {
 
       const note = notes.find(item => item.anchorId === null) ?? notes[0] ?? null
       setNoteId(note?.id ?? null)
-      setContent(note ? parseContent(note.content) : undefined)
+      const parsedContent = note ? parseContent(note.content) : undefined
+      setContent(parsedContent)
       setEditorKey(`notes:${api.id}:${referenceId}:${note?.id ?? 'new'}`)
+      const derivedTitle = note?.title ?? extractTitle(parsedContent)
+      setPaneTitle(derivedTitle)
     }
 
     void loadNote()
@@ -97,7 +136,7 @@ export const NotesPane: React.FC<IDockviewPanelProps> = ({ api }) => {
     return () => {
       cancelled = true
     }
-  }, [api.id, parseContent, referenceId])
+  }, [api.id, extractTitle, parseContent, referenceId, setPaneTitle])
 
   useEffect(() => {
     return () => {
@@ -108,7 +147,7 @@ export const NotesPane: React.FC<IDockviewPanelProps> = ({ api }) => {
     }
   }, [])
 
-  const persistContent = useCallback(async (nextContent: DocumentContent) => {
+  const persistContent = useCallback(async (nextContent: DocumentContent, title: string | null) => {
     const storage = window.stroma?.storage
     const activeReferenceId = referenceIdRef.current
     if (activeReferenceId === null || !storage?.note) {
@@ -121,6 +160,7 @@ export const NotesPane: React.FC<IDockviewPanelProps> = ({ api }) => {
     if (existingId === null) {
       const created = await storage.note.create({
         referenceId: activeReferenceId,
+        title,
         contentType: 'tiptap_json',
         content: contentJson,
       })
@@ -132,7 +172,7 @@ export const NotesPane: React.FC<IDockviewPanelProps> = ({ api }) => {
       return
     }
 
-    await storage.note.update(existingId, { content: contentJson })
+    await storage.note.update(existingId, { title, content: contentJson })
   }, [])
 
   const handleChange = useCallback((nextContent: DocumentContent) => {
@@ -140,15 +180,18 @@ export const NotesPane: React.FC<IDockviewPanelProps> = ({ api }) => {
       return
     }
 
+    const nextTitle = extractTitle(nextContent)
+    setPaneTitle(nextTitle)
+
     if (saveTimerRef.current !== null) {
       window.clearTimeout(saveTimerRef.current)
     }
 
     saveTimerRef.current = window.setTimeout(() => {
       saveTimerRef.current = null
-      void persistContent(nextContent)
+      void persistContent(nextContent, nextTitle)
     }, 300)
-  }, [persistContent, referenceId])
+  }, [extractTitle, persistContent, referenceId, setPaneTitle])
 
   const documentId = useMemo(() => {
     if (referenceId === null) {

@@ -124,6 +124,7 @@ export interface Note {
   referenceId: number
   anchorId: number | null
   localNo: number
+  title: string | null
   contentType: NoteContentType
   content: string
   createdAt: number
@@ -133,11 +134,13 @@ export interface Note {
 export interface CreateNoteInput {
   referenceId: number
   anchorId?: number
+  title?: string | null
   contentType: NoteContentType
   content: string
 }
 
 export interface UpdateNoteInput {
+  title?: string | null
   content?: string
   anchorId?: number | null
 }

@@ -22,12 +22,13 @@ export function createNote(input: CreateNoteInput): Note {
   const localNo = getNextLocalNo(input.referenceId)
 
   const result = db.prepare(`
-    INSERT INTO notes (reference_id, anchor_id, local_no, content_type, content, created_at, updated_at)
-    VALUES (?, ?, ?, ?, ?, ?, ?)
+    INSERT INTO notes (reference_id, anchor_id, local_no, title, content_type, content, created_at, updated_at)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
   `).run(
     input.referenceId,
     input.anchorId ?? null,
     localNo,
+    input.title ?? null,
     input.contentType,
     input.content,
     timestamp,
@@ -39,6 +40,7 @@ export function createNote(input: CreateNoteInput): Note {
     referenceId: input.referenceId,
     anchorId: input.anchorId ?? null,
     localNo,
+    title: input.title ?? null,
     contentType: input.contentType,
     content: input.content,
     createdAt: timestamp,
@@ -53,7 +55,7 @@ export function getNote(id: number): Note | null {
   const db = getDb()
 
   const row = db.prepare(`
-    SELECT id, reference_id, anchor_id, local_no, content_type, content, created_at, updated_at
+    SELECT id, reference_id, anchor_id, local_no, title, content_type, content, created_at, updated_at
     FROM notes
     WHERE id = ?
   `).get(id) as NoteRow | undefined
@@ -72,7 +74,7 @@ export function getNoteByLocalNo(referenceId: number, localNo: number): Note | n
   const db = getDb()
 
   const row = db.prepare(`
-    SELECT id, reference_id, anchor_id, local_no, content_type, content, created_at, updated_at
+    SELECT id, reference_id, anchor_id, local_no, title, content_type, content, created_at, updated_at
     FROM notes
     WHERE reference_id = ? AND local_no = ?
   `).get(referenceId, localNo) as NoteRow | undefined
@@ -91,7 +93,7 @@ export function getNotesForReference(referenceId: number): Note[] {
   const db = getDb()
 
   const rows = db.prepare(`
-    SELECT id, reference_id, anchor_id, local_no, content_type, content, created_at, updated_at
+    SELECT id, reference_id, anchor_id, local_no, title, content_type, content, created_at, updated_at
     FROM notes
     WHERE reference_id = ?
     ORDER BY local_no ASC
@@ -107,7 +109,7 @@ export function getNoteForAnchor(anchorId: number): Note | null {
   const db = getDb()
 
   const row = db.prepare(`
-    SELECT id, reference_id, anchor_id, local_no, content_type, content, created_at, updated_at
+    SELECT id, reference_id, anchor_id, local_no, title, content_type, content, created_at, updated_at
     FROM notes
     WHERE anchor_id = ?
   `).get(anchorId) as NoteRow | undefined
@@ -131,17 +133,19 @@ export function updateNote(id: number, input: UpdateNoteInput): Note | null {
     return null
   }
 
+  const newTitle = input.title !== undefined ? input.title : existing.title
   const newContent = input.content ?? existing.content
   const newAnchorId = input.anchorId !== undefined ? input.anchorId : existing.anchorId
 
   db.prepare(`
     UPDATE notes
-    SET content = ?, anchor_id = ?, updated_at = ?
+    SET title = ?, content = ?, anchor_id = ?, updated_at = ?
     WHERE id = ?
-  `).run(newContent, newAnchorId, timestamp, id)
+  `).run(newTitle, newContent, newAnchorId, timestamp, id)
 
   return {
     ...existing,
+    title: newTitle,
     content: newContent,
     anchorId: newAnchorId,
     updatedAt: timestamp,
@@ -179,6 +183,7 @@ interface NoteRow {
   reference_id: number
   anchor_id: number | null
   local_no: number
+  title: string | null
   content_type: string
   content: string
   created_at: number
@@ -191,6 +196,7 @@ function rowToNote(row: NoteRow): Note {
     referenceId: row.reference_id,
     anchorId: row.anchor_id,
     localNo: row.local_no,
+    title: row.title,
     contentType: row.content_type as NoteContentType,
     content: row.content,
     createdAt: row.created_at,

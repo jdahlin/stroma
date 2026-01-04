@@ -50,7 +50,7 @@ FROM pdf_text_anchor_rects
 ORDER BY id DESC
 LIMIT 20;
 
-SELECT id, reference_id, anchor_id, local_no, content_type, updated_at
+SELECT id, reference_id, anchor_id, local_no, title, content_type, updated_at
 FROM notes
 ORDER BY id DESC
 LIMIT 20;

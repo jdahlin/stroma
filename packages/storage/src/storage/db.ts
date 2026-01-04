@@ -3,7 +3,7 @@
  */
 
 import Database from 'better-sqlite3'
-import { SCHEMA_V1, SCHEMA_VERSION } from './schema'
+import { SCHEMA_V1, SCHEMA_V2, SCHEMA_VERSION } from './schema'
 
 export type { Database } from 'better-sqlite3'
 
@@ -64,6 +64,10 @@ function runMigrations(database: Database.Database): void {
       // V1: Initial schema
       if (currentVersion < 1) {
         database.exec(SCHEMA_V1)
+      }
+
+      if (currentVersion < 2) {
+        database.exec(SCHEMA_V2)
       }
 
       // Update schema version

@@ -3,7 +3,7 @@
  * Version 1: Initial schema with references, anchors, notes.
  */
 
-export const SCHEMA_VERSION = 1
+export const SCHEMA_VERSION = 2
 
 export const SCHEMA_V1 = `
 -- References (source documents)
@@ -68,6 +68,7 @@ CREATE TABLE IF NOT EXISTS notes (
   reference_id INTEGER NOT NULL REFERENCES "references"(id) ON DELETE CASCADE,
   anchor_id INTEGER REFERENCES anchors(id) ON DELETE SET NULL,
   local_no INTEGER NOT NULL,
+  title TEXT,
   content_type TEXT NOT NULL,
   content TEXT NOT NULL,
   created_at INTEGER NOT NULL,
@@ -83,4 +84,8 @@ CREATE INDEX IF NOT EXISTS idx_pdf_anchors_page ON pdf_anchors(page_index);
 CREATE INDEX IF NOT EXISTS idx_pdf_text_anchor_rects_anchor ON pdf_text_anchor_rects(anchor_id);
 CREATE INDEX IF NOT EXISTS idx_notes_reference ON notes(reference_id);
 CREATE INDEX IF NOT EXISTS idx_notes_anchor ON notes(anchor_id);
+`
+
+export const SCHEMA_V2 = `
+ALTER TABLE notes ADD COLUMN title TEXT;
 `
