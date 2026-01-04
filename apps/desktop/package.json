@@ -1,0 +1,64 @@
+{
+  "name": "@repo/desktop",
+  "type": "module",
+  "version": "0.1.6",
+  "private": true,
+  "productName": "Stroma",
+  "description": "A desktop knowledge work environment for deep reading and learning",
+  "author": {
+    "name": "Johan Dahlin",
+    "email": "jdahlin@gmail.com"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/jdahlin/stroma",
+  "repository": {
+    "url": "https://github.com/jdahlin/stroma"
+  },
+  "main": "dist/main/index.mjs",
+  "scripts": {
+    "dev": "tsx scripts/dev.ts",
+    "lint": "eslint .",
+    "build": "pnpm run build:main && pnpm run build:preload && pnpm run build:renderer",
+    "build:main": "esbuild src/main/index.ts --bundle --platform=node --format=esm --sourcemap --tsconfig=tsconfig.main.json --outfile=dist/main/index.mjs --external:electron --external:better-sqlite3 --conditions=import",
+    "build:preload": "esbuild src/preload/index.ts --bundle --platform=node --format=esm --sourcemap --tsconfig=tsconfig.preload.json --outfile=dist/preload/index.mjs --external:electron --conditions=import",
+    "build:renderer": "vite build",
+    "start": "electron .",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist release",
+    "build:icon": "./scripts/build-icon.sh",
+    "pack": "pnpm run build:icon && electron-builder --dir",
+    "dist": "pnpm run build:icon && electron-builder",
+    "dist:mac": "pnpm run build:icon && electron-builder --mac",
+    "dist:win": "pnpm run build:icon && electron-builder --win",
+    "dist:linux": "pnpm run build:icon && electron-builder --linux",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@repo/core": "workspace:*",
+    "@repo/storage": "workspace:*",
+    "@repo/ux": "workspace:*",
+    "better-sqlite3": "^12.5.0",
+    "dockview": "^4.13.1",
+    "pdfjs-dist": "^5.4.530",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "zustand": "^5.0.2"
+  },
+  "devDependencies": {
+    "@repo/tsconfig": "workspace:*",
+    "@repo/vitest-config": "workspace:*",
+    "@types/node": "22.7.7",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^4.7.0",
+    "electron": "39.2.7",
+    "electron-builder": "^26.0.12",
+    "esbuild": "^0.27.2",
+    "tsx": "^4.21.0",
+    "typescript": "5.9.3",
+    "vite": "^7.3.0",
+    "vitest": "^4.0.16"
+  },
+  "releaseDate": "2026-01-04"
+}
