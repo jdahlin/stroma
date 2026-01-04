@@ -21,29 +21,26 @@ repo/
 │ │ │ ├─ paneRegistry.ts # PaneType → component mapping
 │ │ │ └─ defaultLayout.ts # Default docking layout
 │ │ │
-│ │ ├─ state/ # Shared renderer state (merged from packages/state)
+│ │ ├─ state/ # Renderer state (merged from packages/state)
 │ │ │ ├─ uiStore.ts # Theme, zoom, command palette, global UI flags
 │ │ │ ├─ layoutStore.ts # Dock layout state + persistence orchestration
+│ │ │ ├─ pdfStore.ts # PDF viewing state
 │ │ │ ├─ persist.ts # Storage adapter + versioning/migrations helpers
 │ │ │ └─ index.ts # Public state surface for renderer
 │ │ │
-│ │ ├─ panes/ # Built-in panes (placeholders at Step 1)
+│ │ ├─ panes/ # Built-in panes
 │ │ │ ├─ HomePane.tsx
 │ │ │ ├─ NotesPane.tsx
 │ │ │ ├─ QueuePane.tsx
 │ │ │ └─ SearchPane.tsx
 │ │ │
 │ │ ├─ chrome/ # Global UI chrome (non-pane UI)
-│ │ │ ├─ TopBar.tsx # App title, zoom, theme
-│ │ │ ├─ StatusBar.tsx # Optional status/debug output
+│ │ │ ├─ Sidebar.tsx # Navigation + Anchors
+│ │ │ ├─ Ribbon.tsx # Left-side vertical actions
 │ │ │ └─ CommandPalette.tsx # Global command launcher
 │ │ │
-│ │ ├─ assets/ # App-specific static assets
-│ │ │ ├─ icons/ # Window/app icons
-│ │ │ └─ images/ # Branding / splash / misc
-│ │ │
-│ │ └─ styles/ # App-level style glue only
-│ │ ├─ app.css # Imports shared UI styles
+│ │ └─ styles/ # App-level style glue
+│ │ ├─ base.css # App-specific base styles
 │ │ └─ platform.css # Electron/platform tweaks
 │ │
 │ └─ package.json # Electron/Vite config
@@ -53,38 +50,28 @@ repo/
 │ │ └─ src/
 │ │ ├─ panes.ts # Pane identity + input contracts
 │ │ ├─ commands.ts # Global command definitions
-│ │ └─ model/ # Shared data models (IDs, anchors later)
+│ │ └─ model/ # Shared data models
 │ │
-│ ├─ ui/ # Design system (authoritative styling + components)
+│ ├─ ux/ # Design system + layout (authoritative styling + components)
 │ │ └─ src/
 │ │ ├─ styles/ # Global CSS authority
 │ │ │ ├─ tokens.css # CSS variables (colors, spacing, radii)
 │ │ │ ├─ base.css # Reset + typography baseline
 │ │ │ ├─ themes.css # Light/dark mappings
+│ │ │ ├─ dockview-theme.css # Custom theme for Dockview
 │ │ │ └─ index.css # Single import point
 │ │ │
-│ │ ├─ assets/ # Shared UI assets
-│ │ │ ├─ fonts/ # Fonts (woff2/variable)
-│ │ │ └─ icons/ # Shared SVG icons
-│ │ │
-│ │ ├─ components/ # Reusable UI primitives
-│ │ │ ├─ layout/ # Panels, toolbars, containers
-│ │ │ ├─ controls/ # Buttons, inputs, toggles
-│ │ │ └─ overlays/ # Dialogs, popovers, palettes
-│ │ │
-│ │ └─ index.ts # Public UI surface
+│ │ ├─ components/ # Reusable UI primitives (Button, Icon, etc.)
+│ │ ├─ layout/ # DockHost root component
+│ │ └─ index.ts # Public UX surface
 │ │
-│ └─ layout/ # Docking integration (layout ≠ UI)
-│ └─ src/
-│ ├─ DockHost.tsx # Dockview root component
-│ ├─ persistence.ts # Layout serialization/restore helpers
-│ └─ index.ts
+│ └─ shared/ # Pure utilities, type helpers - NO dependencies
 │
 ├─ configs/ # Centralized tooling configuration
 │ ├─ ts/
 │ ├─ eslint/
 │ ├─ prettier/
-│ └─ tailwind/
+│ └─ vitest/
 │
 ├─ scripts/ # Repo maintenance scripts
 │
@@ -93,10 +80,6 @@ repo/
 ├─ pnpm-lock.yaml
 └─ turbo.json
 
-What changed
-• Removed packages/state/
-• Added apps/desktop/src/renderer/state/ with the same responsibilities.
-
 Simple boundary rule to keep “core pure”
-• packages/core must never import from apps/\*\* or packages/ui|layout.
+• packages/core must never import from apps/** or packages/ux.
 • Renderer may import @repo/core, but @repo/core must stay dependency-light (types/contracts).
