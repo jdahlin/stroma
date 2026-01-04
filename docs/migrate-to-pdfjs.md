@@ -1,13 +1,13 @@
-# Migrate to Direct pdf.js Rendering (Remove react-pdf)
+# Improve pdf.js Rendering Performance (Reduce Flicker/Zoom Jank)
 
-This plan outlines the steps to replace react-pdf with a direct pdf.js rendering pipeline while keeping the existing Stroma UX (PdfPane, toolbar, Dockview layout).
+This plan outlines steps to improve performance and reduce flicker in the existing pdf.js-based renderer while keeping the current Stroma UX (PdfPane, toolbar, Dockview layout).
 
 ## Goals
 
-- Improve scroll/zoom performance and reduce flicker.
-- Make rendering fully controllable (render scheduling, cancellation, virtualization).
+- Reduce flicker during pinch-zoom and resize.
+- Minimize unnecessary renders and layout thrash.
 - Preserve existing UI/UX and PDF features (anchors, selection, overlays).
-- Remove react-pdf dependency and any unused react-pdf code.
+- Keep the store-driven scroll/zoom model stable.
 
 ## Non-Goals
 
@@ -15,87 +15,59 @@ This plan outlines the steps to replace react-pdf with a direct pdf.js rendering
 - Building a feature-complete PDF annotation system beyond current needs.
 - Full parity with the pdf.js web viewer (toolbars, file manager, etc.).
 
-## Current Baseline (Before Migration)
+## Current Baseline (Before Changes)
 
 - PdfPane renders PdfViewer, PdfViewport, PdfPage components.
 - Scroll/zoom state is managed in the store; PdfViewer computes scale and restores scroll.
 - Rendering uses pdfjs-dist directly via React components for pages and layers.
-- Need to remove any remaining react-pdf usage if present.
 
 ## Migration Phases
 
-### Phase 0: Inventory and Removal Prep
+### Phase 0: Baseline Audit and Profiling
 
-1. Identify react-pdf usage (components, hooks, utils).
-2. Confirm actual dependency in package.json (if present, remove).
-3. Ensure no tests or UI paths depend on react-pdf types.
-4. Add a feature flag (optional) for incremental rollout:
-   - Example: `useDirectPdfRenderer` in store or env config.
+1. Capture a short profile during pinch-zoom and resize.
+2. Identify render hotspots (canvas render vs text layer render).
+3. Add a feature flag (optional) for incremental rollout:
+   - Example: `useVirtualizedPdfRenderer` in store or env config.
 
-### Phase 1: Rendering Core (Imperative)
+### Phase 1: Stabilize Zoom/Scroll (Low-Risk)
 
-1. Create a `PdfRenderer` service/module:
-   - Responsibilities: load document, manage page cache, render queue, cancel tasks.
-   - API:
-     - `load(data: Uint8Array)`
-     - `renderPage(pageIndex, scale, container)`
-     - `cancelPage(pageIndex)`
-     - `destroy()`
-2. Establish a render task registry to cancel in-flight renders on scale change.
-3. Implement a lightweight page cache:
-   - `PDFPageProxy` caching (per document).
-   - Optionally cache rendered canvases for current scale.
+1. Suspend fit-to-width logic during active pinch-zoom.
+2. Debounce scale updates from ResizeObserver and wheel events.
+3. Ensure render task cancellation on scale change is reliable.
+4. Throttle text layer rendering (delay until zoom settles).
 
-### Phase 2: Virtualized Page List
+### Phase 2: Virtualized Page Rendering (Moderate)
 
-1. Replace React-driven page list with an imperative page host:
-   - A single scroll container with placeholder page divs.
-2. Compute visible page indices based on scrollTop and page heights.
+1. Keep React for chrome/toolbar, but move page rendering to an imperative host.
+2. Compute visible page indices based on scrollTop and cached page heights.
 3. Render only visible pages (+buffer).
 4. Maintain total scroll height with placeholders:
-   - Each page placeholder has the correct height at the current scale.
+   - Page heights derived from cached page dimensions at current scale.
 5. On scroll, update visible range and render/cancel pages.
 
-### Phase 3: Zoom + Scroll Control
+### Phase 3: Render Pipeline Refinement
 
-1. Implement a zoom controller:
-   - Zoom in/out via wheel and toolbar.
-   - Clamp zoom range (e.g., 0.5 to 3).
-2. Ensure zoom changes cancel renders and re-render visible pages.
-3. Preserve scroll position on zoom:
-   - Save scroll position as `{ ratio, top, scale }`.
-   - If scale unchanged, restore by `top`; otherwise restore by ratio.
-4. Add a short stabilization pass:
-   - Reapply scroll after layout settles (delayed or after first render tick).
+1. Render queue with prioritization (visible pages first).
+2. Limit concurrent renders and cancel stale tasks.
+3. Cache `PDFPageProxy` instances and reuse across renders.
+4. Optional: cache rendered canvas bitmaps per scale for fast zoom snaps.
 
-### Phase 4: Text Layer and Selection
+### Phase 4: Text Layer and Selection Stability
 
-1. Add pdf.js text layer rendering per visible page:
-   - Create a text layer container per page.
-   - Render text layer after canvas render.
-2. Restore selection logic:
-   - Ensure selection overlay uses the new page DOM structure.
-   - Verify selection coordinates align with scaled viewport.
-3. Hook anchor overlays into the new page container hierarchy.
+1. Render text layers only after canvas render completes.
+2. Batch text layer updates (avoid re-rendering on every scroll tick).
+3. Ensure selection overlay uses the new page DOM structure.
+4. Force-render the focused anchor page even if offscreen.
 
-### Phase 5: Integration into PdfPane
+### Phase 5: Integration and Cleanup
 
 1. Keep `PdfPane` and toolbar unchanged.
-2. Replace `PdfViewer` internals:
-   - Convert to an imperative host that creates the scroll container.
-   - Attach `PdfRenderer` and virtualization logic.
-3. Wire store updates:
-   - Keep scroll position updates in store.
-   - Keep scale updates in store.
+2. Replace `PdfViewer` internals with the imperative renderer.
+3. Ensure store updates for scroll position + scale remain stable.
+4. Delete unused React page components if fully replaced.
 
-### Phase 6: Cleanup and Removal
-
-1. Remove react-pdf dependency from all package.json files.
-2. Delete unused react-pdf wrappers/components.
-3. Remove any tests or utilities that reference react-pdf.
-4. Update docs and README if they mention react-pdf.
-
-### Phase 7: Performance Verification
+### Phase 6: Performance Verification
 
 1. Manual checks:
    - Smooth scrolling across large PDFs.
@@ -114,14 +86,13 @@ This plan outlines the steps to replace react-pdf with a direct pdf.js rendering
 
 ## Estimated Effort
 
-- MVP (canvas-only, virtualization, scroll/zoom): 2–3 days.
+- MVP (virtualization + stable zoom/scroll): 2–3 days.
 - Full parity (text layer, selection, anchors): +2–3 days.
 - Total: 4–6 focused days.
 
 ## Deliverables
 
-- `PdfRenderer` service (imperative pdf.js rendering).
-- Virtualized scroll container with page placeholders.
-- Updated `PdfViewer` (imperative host).
-- Removed react-pdf dependency and unused code.
+- Imperative renderer + virtualization.
+- Updated PdfViewer internals (no React-per-page rendering).
+- Reduced scroll/zoom jank with render throttling and task cancellation.
 - Updated docs and tests.
