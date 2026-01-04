@@ -1,9 +1,12 @@
-import { type ChildProcess, spawn } from 'node:child_process'
-import { type FSWatcher, watch } from 'node:fs'
+import type { ChildProcess } from 'node:child_process'
+import type { FSWatcher } from 'node:fs'
+import type { ViteDevServer } from 'vite'
+import { spawn } from 'node:child_process'
+import { watch } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import process from 'node:process'
 import { fileURLToPath } from 'node:url'
-import { createServer, type ViteDevServer } from 'vite'
+import { createServer } from 'vite'
 
 async function startDev(): Promise<void> {
   const scriptDir = dirname(fileURLToPath(import.meta.url))

@@ -1,8 +1,7 @@
+import type { DockviewReadyEvent, IDockviewHeaderActionsProps, IDockviewPanelProps } from 'dockview'
 import {
   DockviewReact,
-  type DockviewReadyEvent,
-  type IDockviewHeaderActionsProps,
-  type IDockviewPanelProps,
+
 } from 'dockview'
 import React, { useCallback } from 'react'
 import { stromaTheme } from './stromaTheme'

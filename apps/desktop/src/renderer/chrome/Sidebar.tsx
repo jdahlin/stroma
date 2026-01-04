@@ -1,5 +1,6 @@
+import type { SidebarSide } from '../state'
 import React, { useCallback, useEffect, useRef } from 'react'
-import { type SidebarSide, useUIStore } from '../state'
+import { useUIStore } from '../state'
 import './Sidebar.css'
 
 const MIN_WIDTH = 10 // rem

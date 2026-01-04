@@ -1,4 +1,5 @@
-import { type CommandId, commandRegistry } from '@repo/core'
+import type { CommandId } from '@repo/core'
+import { commandRegistry } from '@repo/core'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import './CommandPalette.css'
 
