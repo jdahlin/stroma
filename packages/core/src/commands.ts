@@ -92,6 +92,7 @@ export const commandRegistry = new CommandRegistry();
 
 export const COMMANDS = {
   toggleCommandPalette: commandId('app.toggleCommandPalette'),
+  reload: commandId('app.reload'),
   toggleTheme: commandId('app.toggleTheme'),
   toggleRibbon: commandId('ribbon.toggle'),
   toggleLeftSidebar: commandId('sidebar.toggleLeft'),
@@ -123,6 +124,12 @@ commandRegistry.define({
   id: COMMANDS.toggleCommandPalette,
   label: 'Toggle Command Palette',
   shortcut: key('k', { meta: true }),
+  category: 'App',
+});
+commandRegistry.define({
+  id: COMMANDS.reload,
+  label: 'Reload',
+  shortcut: key('r', { meta: true }),
   category: 'App',
 });
 commandRegistry.define({ id: COMMANDS.toggleTheme, label: 'Toggle Theme', category: 'App' });

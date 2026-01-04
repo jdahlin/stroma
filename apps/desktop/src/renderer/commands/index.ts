@@ -9,6 +9,9 @@ export function registerCommands(): () => void {
     commandRegistry.register(COMMANDS.toggleCommandPalette, () => {
       useUIStore.getState().toggleCommandPalette();
     }),
+    commandRegistry.register(COMMANDS.reload, () => {
+      window.location.reload();
+    }),
     commandRegistry.register(COMMANDS.toggleTheme, () => {
       const { theme, setTheme } = useUIStore.getState();
       const currentIndex = THEMES.indexOf(theme);
