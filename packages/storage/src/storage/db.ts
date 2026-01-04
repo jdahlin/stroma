@@ -67,13 +67,20 @@ function runMigrations(database: Database.Database): void {
       }
 
       if (currentVersion < 2) {
-        database.exec(SCHEMA_V2)
+        if (!hasColumn(database, 'notes', 'title')) {
+          database.exec(SCHEMA_V2)
+        }
       }
 
       // Update schema version
       database.pragma(`user_version = ${SCHEMA_VERSION}`)
     })()
   }
+}
+
+function hasColumn(database: Database.Database, table: string, column: string): boolean {
+  const rows = database.pragma(`table_info(${table})`) as Array<{ name: string }>
+  return rows.some(row => row.name === column)
 }
 
 /**
