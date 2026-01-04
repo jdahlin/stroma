@@ -103,7 +103,7 @@ jobs:
 
       - name: Build macOS package (${{ matrix.arch }})
         working-directory: apps/desktop
-        run: pnpm electron-builder --mac --${{ matrix.arch }}
+        run: pnpm electron-builder --mac --${{ matrix.arch }} --publish never
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -176,7 +176,7 @@ jobs:
 
       - name: Build Windows package (${{ matrix.arch }})
         working-directory: apps/desktop
-        run: pnpm electron-builder --win --${{ matrix.arch }}
+        run: pnpm electron-builder --win --${{ matrix.arch }} --publish never
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -248,7 +248,7 @@ jobs:
 
       - name: Build Linux package (${{ matrix.arch }})
         working-directory: apps/desktop
-        run: pnpm electron-builder --linux --${{ matrix.arch }}
+        run: pnpm electron-builder --linux --${{ matrix.arch }} --publish never
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
