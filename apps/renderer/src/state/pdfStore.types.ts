@@ -8,6 +8,7 @@ export interface PdfScrollPosition {
 
 export interface PdfPaneState {
   source: PdfSource
+  referenceId: number | null
   data: Uint8Array
   anchors: PdfAnchor[]
   focusedAnchorId: PdfAnchorId | null
@@ -18,6 +19,7 @@ export interface PdfPaneState {
 
 export interface PdfOpenPayload {
   source: PdfSource
+  referenceId: number | null
   data: Uint8Array
 }
 
