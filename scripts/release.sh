@@ -6,6 +6,10 @@ if [ -z "$VERSION" ]; then
   echo "Usage: scripts/release.sh <version>"
   exit 1
 fi
+if [[ "$VERSION" == v* ]]; then
+  echo "Version must not start with a lowercase 'v' (use e.g. 1.2.3)"
+  exit 1
+fi
 
 PACKAGE_JSON="apps/desktop/package.json"
 TAG="v$VERSION"
@@ -41,6 +45,6 @@ if git diff --quiet -- "$PACKAGE_JSON"; then
 fi
 
 git add "$PACKAGE_JSON"
-git commit -m "chore: release $TAG" -- "$PACKAGE_JSON"
-git tag "$TAG"
+git commit -m "chore(release): $TAG" -- "$PACKAGE_JSON"
+git tag -a "$TAG" -m "Release $TAG"
 git push origin "$TAG"
