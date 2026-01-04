@@ -1,5 +1,5 @@
 import type { PdfAnchor, PdfRect } from '@repo/core'
-import type { PDFDocumentProxy } from 'pdfjs-dist/types/src/display/api'
+import type { PDFDocumentProxy, RenderTask } from 'pdfjs-dist/types/src/display/api'
 import { setLayerDimensions, TextLayer } from 'pdfjs-dist/legacy/build/pdf'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { PdfOverlayLayer } from './PdfOverlayLayer'
@@ -36,6 +36,7 @@ export const PdfPage: React.FC<PdfPageProps> = ({
     if (!doc)
       return
     let cancelled = false
+    let renderTask: RenderTask | null = null
 
     const renderPage = async () => {
       const page = await doc.getPage(pageNumber)
@@ -61,29 +62,37 @@ export const PdfPage: React.FC<PdfPageProps> = ({
         canvas: context.canvas,
       }
 
+      renderTask = page.render(renderContext)
       try {
-        const renderTask = page.render(renderContext)
         await renderTask.promise
-
-        if (cancelled)
-          return
-
-        const textLayer = textLayerRef.current
-        if (textLayer) {
-          textLayer.innerHTML = ''
-          setLayerDimensions(textLayer, viewport)
-          const textContent = await page.getTextContent()
-          const layer = new TextLayer({
-            textContentSource: textContent,
-            container: textLayer,
-            viewport,
-          })
-          await layer.render()
-        }
       }
       catch (error) {
         if (!cancelled) {
-          console.error(error)
+          console.warn('PDF page render failed.', error)
+        }
+        return
+      }
+
+      if (cancelled)
+        return
+
+      const textLayer = textLayerRef.current
+      if (textLayer) {
+        textLayer.innerHTML = ''
+        setLayerDimensions(textLayer, viewport)
+        const textContent = await page.getTextContent()
+        const layer = new TextLayer({
+          textContentSource: textContent,
+          container: textLayer,
+          viewport,
+        })
+        try {
+          await layer.render()
+        }
+        catch (error) {
+          if (!cancelled) {
+            console.warn('PDF text layer render failed.', error)
+          }
         }
       }
     }
@@ -92,6 +101,7 @@ export const PdfPage: React.FC<PdfPageProps> = ({
 
     return () => {
       cancelled = true
+      renderTask?.cancel()
     }
   }, [doc, pageNumber, scale])
 

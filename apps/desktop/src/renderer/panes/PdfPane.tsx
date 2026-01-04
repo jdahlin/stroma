@@ -17,11 +17,16 @@ export const PdfPane: React.FC<IDockviewPanelProps> = ({ api }) => {
   const addTextAnchor = usePdfStore(state => state.addTextAnchor)
   const setActivePane = usePdfStore(state => state.setActivePane)
   const removePane = usePdfStore(state => state.removePane)
-  const setScrollRatio = usePdfStore(state => state.setScrollRatio)
+  const setScrollPosition = usePdfStore(state => state.setScrollPosition)
+  const flushPanePersistence = usePdfStore(state => state.flushPanePersistence)
+  const setStoredScale = usePdfStore(state => state.setScale)
+  const bumpScrollRestoreToken = usePdfStore(state => state.bumpScrollRestoreToken)
 
-  const [scale, setScale] = useState(1)
   const [loadState, setLoadState] = useState<'idle' | 'loading' | 'ready' | 'error'>('idle')
   const skipCleanupRef = useRef(true)
+  const isUnloadingRef = useRef(false)
+  const scale = paneState?.scale ?? 1
+  const scrollRestoreToken = paneState?.scrollRestoreToken ?? 0
   const pendingScaleRef = useRef(scale)
   const rafRef = useRef<number | null>(null)
 
@@ -35,7 +40,7 @@ export const PdfPane: React.FC<IDockviewPanelProps> = ({ api }) => {
 
     rafRef.current = window.requestAnimationFrame(() => {
       rafRef.current = null
-      setScale(Number(pendingScaleRef.current.toFixed(3)))
+      setStoredScale(paneId, Number(pendingScaleRef.current.toFixed(3)))
     })
   }
 
@@ -51,6 +56,21 @@ export const PdfPane: React.FC<IDockviewPanelProps> = ({ api }) => {
     }
   }, [])
 
+  useEffect(() => {
+    const handleUnload = () => {
+      isUnloadingRef.current = true
+      flushPanePersistence(paneId)
+    }
+
+    window.addEventListener('beforeunload', handleUnload)
+    window.addEventListener('pagehide', handleUnload)
+
+    return () => {
+      window.removeEventListener('beforeunload', handleUnload)
+      window.removeEventListener('pagehide', handleUnload)
+    }
+  }, [flushPanePersistence, paneId])
+
   const filteredAnchors = useMemo<PdfAnchor[]>(() => {
     return paneState?.anchors ?? []
   }, [paneState])
@@ -60,6 +80,7 @@ export const PdfPane: React.FC<IDockviewPanelProps> = ({ api }) => {
     const disposable = api.onDidActiveChange((event) => {
       if (event.isActive) {
         setActivePane(paneId)
+        bumpScrollRestoreToken(paneId)
       }
     })
 
@@ -69,9 +90,12 @@ export const PdfPane: React.FC<IDockviewPanelProps> = ({ api }) => {
         skipCleanupRef.current = false
         return
       }
+      if (isUnloadingRef.current) {
+        return
+      }
       removePane(paneId)
     }
-  }, [api, paneId, removePane, setActivePane])
+  }, [api, paneId, bumpScrollRestoreToken, removePane, setActivePane])
 
   useEffect(() => {
     if (paneState)
@@ -112,8 +136,8 @@ export const PdfPane: React.FC<IDockviewPanelProps> = ({ api }) => {
       <PdfToolbar
         title={paneState?.source.name ?? 'PDF'}
         scale={scale}
-        onZoomIn={() => setScale(value => Math.min(3, value + 0.1))}
-        onZoomOut={() => setScale(value => Math.max(0.5, value - 0.1))}
+        onZoomIn={() => setStoredScale(paneId, Math.min(3, scale + 0.1))}
+        onZoomOut={() => setStoredScale(paneId, Math.max(0.5, scale - 0.1))}
         onOpenPdf={() => void handleOpen()}
       />
       {paneState?.data
@@ -127,8 +151,11 @@ export const PdfPane: React.FC<IDockviewPanelProps> = ({ api }) => {
                 addTextAnchor(paneId, pageIndex, text, rects)}
               onZoomDelta={zoomByDelta}
               onLoadStateChange={handleLoadStateChange}
-              initialScrollRatio={paneState.scrollRatio}
-              onScrollRatioChange={ratio => setScrollRatio(paneId, ratio)}
+              initialScrollPosition={paneState.scrollPosition}
+              onScrollPositionChange={position =>
+                setScrollPosition(paneId, position)}
+              restoreScrollToken={scrollRestoreToken}
+              onFitWidthScaleChange={nextScale => setStoredScale(paneId, nextScale)}
             />
           )
         : (

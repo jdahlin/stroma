@@ -17,9 +17,13 @@ interface PdfViewerProps {
   onCreateTextAnchor: (pageIndex: number, text: string, rects: PdfRect[]) => void
   onZoomDelta?: (factor: number) => void
   onLoadStateChange?: (state: 'loading' | 'ready' | 'error') => void
-  initialScrollRatio?: number
-  onScrollRatioChange?: (ratio: number) => void
+  initialScrollPosition?: { ratio: number, top: number, scale: number }
+  onScrollPositionChange?: (position: { ratio: number, top: number, scale: number }) => void
+  restoreScrollToken?: number
+  onFitWidthScaleChange?: (scale: number) => void
 }
+
+const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value))
 
 export const PdfViewer: React.FC<PdfViewerProps> = ({
   data,
@@ -29,11 +33,18 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
   onCreateTextAnchor,
   onZoomDelta,
   onLoadStateChange,
-  initialScrollRatio,
-  onScrollRatioChange,
+  initialScrollPosition,
+  onScrollPositionChange,
+  restoreScrollToken,
+  onFitWidthScaleChange,
 }) => {
   const [doc, setDoc] = useState<PDFDocumentProxy | null>(null)
+  const [basePageWidth, setBasePageWidth] = useState<number | null>(null)
   const scrollRef = useRef<HTMLDivElement>(null)
+  const fitRafRef = useRef<number | null>(null)
+  const fitDebounceRef = useRef<number | null>(null)
+  const pendingWidthRef = useRef<number | null>(null)
+  const lastFitScaleRef = useRef<number | null>(null)
 
   useEffect(() => {
     let cancelled = false
@@ -65,6 +76,99 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
   }, [data, onLoadStateChange])
 
   useEffect(() => {
+    if (!doc) {
+      setBasePageWidth(null)
+      return
+    }
+
+    let cancelled = false
+    doc
+      .getPage(1)
+      .then((page) => {
+        if (cancelled)
+          return
+        const viewport = page.getViewport({ scale: 1 })
+        setBasePageWidth(viewport.width)
+      })
+      .catch((error) => {
+        console.warn('Failed to measure PDF page width.', error)
+      })
+
+    return () => {
+      cancelled = true
+    }
+  }, [doc])
+
+  useEffect(() => {
+    const viewport = scrollRef.current
+    if (!viewport || basePageWidth === null || !onFitWidthScaleChange)
+      return
+
+    const updateScale = (width: number) => {
+      if (!Number.isFinite(width) || width <= 0)
+        return
+      if (!Number.isFinite(basePageWidth) || basePageWidth <= 0)
+        return
+      const nextScale = clamp(width / basePageWidth, 0.5, 3)
+      if (!Number.isFinite(nextScale))
+        return
+      if (Math.abs(nextScale - scale) < 0.01)
+        return
+      const lastScale = lastFitScaleRef.current
+      if (lastScale !== null && Math.abs(lastScale - nextScale) < 0.001)
+        return
+      lastFitScaleRef.current = nextScale
+      onFitWidthScaleChange(nextScale)
+    }
+
+    const observer = new ResizeObserver((entries) => {
+      const entry = entries[0]
+      const width = entry?.contentRect.width ?? viewport.clientWidth
+      pendingWidthRef.current = width
+      if (fitRafRef.current === null) {
+        fitRafRef.current = window.requestAnimationFrame(() => {
+          fitRafRef.current = null
+          if (fitDebounceRef.current !== null) {
+            window.clearTimeout(fitDebounceRef.current)
+          }
+          fitDebounceRef.current = window.setTimeout(() => {
+            fitDebounceRef.current = null
+            if (pendingWidthRef.current !== null) {
+              updateScale(pendingWidthRef.current)
+            }
+          }, 120)
+        })
+      }
+    })
+
+    observer.observe(viewport)
+    updateScale(viewport.clientWidth)
+
+    return () => {
+      observer.disconnect()
+      if (fitRafRef.current !== null) {
+        window.cancelAnimationFrame(fitRafRef.current)
+        fitRafRef.current = null
+      }
+      if (fitDebounceRef.current !== null) {
+        window.clearTimeout(fitDebounceRef.current)
+        fitDebounceRef.current = null
+      }
+    }
+  }, [basePageWidth, onFitWidthScaleChange, scale])
+
+  useEffect(() => {
+    lastFitScaleRef.current = scale
+  }, [scale])
+
+  const handleScrollPositionChange = React.useCallback(
+    (position: { ratio: number, top: number }) => {
+      onScrollPositionChange?.({ ...position, scale })
+    },
+    [onScrollPositionChange, scale],
+  )
+
+  useEffect(() => {
     if (!focusedAnchorId)
       return
     const target = document.querySelector(`[data-anchor-id="${focusedAnchorId}"]`)
@@ -80,28 +184,39 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
     const viewport = scrollRef.current
     if (!viewport || !doc)
       return
-    if (initialScrollRatio === undefined)
+    if (!initialScrollPosition)
       return
 
-    const clamp = Math.max(0, Math.min(1, initialScrollRatio))
+    const shouldUseExact = Math.abs(initialScrollPosition.scale - scale) < 0.001
+    const clampedRatio = Math.max(0, Math.min(1, initialScrollPosition.ratio))
+    const desiredTop = initialScrollPosition.top
     let inner = 0
     const applyScroll = () => {
       const maxScroll = viewport.scrollHeight - viewport.clientHeight
       if (maxScroll <= 0)
         return
-      viewport.scrollTop = maxScroll * clamp
+      if (shouldUseExact) {
+        viewport.scrollTop = clamp(desiredTop, 0, maxScroll)
+        return
+      }
+      viewport.scrollTop = maxScroll * clampedRatio
     }
 
     const outer = window.requestAnimationFrame(() => {
       inner = window.requestAnimationFrame(applyScroll)
     })
 
+    const retry = window.setTimeout(() => {
+      applyScroll()
+    }, 120)
+
     return () => {
       window.cancelAnimationFrame(outer)
       if (inner)
         window.cancelAnimationFrame(inner)
+      window.clearTimeout(retry)
     }
-  }, [doc, initialScrollRatio, scale])
+  }, [doc, initialScrollPosition, restoreScrollToken, scale])
 
   const pages = useMemo(() => {
     if (!doc)
@@ -112,7 +227,7 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({
   return (
     <PdfViewport
       onZoomDelta={onZoomDelta}
-      onScrollRatioChange={onScrollRatioChange}
+      onScrollPositionChange={handleScrollPositionChange}
       scrollRef={scrollRef}
     >
       <div className="pdf-page-stack">

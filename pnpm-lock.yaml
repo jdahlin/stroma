@@ -81,6 +81,9 @@ importers:
       '@repo/tsconfig':
         specifier: workspace:*
         version: link:../../configs/ts
+      '@repo/vitest-config':
+        specifier: workspace:*
+        version: link:../../configs/vitest
       '@types/node':
         specifier: 22.7.7
         version: 22.7.7
