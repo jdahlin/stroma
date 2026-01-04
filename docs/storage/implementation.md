@@ -17,7 +17,7 @@ This document explains the implementation plan for persistent storage in Stroma.
 - Out of scope: localStorage migration (no existing data), cloud sync.
 
 ## What is the mental model?
-- Storage is a shared package in `@repo/core` so CLI tools can use it directly.
+- Storage is a Node-only package in `@repo/storage` so the core types stay portable.
 - The desktop app wraps storage with IPC for renderer access.
 
 ## What are the key concepts?
@@ -30,19 +30,21 @@ This document explains the implementation plan for persistent storage in Stroma.
 ## What is the module structure?
 
 ```
-packages/core/src/storage/
+packages/storage/src/storage/
 ├── db.ts              # Connection, init, migrations
 ├── schema.ts          # DDL as string constant
 ├── assets.ts          # File storage for PDFs
-├── types.ts           # Entity types and inputs
 ├── repositories/
 │   ├── references.ts
 │   ├── anchors.ts
 │   └── notes.ts
 └── index.ts
 
+packages/core/src/
+└── storageTypes.ts    # Entity types and inputs
+
 apps/desktop/src/main/
-├── storage-ipc.ts     # IPC handlers calling @repo/core/storage
+├── storage-ipc.ts     # IPC handlers calling @repo/storage
 ```
 
 ## What is the schema?
@@ -169,7 +171,7 @@ interface StorageAPI {
 9. Update renderer state to use DB.
 
 ## What are the facts?
-- Storage lives in `@repo/core` for CLI tool reuse.
+- Storage lives in `@repo/storage` for CLI tool reuse.
 - Anchor `local_no` is computed via `MAX(local_no) + 1` query.
 - Note content is inline JSON in SQLite.
 
@@ -187,7 +189,7 @@ interface StorageAPI {
 
 ## What assumptions and invariants apply?
 - Main process owns DB access in Electron context.
-- CLI tools access DB directly via `@repo/core`.
+- CLI tools access DB directly via `@repo/storage`.
 
 ## What related docs matter?
 - Data model: [`model.md`](./model.md)

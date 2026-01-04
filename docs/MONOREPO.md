@@ -37,9 +37,10 @@ This document explains the Stroma monorepo layout and the import boundaries betw
 ## What are the import boundaries?
 - `@repo/shared` has no dependencies.
 - `@repo/core` can import `@repo/shared` only.
+- `@repo/storage` can import `@repo/core` and `@repo/shared` only.
 - `@repo/ux` can import `@repo/core` and `@repo/shared`.
-- `@repo/main` can import `@repo/core` and `@repo/shared`.
-- `@repo/renderer` can import `@repo/core`, `@repo/shared`, and `@repo/ux`.
+- `@main` can import `@repo/core`, `@repo/shared`, and `@repo/storage`.
+- `@renderer` can import `@repo/core`, `@repo/shared`, and `@repo/ux`.
 
 ## Where are key apps?
 | Area | Purpose | Location |
@@ -56,6 +57,7 @@ This document explains the Stroma monorepo layout and the import boundaries betw
 ## What decisions are recorded?
 - `@repo/core` stays dependency-light and UI-free.
 - Desktop application is split into three packages (main, preload, renderer) to improve build isolation.
+- `@repo/storage` is Node-only and not imported by the renderer.
 
 ## What are the open questions?
 - None.
