@@ -33,7 +33,6 @@
   },
   "dependencies": {
     "@repo/core": "workspace:*",
-    "@repo/shared": "workspace:*",
     "@repo/ux": "workspace:*",
     "dockview": "^4.13.1",
     "pdfjs-dist": "^5.4.530",
@@ -52,7 +51,6 @@
     "electron": "39.2.7",
     "electron-builder": "^25.1.8",
     "esbuild": "^0.27.0",
-    "node-abi": "4.24.0",
     "postcss": "^8.5.0",
     "postcss-load-config": "^6.0.0",
     "tailwindcss": "^3.4.17",
