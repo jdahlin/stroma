@@ -39,7 +39,7 @@ else
   exit 1
 fi
 
-# macOS: Create .icns
+# macOS/Linux: Create .icns
 if command -v iconutil &> /dev/null; then
   echo "Creating macOS icon.icns..."
   rm -rf "$ICONSET_PATH"
@@ -59,6 +59,21 @@ if command -v iconutil &> /dev/null; then
   iconutil -c icns "$ICONSET_PATH" -o "$ICNS_PATH"
   rm -rf "$ICONSET_PATH"
   echo "Created $ICNS_PATH"
+elif command -v png2icns &> /dev/null; then
+  echo "Creating macOS icon.icns with png2icns..."
+  TEMP_DIR=$(mktemp -d)
+  for size in 16 32 64 128 256 512 1024; do
+    if command -v convert &> /dev/null; then
+      convert "$PNG_PATH" -resize ${size}x${size} "$TEMP_DIR/icon_${size}.png"
+    elif command -v rsvg-convert &> /dev/null; then
+      rsvg-convert -w $size -h $size "$SVG_PATH" -o "$TEMP_DIR/icon_${size}.png"
+    fi
+  done
+  png2icns "$ICNS_PATH" "$TEMP_DIR"/icon_*.png
+  rm -rf "$TEMP_DIR"
+  echo "Created $ICNS_PATH"
+else
+  echo "Warning: Neither iconutil nor png2icns available, skipping .icns generation"
 fi
 
 # Windows: Create .ico using ImageMagick or png2ico
