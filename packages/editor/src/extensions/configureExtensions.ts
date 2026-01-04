@@ -20,6 +20,8 @@ import Paragraph from '@tiptap/extension-paragraph'
 import Placeholder from '@tiptap/extension-placeholder'
 import Strike from '@tiptap/extension-strike'
 import Text from '@tiptap/extension-text'
+import { SlashCommand } from './SlashCommand'
+import { slashCommandSuggestion } from './slashCommandSuggestion'
 
 export interface ConfigureExtensionsOptions {
   /** Placeholder text when the editor is empty */
@@ -92,6 +94,11 @@ export function configureExtensions(
     // Placeholder
     Placeholder.configure({
       placeholder,
+    }),
+
+    // Slash commands
+    SlashCommand.configure({
+      suggestion: slashCommandSuggestion,
     }),
   ]
 }

@@ -291,6 +291,9 @@ importers:
       react:
         specifier: ^19.2.0
         version: 19.2.3
+      react-dom:
+        specifier: ^19.2.0
+        version: 19.2.3(react@19.2.3)
     devDependencies:
       '@repo/tsconfig':
         specifier: workspace:*
@@ -301,6 +304,9 @@ importers:
       '@types/react':
         specifier: ^19.2.0
         version: 19.2.7
+      '@types/react-dom':
+        specifier: ^19.2.0
+        version: 19.2.3(@types/react@19.2.7)
       typescript:
         specifier: ^5.9.0
         version: 5.9.3
