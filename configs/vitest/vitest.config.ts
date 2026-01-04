@@ -15,6 +15,7 @@ export const config: any = {
         '**/node_modules/**',
         '**/dist/**',
         '**/*.test.{ts,tsx}',
+        '**/*.types.ts',
         '**/*.css',
         '**/*.d.ts',
       ],
