@@ -20,6 +20,7 @@ import Paragraph from '@tiptap/extension-paragraph'
 import Placeholder from '@tiptap/extension-placeholder'
 import Strike from '@tiptap/extension-strike'
 import Text from '@tiptap/extension-text'
+import { Section } from './Section'
 import { SlashCommand } from './SlashCommand'
 import { slashCommandSuggestion } from './slashCommandSuggestion'
 
@@ -100,5 +101,8 @@ export function configureExtensions(
     SlashCommand.configure({
       suggestion: slashCommandSuggestion,
     }),
+
+    // Sections
+    Section,
   ]
 }

@@ -119,9 +119,7 @@ export const slashCommandItems: SlashCommandItem[] = [
     description: 'Collapsible section container',
     icon: FolderOpen,
     command: ({ editor, range }) => {
-      // Section extension will be implemented in Phase 5
-      // For now, just clear the slash command
-      editor.chain().focus().deleteRange(range).run()
+      editor.chain().focus().deleteRange(range).insertSection().run()
     },
   },
 ]
