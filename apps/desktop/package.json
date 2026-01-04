@@ -29,7 +29,9 @@
     "dist": "pnpm run build:icon && electron-builder",
     "dist:mac": "pnpm run build:icon && electron-builder --mac",
     "dist:win": "pnpm run build:icon && electron-builder --win",
-    "dist:linux": "pnpm run build:icon && electron-builder --linux"
+    "dist:linux": "pnpm run build:icon && electron-builder --linux",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@repo/core": "workspace:*",
@@ -44,6 +46,7 @@
   "devDependencies": {
     "@repo/tailwind-config": "workspace:*",
     "@repo/tsconfig": "workspace:*",
+    "@repo/vitest-config": "workspace:*",
     "@types/node": "22.7.7",
     "@types/react": "^19.2.0",
     "@types/react-dom": "^19.2.0",
