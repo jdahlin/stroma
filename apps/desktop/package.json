@@ -1,5 +1,6 @@
 {
   "name": "@repo/desktop",
+  "type": "module",
   "version": "0.1.6",
   "private": true,
   "productName": "Stroma",
@@ -47,19 +48,19 @@
     "@repo/tsconfig": "workspace:*",
     "@repo/vitest-config": "workspace:*",
     "@types/node": "22.7.7",
-    "@types/react": "^19.2.0",
-    "@types/react-dom": "^19.2.0",
-    "@vitejs/plugin-react": "^4.3.4",
-    "autoprefixer": "^10.4.20",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^4.7.0",
+    "autoprefixer": "^10.4.23",
     "electron": "39.2.7",
     "electron-builder": "^25.1.8",
-    "esbuild": "^0.27.0",
-    "postcss": "^8.5.0",
-    "postcss-load-config": "^6.0.0",
-    "tailwindcss": "^3.4.17",
-    "tsx": "^4.19.2",
+    "esbuild": "^0.27.2",
+    "postcss": "^8.5.6",
+    "postcss-load-config": "^6.0.1",
+    "tailwindcss": "^3.4.19",
+    "tsx": "^4.21.0",
     "typescript": "5.9.3",
-    "vite": "^6.0.7"
+    "vite": "^6.4.1"
   },
   "releaseDate": "2026-01-04"
 }

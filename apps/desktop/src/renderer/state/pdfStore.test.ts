@@ -2,6 +2,7 @@ import type { PdfSourceId } from '@repo/core'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { usePdfStore } from './pdfStore'
 import { persistState } from './persist'
+import '../localStorage.polyfill'
 
 const STORAGE_KEY = 'stroma-pdf-panes'
 
