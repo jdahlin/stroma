@@ -15,6 +15,21 @@ export const PdfViewport: React.FC<PdfViewportProps> = ({
   scrollRef,
 }) => {
   const rafRef = React.useRef<number | null>(null)
+  const viewportRef = React.useRef<HTMLDivElement | null>(null)
+
+  const setRefs = React.useCallback(
+    (node: HTMLDivElement | null) => {
+      viewportRef.current = node
+      if (!scrollRef)
+        return
+      if (typeof scrollRef === 'function') {
+        scrollRef(node)
+      } else {
+        scrollRef.current = node
+      }
+    },
+    [scrollRef],
+  )
 
   React.useEffect(() => {
     return () => {
@@ -42,19 +57,29 @@ export const PdfViewport: React.FC<PdfViewportProps> = ({
     })
   }
 
-  const handleWheel = (event: React.WheelEvent<HTMLDivElement>) => {
-    if (!onZoomDelta)
-      return
-    if (!event.ctrlKey && !event.metaKey)
+  React.useEffect(() => {
+    const node = viewportRef.current
+    if (!node || !onZoomDelta)
       return
 
-    event.preventDefault()
-    const zoomFactor = Math.exp(-event.deltaY / 200)
-    onZoomDelta(zoomFactor)
-  }
+    const handleWheel = (event: WheelEvent) => {
+      if (!event.ctrlKey && !event.metaKey)
+        return
+
+      event.preventDefault()
+      const zoomFactor = Math.exp(-event.deltaY / 200)
+      onZoomDelta(zoomFactor)
+    }
+
+    node.addEventListener('wheel', handleWheel, { passive: false })
+
+    return () => {
+      node.removeEventListener('wheel', handleWheel)
+    }
+  }, [onZoomDelta])
 
   return (
-    <div className="pdf-viewport" onWheel={handleWheel} onScroll={handleScroll} ref={scrollRef}>
+    <div className="pdf-viewport" onScroll={handleScroll} ref={setRefs}>
       {children}
     </div>
   )
