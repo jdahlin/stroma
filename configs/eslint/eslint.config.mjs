@@ -27,5 +27,6 @@ export default antfu({
     'ts/switch-exhaustiveness-check': 'error',
     'ts/no-unnecessary-type-assertion': 'error',
     'ts/consistent-type-imports': ['error', { prefer: 'type-imports' }],
+    'ts/no-explicit-any': 'error',
   },
 })
