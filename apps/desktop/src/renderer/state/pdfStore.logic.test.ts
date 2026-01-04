@@ -48,7 +48,7 @@ describe('pdfStore logic', () => {
       expect(normalizeScrollPosition(pos)).toEqual(pos)
     })
 
-    it('clumps ratio between 0 and 1', () => {
+    it('clamps ratio between 0 and 1', () => {
       expect(normalizeScrollPosition({ ratio: -0.1, top: 100, scale: 1 })?.ratio).toBe(0)
       expect(normalizeScrollPosition({ ratio: 1.5, top: 100, scale: 1 })?.ratio).toBe(1)
     })
