@@ -1,168 +1,75 @@
-# Release Process
+---
+title: "How do releases work?"
+status: implemented
+audience: [maintainer]
+last_updated: 2026-01-04
+---
 
-This document describes how to release new versions of Stroma.
+# How do releases work?
+This document explains how to produce and publish a Stroma release.
 
-## Overview
+## Who is this for?
+- Maintainers cutting official releases.
 
-Stroma uses GitHub Actions for automated builds and releases. The workflow:
+## What is the scope?
+- In scope: tagging, CI build flow, artifacts, and troubleshooting.
+- Out of scope: day-to-day development workflows.
 
-1. Triggers on git tags matching `v*` (e.g., `v0.1.0`)
-2. Builds macOS packages for both Intel (x64) and Apple Silicon (arm64)
-3. Creates a draft GitHub Release with all artifacts
+## What is the mental model?
+- A release is a version tag that triggers CI builds and produces platform artifacts.
 
-## Creating a Release
+## What are the key concepts?
+| Concept | Definition | Example |
+| --- | --- | --- |
+| Version tag | Git tag that triggers the release workflow. | "v0.1.0" |
+| Artifact | OS-specific build output. | "macOS DMG" |
+| Draft release | CI-created release awaiting publish. | "Draft in GitHub Releases." |
 
-### Prerequisites
+## What are the prerequisites?
+- All changes are committed and pushed to `main`.
+- Local build passes: `pnpm build`.
+- App version is updated in `apps/desktop/package.json`.
 
-1. Ensure all changes are committed and pushed to `main`
-2. Verify the build passes locally: `pnpm build`
-3. Update version in `apps/desktop/package.json` if not already updated
-
-### Steps
-
-1. **Create and push a version tag:**
-
+## What are the release steps?
+1. Create and push a version tag:
    ```bash
-   # Update version in apps/desktop/package.json
    cd apps/desktop
-   npm version patch  # or minor, major, or specific version
-
-   # Push the tag
+   npm version patch
    git push origin v$(node -p "require('./package.json').version")
    ```
+2. Monitor the GitHub Actions release workflow.
+3. Publish the draft release after checking notes.
 
-2. **Monitor the build:**
-   - Go to Actions tab in GitHub
-   - Watch the "Release" workflow progress
-   - Build takes approximately 10-15 minutes
+## What artifacts are produced?
+| Platform | Artifacts | Example |
+| --- | --- | --- |
+| macOS | DMG and ZIP for x64/arm64. | `Stroma-0.1.0-mac-arm64.dmg` |
+| Windows | EXE for x64/arm64. | `Stroma-0.1.0-win-x64.exe` |
+| Linux | AppImage, DEB, tar.gz. | `Stroma-0.1.0-x64.AppImage` |
 
-3. **Publish the release:**
-   - Navigate to Releases in GitHub
-   - Find the draft release created by the workflow
-   - Review the auto-generated release notes
-   - Edit description if needed
-   - Click "Publish release"
+## What are the manual dispatch steps?
+- Run the Release workflow from GitHub Actions.
+- Provide the version number without the `v` prefix.
 
-### Manual Workflow Dispatch
+## What are the failure modes or edge cases?
+- The tag is missing the `v` prefix, so CI does not trigger.
+- The build fails because dependencies were not installed.
 
-You can also trigger a release manually from the Actions tab:
+## What assumptions and invariants apply?
+- Releases are built by GitHub Actions.
+- Artifacts are published as drafts first.
 
-1. Go to Actions > Release workflow
-2. Click "Run workflow"
-3. Enter the version number (without 'v' prefix)
-4. Click "Run workflow"
+## What are the facts?
+- Releases are currently unsigned.
 
-## Versioning
+## What decisions are recorded?
+- Semantic Versioning is the versioning scheme.
 
-We follow [Semantic Versioning](https://semver.org/):
+## What are the open questions?
+- When should code signing be enabled?
 
-- **MAJOR** (1.0.0): Breaking changes
-- **MINOR** (0.1.0): New features, backwards compatible
-- **PATCH** (0.0.1): Bug fixes, backwards compatible
+## What related docs matter?
+- Monorepo layout: [`monorepo.md`](./monorepo.md)
 
-Pre-release versions use suffixes: `0.1.0-beta.1`, `0.1.0-rc.1`
-
-## Artifacts
-
-Each release produces:
-
-### macOS
-
-| File                             | Description               |
-| -------------------------------- | ------------------------- |
-| `Stroma-{version}-mac-x64.dmg`   | Intel Mac disk image      |
-| `Stroma-{version}-mac-arm64.dmg` | Apple Silicon disk image  |
-| `Stroma-{version}-mac-x64.zip`   | Intel Mac zip archive     |
-| `Stroma-{version}-mac-arm64.zip` | Apple Silicon zip archive |
-
-### Windows
-
-| File                             | Description             |
-| -------------------------------- | ----------------------- |
-| `Stroma-{version}-win-x64.exe`   | Windows x64 installer   |
-| `Stroma-{version}-win-arm64.exe` | Windows ARM64 installer |
-
-### Linux
-
-| File                                  | Description           |
-| ------------------------------------- | --------------------- |
-| `Stroma-{version}-x64.AppImage`       | Linux x64 AppImage    |
-| `Stroma-{version}-arm64.AppImage`     | Linux ARM64 AppImage  |
-| `stroma_{version}_amd64.deb`          | Debian/Ubuntu package |
-| `Stroma-{version}-linux-x64.tar.gz`   | Linux x64 tarball     |
-| `Stroma-{version}-linux-arm64.tar.gz` | Linux ARM64 tarball   |
-
-## Code Signing
-
-Currently, releases are unsigned. Users will see a warning on first launch.
-
-To bypass on macOS:
-
-- Right-click the app > Open, or
-- System Settings > Privacy & Security > Open Anyway
-
-### Enabling Code Signing (Future)
-
-To enable code signing, you'll need:
-
-1. Apple Developer Program membership ($99/year)
-2. Developer ID Application certificate
-3. Add the following secrets to GitHub:
-   - `MAC_CERTS`: Base64-encoded .p12 certificate
-   - `MAC_CERTS_PASSWORD`: Certificate password
-   - `APPLE_ID`: Your Apple ID email
-   - `APPLE_APP_SPECIFIC_PASSWORD`: App-specific password for notarization
-   - `APPLE_TEAM_ID`: Your Apple Developer Team ID
-
-Then uncomment the code signing environment variables in `.github/workflows/release.yml`.
-
-## Local Testing
-
-To test the build locally without publishing:
-
-```bash
-# Build all packages
-pnpm build
-
-# Create a macOS package (unpacked, for testing)
-cd apps/desktop
-pnpm pack
-
-# Create full DMG
-pnpm dist:mac
-```
-
-The output will be in `apps/desktop/release/`.
-
-## Troubleshooting
-
-### Build fails with "electron-builder" error
-
-Ensure `electron-builder` is installed:
-
-```bash
-pnpm install
-```
-
-### DMG shows wrong icon
-
-Regenerate `icon.icns` from a 1024x1024 PNG:
-
-```bash
-mkdir icon.iconset
-sips -z 16 16 icon.png --out icon.iconset/icon_16x16.png
-sips -z 32 32 icon.png --out icon.iconset/icon_16x16@2x.png
-sips -z 32 32 icon.png --out icon.iconset/icon_32x32.png
-sips -z 64 64 icon.png --out icon.iconset/icon_32x32@2x.png
-sips -z 128 128 icon.png --out icon.iconset/icon_128x128.png
-sips -z 256 256 icon.png --out icon.iconset/icon_128x128@2x.png
-sips -z 256 256 icon.png --out icon.iconset/icon_256x256.png
-sips -z 512 512 icon.png --out icon.iconset/icon_256x256@2x.png
-sips -z 512 512 icon.png --out icon.iconset/icon_512x512.png
-sips -z 1024 1024 icon.png --out icon.iconset/icon_512x512@2x.png
-iconutil -c icns icon.iconset -o apps/desktop/build/icon.icns
-```
-
-### Release not appearing
-
-Check if the release was created as a draft. Navigate to Releases and publish it manually.
+## What this doc does not cover
+- The internal CI configuration or packaging scripts.

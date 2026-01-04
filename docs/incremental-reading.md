@@ -1,125 +1,79 @@
-# Incremental Reading (Distilled UX Requirements)
+---
+title: "What is the incremental reading workflow?"
+status: planned
+audience: [contributor, maintainer]
+last_updated: 2026-01-04
+---
 
-This document distills the core ideas from:
-https://supermemo.guru/wiki/Incremental_reading
+# What is the incremental reading workflow?
+This document explains the incremental reading workflow and the UX capabilities it requires.
 
-It translates those ideas into concrete UX requirements for this app.
+## Who is this for?
+- Contributors designing reading, extraction, and review flows.
+- Maintainers validating MVP scope against the workflow.
 
-## Core Ideas (From SuperMemo)
+## What is the scope?
+- In scope: workflow concepts, required actions, and UX surfaces.
+- Out of scope: detailed UI design and implementation choices.
 
-- Incremental reading blends reading, extraction, and review into one loop.
-- Knowledge flows through a "funnel": source -> selection -> extract -> question.
-- Spaced repetition is used to resurface material and stabilize memory.
-- There is no "finish reading"; sources are revisited until exhausted.
+## What is the mental model?
+- Knowledge flows through a funnel: source -> selection -> extract -> question -> review.
 
-## UX Features Required
+## What are the key concepts?
+| Concept | Definition | Example |
+| --- | --- | --- |
+| Source | Input material the user reads. | "A PDF in the library." |
+| Selection | A highlight or capture inside a source. | "A highlighted paragraph." |
+| Extract | A refined note tied to a selection. | "A short summary linked to the highlight." |
+| Question | A reviewable prompt. | "A cloze card derived from an extract." |
+| Review loop | Scheduled resurfacing of extracts/questions. | "A due list for today." |
 
-These are the minimum UX features needed to support the incremental workflow.
+## What UX capabilities are required?
+| Capability | Why it matters | Example |
+| --- | --- | --- |
+| Source intake | Build a prioritized reading queue. | "Add a PDF with a due date." |
+| Incremental extraction | Create extracts without leaving the source. | "Extract text inline while reading." |
+| Progressive refinement | Break extracts into smaller units. | "Turn a summary into a question." |
+| Review loop | Resurface material on schedule. | "Rate a question as Good." |
+| Low friction | Keep the flow fast and keyboard-first. | "Jump source <-> note with one action." |
 
-### 1) Source Intake and Prioritized Reading Queue
+## What screens and actions are required?
+- Home/Today: start next read or review, postpone, resume last item.
+- Library/Sources: add, open, prioritize, archive sources.
+- Reader: navigate, highlight, extract, open linked note.
+- Extract editor: edit, refine, jump to anchor, rate when prompted.
+- Review queue: rate, see context, skip or postpone, jump to source.
+- Note tree: browse hierarchy and jump to related items.
 
-- Ability to add sources (PDF, web, image, video).
-- A reading queue with priorities (or due dates).
-- Postpone/advance actions to control when an item returns.
+## What are the non-goals?
+- One-time reading flows without resurfacing.
+- Review-only systems without source context.
 
-### 2) Incremental Extraction Workflow
+## What are the facts?
+- Incremental reading blends reading, extraction, and review in one loop.
 
-- Highlight and extract within the source view.
-- Create extracts incrementally without leaving the source.
-- Extracts remain linked to their source anchors.
+## What decisions are recorded?
+- Spaced review is a first-class requirement.
+- Extracts must remain linked to their sources.
 
-### 3) Progressive Refinement
+## What are the open questions?
+- How much of the workflow should be keyboard-only in the MVP?
 
-- Ability to turn extracts into smaller extracts or questions.
-- Clear visual distinction between highlight, extract, and question.
-- History or traceability back to the original source.
+## What are the failure modes or edge cases?
+- Extracts lose their source anchors.
+- The queue resurfaces items without showing context.
 
-### 4) Review Loop with Spaced Repetition
+## What assumptions and invariants apply?
+- Sources can be revisited indefinitely.
+- Users need a clear "what next" signal.
 
-- A review queue that resurfaces extracts or questions.
-- Simple rating actions (Again/Hard/Good/Easy) mapped to scheduling.
-- "Due now" and "due soon" indicators to shape sessions.
+## What related docs matter?
+- Product vision: [`product-vision.md`](./product-vision.md)
+- MVP roadmap: [`roadmap-mvp.md`](./roadmap-mvp.md)
+- PDF docs: [`pdf/README.md`](./pdf/README.md)
+- Editor docs: [`editor/README.md`](./editor/README.md)
+- SuperMemo Guru (background): [Incremental reading](https://supermemo.guru/wiki/Incremental_reading)
+- Wikipedia (definition): [Incremental reading](https://en.wikipedia.org/wiki/Incremental_reading)
 
-### 5) Minimal Friction and Speed
-
-- Keyboard-first flow for reading and review.
-- Jump from note to source and back with one action.
-- Fast UI feedback; no modal-heavy workflow.
-
-## Implications for MVP
-
-- Extracts must be persistent and linkable.
-- Scheduling must exist early (FSRS preferred).
-- The UI must show "what to read next" and "what to review next."
-
-## UX Screens and Required Actions
-
-These screens describe a minimal set of UI surfaces and the actions users must
-be able to perform in each.
-
-### 1) Home / Today
-
-Purpose: show "what to do next" across reading and review.
-
-Required actions:
-- Start reading the next due source.
-- Start reviewing the next due extract/question.
-- Postpone items (snooze).
-- Jump back to the last active item.
-
-### 2) Library / Sources
-
-Purpose: manage input sources and their metadata.
-
-Required actions:
-- Add a new source (PDF, web, image, YouTube).
-- Open a source for reading.
-- Set or adjust source priority.
-- Archive or remove a source (soft delete).
-
-### 3) Reader (PDF / Web / Media)
-
-Purpose: read and create anchors.
-
-Required actions:
-- Navigate within the source (scroll, page, jump).
-- Highlight a selection.
-- Create an extract from a selection.
-- Open the linked extract in the editor.
-- Add to queue / postpone reading.
-
-### 4) Extract Editor
-
-Purpose: refine knowledge into notes or questions.
-
-Required actions:
-- Edit extract text.
-- Create a child extract or question from a selection.
-- Jump to the source anchor.
-- Set review rating when prompted.
-
-### 5) Review Queue
-
-Purpose: resurface extracts/questions on schedule.
-
-Required actions:
-- Review due items with rating actions (Again/Hard/Good/Easy).
-- See context (source snippet or anchor preview).
-- Postpone or skip an item.
-- Jump to source for clarification.
-
-### 6) Note Tree / Outline
-
-Purpose: visualize hierarchy of highlights, extracts, and questions.
-
-Required actions:
-- Expand/collapse branches.
-- Select a node and jump to its source or note.
-- See icons by type (highlight/extract/question).
-- Reorder items (optional for MVP).
-
-## Notes
-
-The SuperMemo definition emphasizes the funnel of knowledge and spaced
-repetition as the backbone of incremental reading. The app should prioritize
-those two mechanics above all other UI polish or advanced features.
+## What this doc does not cover
+- Detailed UI layouts or scheduling algorithms.

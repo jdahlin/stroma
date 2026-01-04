@@ -1,103 +1,74 @@
-# Improve pdf.js Rendering Performance (Reduce Flicker/Zoom Jank)
+---
+title: "How will PDF rendering performance improve?"
+status: planned
+audience: [contributor, maintainer]
+last_updated: 2026-01-04
+---
 
-This plan outlines steps to improve performance and reduce flicker in the existing pdf.js-based renderer while keeping the current Stroma UX (PdfPane, toolbar, Dockview layout).
+# How will PDF rendering performance improve?
+This document explains the planned steps to reduce PDF rendering flicker and zoom jank.
 
-## Goals
+## Who is this for?
+- Contributors working on renderer performance.
+- Maintainers planning optimization work.
 
+## What is the scope?
+- In scope: phased performance plan and risks.
+- Out of scope: non-PDF performance work.
+
+## What is the mental model?
+- Treat rendering as a pipeline: schedule, render, and update only visible pages.
+
+## What are the key concepts?
+| Concept | Definition | Example |
+| --- | --- | --- |
+| Virtualization | Render only visible pages. | "Only pages in view are on canvas." |
+| Render queue | Prioritize visible work. | "Visible pages render first." |
+| Zoom stabilization | Avoid re-render on every tick. | "Debounce scale changes." |
+
+## What are the goals?
 - Reduce flicker during pinch-zoom and resize.
 - Minimize unnecessary renders and layout thrash.
-- Preserve existing UI/UX and PDF features (anchors, selection, overlays).
-- Keep the store-driven scroll/zoom model stable.
+- Preserve current UX and anchor behavior.
 
-## Non-Goals
+## What are the non-goals?
+- Replacing Dockview or the state store.
+- Building a full pdf.js web viewer.
 
-- Replacing Dockview, Zustand, or the current pane layout.
-- Building a feature-complete PDF annotation system beyond current needs.
-- Full parity with the pdf.js web viewer (toolbars, file manager, etc.).
+## What are the phases?
+| Phase | Goal | Example |
+| --- | --- | --- |
+| 0. Baseline audit | Profile pinch-zoom behavior. | "Capture a profile during resize." |
+| 1. Stabilize zoom/scroll | Debounce scale updates. | "Cancel stale render tasks." |
+| 2. Virtualize pages | Render visible pages only. | "Keep placeholders for offscreen pages." |
+| 3. Refine pipeline | Prioritized render queue. | "Limit concurrent renders." |
+| 4. Text layer stability | Align text and canvas. | "Delay text layer until canvas is ready." |
+| 5. Integrate cleanup | Swap viewer internals. | "Remove unused React per-page code." |
+| 6. Verify performance | Manual and automated checks. | "Scroll a large PDF smoothly." |
 
-## Current Baseline
+## What are the risks?
+- Zoom flicker if render cancellation is unreliable.
+- Scroll drift if scale changes are not reconciled.
+- Selection misalignment if text layer scale diverges.
 
-- `PdfPane` renders `PdfViewer`, `PdfViewport`, and `PdfPage` components.
-- Scroll/zoom state is managed in the store; `PdfViewer` computes scale and restores scroll.
-- Rendering uses `pdfjs-dist` directly (canvas + text layer + overlays).
+## What are the facts?
+- The current renderer uses pdf.js with canvas + text layers.
 
-## Phases
+## What decisions are recorded?
+- Prefer an imperative renderer for virtualized pages.
 
-### Phase 0: Baseline Audit and Profiling
+## What are the open questions?
+- How aggressive should page caching be without memory pressure?
 
-1. Capture a short profile during pinch-zoom and resize.
-2. Identify render hotspots (canvas render vs text layer render).
-3. Add a feature flag (optional) for incremental rollout.
+## What are the failure modes or edge cases?
+- A focused anchor page is offscreen and never rendered.
 
-### Phase 1: Stabilize Zoom/Scroll (Low-Risk)
+## What assumptions and invariants apply?
+- The PDF pane and toolbar UX remain unchanged.
 
-1. Suspend fit-to-width logic during active pinch-zoom.
-2. Debounce scale updates from `ResizeObserver` and wheel events.
-3. Ensure render task cancellation on scale change is reliable.
-4. Throttle text layer rendering (delay until zoom settles).
-
-### Phase 2: Virtualized Page Rendering (Moderate)
-
-1. Keep React for chrome/toolbar, but move page rendering to an imperative host.
-2. Compute visible page indices based on `scrollTop` and cached page heights.
-3. Render only visible pages (+buffer).
-4. Maintain total scroll height with placeholders:
-   - Page heights derived from cached page dimensions at current scale.
-5. On scroll, update visible range and render/cancel pages.
-
-### Phase 3: Render Pipeline Refinement
-
-1. Render queue with prioritization (visible pages first).
-2. Limit concurrent renders and cancel stale tasks.
-3. Cache `PDFPageProxy` instances and reuse across renders.
-4. Optional: cache rendered canvas bitmaps per scale for fast zoom snaps.
-
-### Phase 4: Text Layer and Selection Stability
-
-1. Render text layers only after canvas render completes.
-2. Batch text layer updates (avoid re-rendering on every scroll tick).
-3. Ensure selection overlay uses the new page DOM structure.
-4. Force-render the focused anchor page even if offscreen.
-
-### Phase 5: Integration and Cleanup
-
-1. Keep `PdfPane` and toolbar unchanged.
-2. Replace `PdfViewer` internals with the imperative renderer.
-3. Ensure store updates for scroll position + scale remain stable.
-4. Delete unused React page components if fully replaced.
-
-### Phase 6: Performance Verification
-
-1. Manual checks:
-   - Smooth scrolling across large PDFs.
-   - Stable pinch zoom without flicker.
-   - Restore scroll position after reload.
-2. Automated checks (where feasible):
-   - Unit tests for store scroll persistence.
-   - Optional integration tests for scroll/zoom in Electron.
-
-## Risks and mitigations
-
-- Render flicker on zoom: enforce render cancellation + debounced re-render.
-- Scroll position drift: restore using pixel+scale with ratio fallback.
-- Text selection misalignment: align text layer viewport to canvas viewport.
-- Memory growth: cap cached pages and clean up on page exit.
-
-## Estimated effort
-
-- MVP (virtualization + stable zoom/scroll): 2–3 days.
-- Full parity (text layer, selection, anchors): +2–3 days.
-- Total: 4–6 focused days.
-
-## Deliverables
-
-- Imperative renderer + virtualization.
-- Updated `PdfViewer` internals (no React-per-page rendering).
-- Reduced scroll/zoom jank with render throttling and task cancellation.
-- Updated docs and tests.
-
-## See also
-
+## What related docs matter?
 - Renderer architecture: [`renderer-architecture.md`](./renderer-architecture.md)
-- PDF troubleshooting: [`troubleshooting.md`](./troubleshooting.md)
+- Troubleshooting: [`troubleshooting.md`](./troubleshooting.md)
 
+## What this doc does not cover
+- Specific implementation tasks or profiling data.

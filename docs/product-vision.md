@@ -1,123 +1,80 @@
-Below is a concise, high-level product summary you can put at the top of a README or design doc.
-It focuses on what the app is, what it aims to become, and how it gets there in stages—no implementation detail.
+---
+title: "What is the long-term product vision?"
+status: planned
+audience: [user, contributor, maintainer]
+last_updated: 2026-01-04
+---
 
-⸻
+# What is the long-term product vision?
+This document explains Stroma's end-state product vision and the phased path to reach it.
 
-Project Summary
+## Who is this for?
+- Contributors aligning work with the long-term vision.
+- Maintainers prioritizing milestones.
 
-What this app is
+## What is the scope?
+- In scope: end-state capabilities, guiding principles, and phased steps.
+- Out of scope: implementation details and near-term task lists.
 
-A desktop knowledge work environment optimized for deep reading, extraction, and long-term learning, built around:
-• PDFs as first-class sources
-• incremental, non-linear reading
-• durable links between source material and notes
-• an IDE-like, multi-pane workspace
+## What is the mental model?
+- Stroma is a knowledge workbench where sources, anchors, and extracts form a durable learning loop.
 
-The app prioritizes control, longevity, and cognitive efficiency over minimalism or casual note-taking.
+## What are the key concepts?
+| Concept | Definition | Example |
+| --- | --- | --- |
+| Source | A durable input like a PDF or web page. | "A PDF imported into the library." |
+| Anchor | A stable pointer into a source. | "A highlight on page 12." |
+| Extract | A note or question derived from an anchor. | "A short summary linked to a highlight." |
+| Workspace | An IDE-like layout of panes. | "PDF pane + notes pane + queue pane." |
+| Incremental reading | Read, extract, and review in a loop. | "Return to a source until it is exhausted." |
+| Spaced review | Scheduled resurfacing of extracts. | "Again/Hard/Good/Easy rating cycle." |
 
-⸻
+## What are the guiding principles?
+- Structure beats polish.
+- Anchors over copied text.
+- Queues over sessions.
+- Keyboard over mouse.
+- Longevity over novelty.
 
-Core features (end state)
+## What are the phased steps?
+| Step | Goal | Example |
+| --- | --- | --- |
+| 1. Application shell | Stable desktop container. | "Dockable panes and persistent layouts." |
+| 2. PDF workspace | Durable PDF reading and anchors. | "Create a highlight and reopen it later." |
+| 3. Notes + extraction | Turn anchors into extracts. | "Create an extract linked to a highlight." |
+| 4. Incremental reading | Prioritized reading and resurfacing. | "Return to a source via a queue." |
+| 5. Review and retention | Scheduling and durable memory. | "Rate an extract and reschedule it." |
 
-1. Multi-pane workspace
-   • Dockable, resizable panes (IDE-style)
-   • Persistent layouts
-   • Keyboard-first navigation
-   • Workspace adapts to different tasks (reading, extracting, reviewing)
+## What are the non-goals?
+- Casual note-taking without sources.
+- Cloud-first collaboration in early phases.
+- Web-only constraints.
+- Minimalist UI at the cost of control.
 
-2. PDF-centric reading
-   • PDFs as primary input (not HTML)
-   • Stable anchors to exact locations in documents
-   • Highlights, extracts, and figures remain linked to source pages
-   • Figures and diagrams treated as first-class learning objects
+## What are the facts?
+- Stroma is a desktop app focused on deep reading and long-term learning.
 
-3. Structured note editor
-   • Block-based notes tied to PDF anchors
-   • Progressive refinement: highlight → extract → question
-   • Notes remain editable without breaking source links
+## What decisions are recorded?
+- PDFs are first-class sources.
+- Anchors must remain stable over time.
 
-4. Incremental learning workflow
-   • Reading and learning blended into a single flow
-   • Material resurfaced based on priority and time
-   • No “finish reading”; sources are revisited until exhausted
+## What are the open questions?
+- How much automation (if any) should assist extraction in early releases?
 
-5. Long-term retention support
-   • Atomic knowledge units
-   • Conversion to testable prompts (cloze, Q&A)
-   • Scheduling based on review performance (spaced repetition)
+## What are the failure modes or edge cases?
+- Anchors drift when rendering changes.
+- Extracts lose their source context.
 
-6. Strong UX foundations
-   • Consistent design system
-   • Zoom and accessibility built-in
-   • Responsive layout for different screen sizes
-   • Predictable keyboard and mouse behavior
+## What assumptions and invariants apply?
+- Sources remain addressable over long time spans.
+- The workspace must support multiple reading modes.
 
-⸻
-
-Project goals
-• Replace ad-hoc PDF reading + note apps with a single, coherent system
-• Maximize long-term retention, not short-term consumption
-• Avoid fragile links between notes and sources
-• Support years of accumulated material without degradation
-• Remain extensible without architectural rewrites
-
-Non-goals:
-• Casual note-taking
-• Cloud-first collaboration (initially)
-• Web-only constraints
-• Aesthetic minimalism at the cost of power
-
-⸻
-
-Path to reach the goals (phased)
-
-Step 1 — Application shell
-• Desktop app with docking layout
-• Design system, zoom, themes
-• Persistent workspaces
-• Keyboard-first navigation
-Purpose: create a stable container for everything else.
-
-Step 2 — PDF workspace
-• PDF rendering and navigation
-• Anchors, highlights, figure capture
-• Reliable linking from UI to source
-Purpose: make PDFs a durable, addressable knowledge source.
-
-Step 3 — Notes + extraction
-• Block-based editor
-• Extracts tied to PDF anchors
-• Navigation between source and notes
-Purpose: turn reading into structured knowledge.
-
-Step 4 — Incremental reading
-• Queues and priorities
-• Progressive extraction
-• Source material resurfaces over time
-Purpose: prevent “read once, forget forever”.
-
-Step 5 — Review and retention
-• Conversion to questions
-• Scheduled reviews
-• Feedback-driven resurfacing
-Purpose: ensure durable memory formation.
-
-⸻
-
-Guiding principles
-• Structure beats polish
-• Anchors over text copies
-• Queues over sessions
-• Keyboard over mouse
-• Longevity over novelty
-
-## See also
-
-- Docs index: [`docs/README.md`](./README.md)
+## What related docs matter?
 - MVP roadmap: [`roadmap-mvp.md`](./roadmap-mvp.md)
-- Storage plan: [`storage/README.md`](./storage/README.md)
+- Incremental reading: [`incremental-reading.md`](./incremental-reading.md)
 - Editor docs: [`editor/README.md`](./editor/README.md)
 - PDF docs: [`pdf/README.md`](./pdf/README.md)
+- Storage plan: [`storage/README.md`](./storage/README.md)
 
-If you want, the next useful artifact would be a one-page “user flow” showing how a PDF moves through the system from import to long-term knowledge.
-See `docs/storage/README.md` for the storage plan.
+## What this doc does not cover
+- Implementation details or project timelines.

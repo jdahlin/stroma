@@ -1,84 +1,62 @@
-# Scaling guidance (SQLite)
+---
+title: "How far can SQLite scale for Stroma?"
+status: planned
+audience: [contributor, maintainer]
+last_updated: 2026-01-04
+---
 
-## Status
+# How far can SQLite scale for Stroma?
+This document explains practical scaling expectations and trade-offs for SQLite.
 
-Planned.
+## Who is this for?
+- Contributors making performance decisions.
+- Maintainers planning storage upgrades.
 
-This is pragmatic guidance for how far we can scale with SQLite for anchors/notes.
-Real limits depend on index choices, query patterns, and whether we add full-text search.
+## What is the scope?
+- In scope: scale drivers and mitigation guidelines.
+- Out of scope: benchmarks and perf tooling.
 
-## SQLite size limits (practical)
+## What is the mental model?
+- Scaling limits are UX-driven: slow lists and searches appear before hard DB limits.
 
-SQLite itself supports very large database files (multi-terabyte in theory).
-In practice on a desktop app, the limits are usually:
+## What are the key concepts?
+| Concept | Definition | Example |
+| --- | --- | --- |
+| Anchor volume | Count of anchors and rects. | "Millions of anchors across sources." |
+| Note size | Size of stored note content. | "Large JSON notes." |
+| FTS | Full-text search index. | "FTS table for note content." |
 
-- disk space
-- backup/export time
-- vacuum/maintenance time
-- memory pressure from big queries
+## What are the scale drivers?
+- Anchor rect tables grow faster than anchor identities.
+- Note content size drives DB file growth.
+- FTS adds a second copy of text content.
 
-For this product, a "too big" SQLite DB is usually about **UX degradation** (slow listing/search) not hard limits.
+## What are the recommended limits?
+- Hundreds of thousands to a few million anchors should be workable.
+- Large notes may need external storage if they reach hundreds of KB.
 
-## Expected scale drivers
+## Should note content live in SQLite?
+- Default: yes, for atomic updates and simple backups.
+- Escape hatch: `notes.content_uri` for oversized notes.
 
-### Anchors
-Anchor rows are small; the bigger cost is:
-- per-anchor rect rows (text selections)
-- indexes on `(reference_id, local_no)` and per-reference listing
+## What are the facts?
+- SQLite supports large DBs, but UX degradation is the practical limit.
 
-A realistic upper bound on a single machine before you need special work:
-- **hundreds of thousands to a few million anchors** total
-- if rects are modest and queries are indexed
+## What decisions are recorded?
+- Start with SQLite and optimize queries before changing storage.
 
-### Notes
-Notes are usually the dominant factor if you store rich JSON text.
-SQLite handles lots of TEXT fine, but large note content increases:
-- DB size
-- write amplification (page rewrites)
-- bandwidth of IPC payloads
+## What are the open questions?
+- When should FTS be introduced in the MVP timeline?
 
-Practical guidance:
-- Many small/medium notes (1–50 KB each): store in SQLite.
-- Very large notes (hundreds of KB to MB each): consider storing content externally.
+## What are the failure modes or edge cases?
+- Loading full note content in list views causes memory spikes.
 
-### Full-text search (FTS)
-If/when you add FTS:
-- you effectively store additional indexed content
-- DB size can increase noticeably
-- writes cost more (updating FTS indexes)
+## What assumptions and invariants apply?
+- Hot paths query indexed columns only.
 
-FTS is still feasible for large libraries, but it changes your sizing assumptions.
+## What related docs matter?
+- Queries: [`queries.md`](./queries.md)
+- Schema proposal: [`schema-sqlite.md`](./schema-sqlite.md)
 
-## Should note content be stored in SQLite?
-
-### Store note content in SQLite (recommended default)
-Pros:
-- atomic transactions with metadata + links
-- easy backup/export as a single DB + assets folder
-- simple consistency model
-
-Cons:
-- big documents mean big DB file
-- expensive rewrites for frequent edits of very large content
-
-### Store note content outside SQLite (only when needed)
-Pros:
-- DB stays compact
-- can stream large content files
-- easy to dedup/partial load
-
-Cons:
-- more moving parts (consistency, file lifecycle)
-- harder to back up atomically (need a manifest or careful copy)
-
-Recommendation:
-- Store note content in SQLite until you have clear evidence it’s too large.
-- Add an escape hatch: `notes.content_uri` to point to an external file for oversized notes.
-
-## Performance safety checks
-
-- Always query by indexed columns for hot paths (`reference_id`, `anchor_id`).
-- Avoid loading full note content when listing (select metadata; fetch content lazily).
-- Use transactions for multi-row writes (anchor + pdf tables + rects).
-- Paginate lists when counts go high.
-
+## What this doc does not cover
+- Detailed performance benchmarks or alternative databases.

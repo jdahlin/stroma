@@ -1,39 +1,69 @@
-# Editor architecture
+---
+title: "How is the editor packaged and structured?"
+status: implemented
+audience: [contributor, maintainer]
+last_updated: 2026-01-04
+---
 
-## Package location
+# How is the editor packaged and structured?
+This document explains the editor package location, development harness, and loading strategy.
 
-The editor lives in `packages/editor/` rather than `packages/ux/`.
+## Who is this for?
+- Contributors modifying editor architecture.
+- Maintainers enforcing package boundaries.
 
-Rationale:
-- The editor is a substantial feature with its own dependencies (TipTap, etc.).
-- Keeps `packages/ux/` focused on primitive UI components.
-- Cleaner dependency graph: editor depends on `@repo/ux` and `@repo/core`.
-- Enables isolated testing and development.
-- Separate package enables lazy loading (only pay import cost when the editor is used).
+## What is the scope?
+- In scope: package placement, dev harness, and lazy-loading strategy.
+- Out of scope: UI component details.
 
-## Directory structure
+## What is the mental model?
+- The editor is a standalone package that can be developed and loaded independently.
 
-See `packages/editor/src/` for the authoritative structure.
+## What are the key concepts?
+| Concept | Definition | Example |
+| --- | --- | --- |
+| Editor package | A feature package with its own deps. | "Lives outside the design system." |
+| Dev harness | A standalone app for editor iteration. | "A Vite app with mock data." |
+| Lazy loading | Load editor only when needed. | "Dynamic import in the renderer." |
 
-## Standalone development app
+## Why is the editor a separate package?
+- The editor is a substantial feature with heavy dependencies.
+- The design system stays focused on primitives.
+- The dependency graph remains clean and testable.
 
-`apps/editor-dev/` is a Vite app for isolated editor development (no Electron overhead).
+## How does the dev harness work?
+- A standalone Vite app provides quick iteration.
+- It includes a live document inspector and mock PDF references.
 
-Typical dev harness features:
-- JSON inspector showing live TipTap document structure.
-- Load/save sample documents.
-- Mock PDF reference insertion.
+## How does lazy loading work?
+- The renderer imports the editor via the package entry.
+- Heavier extensions can be dynamically imported.
 
-## Lazy loading strategy
+## Where is it implemented?
+| Area | Purpose | Example |
+| --- | --- | --- |
+| Editor package | Core editor code. | `packages/editor` |
+| Dev harness | Isolated editor app. | `apps/editor-dev` |
 
-The editor should be safe to lazy-load in the desktop renderer to reduce initial bundle size.
+## What are the facts?
+- The editor depends on `@repo/ux` and `@repo/core`.
 
-- Desktop app integration can import the editor via `@repo/editor` or a dedicated lazy entry.
-- Keep heavy extensions/features behind dynamic imports where it pays off.
+## What decisions are recorded?
+- The editor does not live inside `packages/ux`.
 
-## See also
+## What are the open questions?
+- Which extensions merit dynamic imports first?
 
+## What are the failure modes or edge cases?
+- Lazy loading adds latency if the editor is needed on startup.
+
+## What assumptions and invariants apply?
+- The editor package should remain reusable outside the desktop app.
+
+## What related docs matter?
 - Dependencies: [`dependencies.md`](./dependencies.md)
-- Integration points (desktop + PDF references): [`integration.md`](./integration.md)
+- Integration: [`integration.md`](./integration.md)
 - Monorepo layout: [`../monorepo.md`](../monorepo.md)
 
+## What this doc does not cover
+- Detailed component APIs or UI styling.

@@ -1,164 +1,81 @@
-# MVP Plan: SuperMemo-Style Incremental Reading
+---
+title: "What is the MVP roadmap?"
+status: planned
+audience: [contributor, maintainer]
+last_updated: 2026-01-04
+---
 
-This plan expands the phased goals in `docs/product-vision.md` into an MVP-friendly,
-commit-ready roadmap. It focuses on the minimum behaviors needed to make
-incremental reading feel real, while keeping implementation choices open.
-See `docs/storage/README.md` for the storage plan.
+# What is the MVP roadmap?
+This document explains the MVP roadmap for incremental reading features in Stroma.
 
-## MVP Definition (What "done" means)
+## Who is this for?
+- Contributors sequencing MVP work.
+- Maintainers tracking scope guardrails.
 
-A user can:
+## What is the scope?
+- In scope: MVP definition, phases, and acceptance criteria.
+- Out of scope: detailed task breakdowns and implementation choices.
+
+## What is the mental model?
+- The MVP is a thin but complete loop: read a source, create anchors, extract notes, and review on a schedule.
+
+## What are the key concepts?
+| Concept | Definition | Example |
+| --- | --- | --- |
+| MVP loop | Minimum viable read-extract-review cycle. | "Create an extract and see it resurface later." |
+| Phase | A shippable milestone. | "Phase 2 delivers extracts + editor." |
+| Acceptance criteria | Observable outcomes for a phase. | "A highlight reloads after restart." |
+| FSRS | A scheduling algorithm for spaced review. | "Again/Hard/Good/Easy ratings update next due." |
+
+## What is the MVP definition?
 - Import a PDF and open it in a workspace.
-- Create highlights and extracts that remain linked to the source.
-- Move through a small review queue that resurfaces items over time.
-- Persist their work and resume where they left off.
+- Create highlights and extracts linked to the source.
+- Move through a small review queue over time.
+- Persist work and resume after restart.
 
-## Scope Guardrails
+## What are the scope guardrails?
+- In scope: single-user, local-only experience.
+- In scope: one workspace layout.
+- In scope: one PDF open at a time.
+- Out of scope: cloud sync or collaboration.
+- Out of scope: AI extraction, OCR, or external integrations.
 
-In scope:
-- Single-user, local-only experience.
-- One workspace layout.
-- One PDF open at a time (multi-doc later).
+## What are the phases?
+| Phase | Goal | Example |
+| --- | --- | --- |
+| 1. PDF workspace | Durable PDF reading and anchors. | "Create a highlight and reload it later." |
+| 2. Extracts + editor | Linked notes with navigation. | "Click an extract to jump to the source." |
+| 3. Reading queue | Resurfacing for sources and extracts. | "A due list shows what to read now." |
+| 4. FSRS scheduling | Stable spacing of reviews. | "Review ratings change the next due date." |
+| 5. Core loop polish | Fast, keyboard-first workflow. | "Complete a cycle without the mouse." |
 
-Out of scope:
-- Cloud sync or collaboration.
-- AI extraction, OCR, or external integrations.
+## What are the acceptance criteria?
+- Each phase has at least one end-to-end user action that persists.
+- Each milestone is shippable on its own.
 
----
+## What are the facts?
+- The roadmap is structured as phased deliverables.
 
-## Phase 1: PDF Workspace (Foundation)
+## What decisions are recorded?
+- The MVP prioritizes PDF reading and linked extracts.
+- Scheduling uses FSRS when introduced.
 
-Goal: Make PDFs a durable, addressable source.
+## What are the open questions?
+- How small can the queue UI be while still feeling useful?
 
-Deliverables:
-- PDF viewer with basic navigation (pages, zoom, scroll).
-- Anchors for selections (page + bounding box, or equivalent stable reference).
-- Highlight creation and persistence.
+## What are the failure modes or edge cases?
+- A phase ships without persistence, breaking the loop.
+- The queue resurfaces items without clear context.
 
-Acceptance criteria:
-- A highlight can be created, stored, and reloaded with the PDF.
-- A highlight resolves to the same location after app restart.
-- Minimal metadata for each highlight: id, page ref, bounds, createdAt.
+## What assumptions and invariants apply?
+- Sources are PDFs in the MVP.
+- Anchors remain stable across sessions.
 
-Key risks:
-- Anchor stability across viewport changes.
-- Consistent coordinate space across zoom levels.
-
----
-
-## Phase 2: Extracts + Editor (Knowledge Capture)
-
-Goal: Turn reading into structured knowledge with linked notes.
-
-Deliverables:
-- Create an "extract" from a highlight or selection.
-- Extracts live in a simple block-based editor (text only).
-- Bi-directional navigation between extract and source anchor.
-- Note tree panel that lists a document's highlights and extracts.
-- Distinct icons for highlights vs extracts (and future types).
-
-Acceptance criteria:
-- An extract is linked to exactly one source anchor.
-- Clicking the extract jumps to the correct PDF location.
-- Extracts are persisted and reloaded intact.
-- Note tree shows a stable hierarchy and reflects selection state.
-
-Key risks:
-- Maintaining source links as the editor changes.
-- Avoiding accidental edits that break anchor references.
-
----
-
-## Phase 3: Incremental Reading Queue (Core Loop)
-
-Goal: A minimal review loop that makes resurfacing real.
-
-Deliverables:
-- "Reading queue" of source items (PDFs or sections).
-- "Extract queue" of atomic items for review.
-- Simple actions: "Review now", "Postpone", "Extract more".
-
-Acceptance criteria:
-- User can move items through a queue and see them return later.
-- Items have a scheduledAt timestamp (or simple integer priority).
-- A single screen shows what's due "now".
-
-Key risks:
-- Confusing user flow between reading and extracting.
-- Queue semantics feel arbitrary without feedback.
-
----
-
-## Phase 4: FSRS Scheduling (Persistence + Rhythm)
-
-Goal: Preserve momentum with FSRS-based scheduling.
-
-Deliverables:
-- Integrate FSRS scheduling (targeting `ts-fsrs`).
-- Review history stored per item (lastReviewedAt, stability, difficulty, interval).
-- "Due soon" indicator to make resurfacing predictable.
-- Simple review ratings mapped to FSRS inputs (e.g., Again/Hard/Good/Easy).
-
-Acceptance criteria:
-- Review outcomes update nextDue using FSRS.
-- A user can complete a session and return to a meaningful queue.
-
-Key risks:
-- Scheduling that feels opaque without explainers.
-- Parameter tuning could stall MVP progress.
-
----
-
-## Phase 5: Polishing the Core Loop (UX Hardening)
-
-Goal: Make the workflow feel coherent and fast.
-
-Deliverables:
-- Keyboard-first navigation for review/extract flow.
-- Fast jump between PDF and extract.
-- Minimal affordances for "what should I do next?"
-
-Acceptance criteria:
-- A user can complete a full cycle without mouse.
-- The next action is always visible (button or shortcut).
-
-Key risks:
-- UX fragmentation across panes.
-- Overloading the user with UI choices.
-
----
-
-## Data Model Sketch (Non-binding)
-
-This is conceptual only and can change during implementation.
-
-Entities:
-- Document: id, title, filePath, createdAt
-- Anchor: id, documentId, page, bounds, createdAt
-- Highlight: id, anchorId, color, createdAt
-- Extract: id, anchorId, content, createdAt
-- QueueItem: id, targetType, targetId, scheduledAt, lastReviewedAt, interval
-
-Relationships:
-- One document has many anchors.
-- One anchor can have many highlights.
-- One anchor can have zero or one extract (MVP).
-- Queue items reference either a document or extract.
-
----
-
-## MVP Milestones (Commit-Friendly)
-
-1. PDF viewer + highlights + persistence.
-2. Extract creation + linked editor + persistence.
-3. Minimal queue UI + due list.
-4. Scheduling rules + review history.
-5. Keyboard-first review flow.
-
-Each milestone should be shippable on its own, with visible user progress.
-
-## See also
-
+## What related docs matter?
+- Product vision: [`product-vision.md`](./product-vision.md)
 - Storage plan: [`storage/README.md`](./storage/README.md)
-- Editor docs (extracts + references): [`editor/README.md`](./editor/README.md)
-- PDF docs (renderer, anchors): [`pdf/README.md`](./pdf/README.md)
+- Editor docs: [`editor/README.md`](./editor/README.md)
+- PDF docs: [`pdf/README.md`](./pdf/README.md)
+
+## What this doc does not cover
+- Detailed implementation tasks or sprint planning.

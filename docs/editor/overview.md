@@ -1,29 +1,66 @@
-# Editor overview
+---
+title: "What is the editor for?"
+status: implemented
+audience: [contributor, maintainer]
+last_updated: 2026-01-04
+---
 
-A TipTap-based rich text editor for creating and editing structured documents with support for rich formatting, images, and references to external objects.
+# What is the editor for?
+This document explains the editor's purpose, goals, and current status.
 
-## Goals
+## Who is this for?
+- Contributors building editor features.
+- Maintainers validating scope.
 
-1. **Rich text editing**: standard formatting (bold, italic, headings, lists, links, blockquotes, code)
-2. **Structured documents**: section/block-based organization with collapsible sections
-3. **Media embedding**: images with upload and URL support
-4. **External references**: inline references to PDF anchors and other external objects
-5. **Slash commands**: modern `/` command menu for quick block insertion
-6. **Standalone development**: isolated dev environment for rapid iteration
-7. **Lazy loading**: editor loaded on-demand to minimize initial bundle impact
+## What is the scope?
+- In scope: editor goals and non-goals.
+- Out of scope: internal implementation details.
 
-## Non-goals (for now)
+## What is the mental model?
+- The editor is where extracts become structured notes linked to sources.
 
-- Collaboration or concurrent editing.
-- Perfect parity with a full word processor.
+## What are the key concepts?
+| Concept | Definition | Example |
+| --- | --- | --- |
+| Structured note | A document organized into blocks and sections. | "A section with collapsible content." |
+| Source link | A reference back to a PDF anchor. | "Click a reference to open the PDF page." |
+| Command palette | Inline command menu. | "Type `/` to insert a block." |
 
-## Status
+## What are the goals?
+- Rich text editing with standard formatting.
+- Structured documents with sections.
+- Media embedding.
+- Source-linked references.
+- Slash-command insertion.
+- Standalone dev harness.
+- Lazy-loading where appropriate.
 
-Implemented: the `@repo/editor` package exists and is used in `apps/desktop` and `apps/editor-dev`.
+## What are the non-goals?
+- Real-time collaboration.
+- Full word-processor parity.
 
-## See also
+## What is the current status?
+- Implemented: `@repo/editor` is used by the desktop app and editor dev harness.
 
+## What are the facts?
+- The editor is TipTap-based.
+
+## What decisions are recorded?
+- The editor supports structured sections as first-class blocks.
+
+## What are the open questions?
+- How much of the editor should be loaded lazily in the desktop app?
+
+## What are the failure modes or edge cases?
+- References that cannot resolve to a source anchor.
+
+## What assumptions and invariants apply?
+- Extracts and references must remain linked to sources.
+
+## What related docs matter?
 - Architecture: [`architecture.md`](./architecture.md)
 - Integration: [`integration.md`](./integration.md)
 - Public API: [`public-api.md`](./public-api.md)
 
+## What this doc does not cover
+- Editor component APIs or code structure.

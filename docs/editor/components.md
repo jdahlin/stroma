@@ -1,39 +1,64 @@
-# Editor components
+---
+title: "What editor components matter?"
+status: implemented
+audience: [contributor, maintainer]
+last_updated: 2026-01-04
+---
 
-## Editor (main component)
+# What editor components matter?
+This document explains the main editor components and why they exist.
 
-The root editor component that composes toolbar + content area and manages editor state.
+## Who is this for?
+- Contributors wiring editor UI.
+- Maintainers reviewing component changes.
 
-Common props:
+## What is the scope?
+- In scope: primary components and their responsibilities.
+- Out of scope: detailed prop documentation for every component.
 
-| Prop | Type | Description |
-|---|---|---|
-| `documentId` | `string` | Unique ID for persistence (if enabled) |
-| `content` | `DocumentContent?` | Initial document content |
-| `onChange` | `(content: DocumentContent) => void` | Called on change |
-| `onPdfReferenceClick` | `(anchorId: string) => void` | PDF reference click handler |
-| `placeholder` | `string?` | Placeholder text |
-| `readOnly` | `boolean?` | Disable editing |
-| `autoFocus` | `boolean?` | Focus on mount |
+## What is the mental model?
+- The editor composes a root component, a toolbar, and node views that align with extensions.
 
-## EditorToolbar
+## What are the key concepts?
+| Concept | Definition | Example |
+| --- | --- | --- |
+| Root editor | The component that owns state and composition. | "Editor with toolbar and content." |
+| Toolbar | Formatting and insertion controls. | "Buttons for bold and headings." |
+| Node view | Custom UI for schema nodes. | "PDF reference chip." |
 
-Horizontal toolbar with formatting controls.
+## What are the key components?
+| Component | Responsibility | Example |
+| --- | --- | --- |
+| `Editor` | Compose toolbar + content and manage state. | "Provides onChange to persistence." |
+| `EditorToolbar` | Formatting and insertion controls. | "Reflect active marks." |
+| `PdfReferenceNode` | Render source links in content. | "Click to jump to PDF." |
 
-Guidelines:
-- Reuse `IconButton` from `@repo/ux`.
-- Reflect active marks/nodes (e.g. bold highlighted when active).
+## What are example props for the root editor?
+| Prop | Purpose | Example |
+| --- | --- | --- |
+| `documentId` | Persistence key for a note. | "note-123" |
+| `content` | Initial document content. | "Loaded JSON from storage." |
+| `onChange` | Save content updates. | "Debounced save handler." |
+| `onPdfReferenceClick` | Navigate to source anchors. | "Open page on click." |
 
-## PdfReferenceNode
+## What are the facts?
+- The root editor component composes toolbar and content.
 
-Inline chip displaying a PDF reference.
+## What decisions are recorded?
+- Toolbar uses `@repo/ux` primitives for consistency.
 
-Accessibility:
-- Role: button.
-- Keyboard focusable and activatable.
+## What are the open questions?
+- Should the toolbar be optional for certain panes?
 
-## See also
+## What are the failure modes or edge cases?
+- Missing `onPdfReferenceClick` leaves references inert.
 
+## What assumptions and invariants apply?
+- Node views match the corresponding extensions.
+
+## What related docs matter?
 - Extensions: [`extensions.md`](./extensions.md)
 - Styling: [`styling.md`](./styling.md)
 
+## What this doc does not cover
+- Complete prop tables for every component.

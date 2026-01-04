@@ -1,64 +1,70 @@
-# Editor extensions
+---
+title: "What editor extensions exist?"
+status: implemented
+audience: [contributor, maintainer]
+last_updated: 2026-01-04
+---
 
-This doc describes custom TipTap extensions used by `@repo/editor`.
+# What editor extensions exist?
+This document explains the custom editor extensions and their roles.
 
-## PdfReference
+## Who is this for?
+- Contributors adding or modifying extensions.
+- Maintainers reviewing extension behavior.
 
-An inline atomic node representing a reference to a PDF anchor.
+## What is the scope?
+- In scope: extension purpose, attributes, and behaviors.
+- Out of scope: full implementation details.
 
-Node type: inline, atomic.
+## What is the mental model?
+- Extensions define the document schema and interactive behaviors for sources and extracts.
 
-Attributes:
+## What are the key concepts?
+| Concept | Definition | Example |
+| --- | --- | --- |
+| PDF reference | Inline node that links to a source anchor. | "A chip showing source name and page." |
+| Section | Block container for hierarchy. | "A collapsible section titled 'Chapter 2'." |
+| Slash command | Inline menu for block insertion. | "Type `/` to insert a divider." |
 
-| Attribute | Type | Description |
-|---|---|---|
-| `anchorId` | `PdfAnchorId` | Unique anchor identifier from `@repo/core` |
-| `sourceId` | `PdfSourceId` | PDF document identifier |
-| `sourceName` | `string` | Display name of the PDF |
-| `pageIndex` | `number` | Zero-based page number |
-| `previewText` | `string?` | Optional excerpt from the anchor |
+## What extensions are defined?
+| Extension | Purpose | Example |
+| --- | --- | --- |
+| PdfReference | Inline node linking to a PDF anchor. | "Navigate to page 5 on click." |
+| Section | Block container with collapse state. | "Nested sections for outlines." |
+| SlashCommand | Suggestion-driven command menu. | "Insert a heading from the menu." |
 
-Rendering: displays as an inline chip/pill with PDF icon, document name, and page number. Clicking navigates to the referenced PDF location.
+## What are the key attributes?
+| Extension | Attribute | Meaning | Example |
+| --- | --- | --- | --- |
+| PdfReference | `anchorId` | Anchor identity in core types. | "Anchor 12 in source 3." |
+| PdfReference | `pageIndex` | Zero-based page number. | "Page 0 for first page." |
+| Section | `id` | Section identifier. | "section-42" |
+| Section | `collapsed` | Collapse state. | "true" |
 
-HTML serialization: `<span data-pdf-reference data-anchor-id="..." data-source-id="...">...</span>`
+## What are the behaviors?
+- PdfReference renders as a chip and navigates to the anchor on click.
+- Section supports collapsing and nesting.
+- SlashCommand triggers when `/` appears at line start or after whitespace.
 
-Insertion: toolbar button, command palette, or drag-drop from PDF pane.
+## What are the facts?
+- PdfReference is an inline atomic node.
 
-## Section
+## What decisions are recorded?
+- References to sources are rendered as chips for clarity.
 
-A block container for organizing document structure.
+## What are the open questions?
+- Should sections support drag reordering in the MVP?
 
-Node type: block container.
+## What are the failure modes or edge cases?
+- Missing anchor data results in a dead reference chip.
 
-Attributes:
+## What assumptions and invariants apply?
+- Anchor identifiers are stable across sessions.
 
-| Attribute | Type | Description |
-|---|---|---|
-| `id` | `string` | Unique section identifier |
-| `title` | `string` | Section title for display and navigation |
-| `collapsed` | `boolean` | Whether section content is hidden |
-
-Behavior:
-- Collapsible: click header to toggle.
-- Draggable/reorderable (if implemented).
-- Nested sections for hierarchy.
-
-HTML serialization: `<section data-editor-section data-id="..." data-title="...">...</section>`
-
-## SlashCommand
-
-A suggestion-based extension that shows a command menu when the user types `/`.
-
-Trigger: `/` at start of line or after whitespace.
-
-Typical menu items:
-- headings, lists, quote, code block, divider
-- insert image
-- insert section
-
-## See also
-
-- Components (node views and UI): [`components.md`](./components.md)
-- Integration with PDF pane: [`integration.md`](./integration.md)
+## What related docs matter?
+- Components: [`components.md`](./components.md)
+- Integration: [`integration.md`](./integration.md)
 - PDF docs: [`../pdf/README.md`](../pdf/README.md)
 
+## What this doc does not cover
+- The concrete ProseMirror schema or command implementations.

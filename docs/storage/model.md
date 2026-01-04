@@ -1,98 +1,68 @@
-# Storage model (generalized)
+---
+title: "What is the storage data model?"
+status: planned
+audience: [contributor, maintainer]
+last_updated: 2026-01-04
+---
 
-## Status
+# What is the storage data model?
+This document explains the generalized storage data model for sources, anchors, and notes.
 
-Planned.
+## Who is this for?
+- Contributors designing persistence.
+- Maintainers reviewing schema choices.
 
-## Naming
+## What is the scope?
+- In scope: entity definitions and naming rules.
+- Out of scope: specific SQL schema or queries.
 
-This doc uses a generalized vocabulary:
+## What is the mental model?
+- Sources have assets and anchors; notes attach to sources or anchors.
 
-- **Reference**: a source material unit (a PDF, web page, image, video, …).
-- **Reference asset**: a concrete retrievable thing for a reference (a local file, a URL, a thumbnail).
-- **Anchor**: a stable pointer into a reference (page/rects/text selection, timestamp range, selector, …).
-- **Note**: editor content attached to a reference and optionally to an anchor.
+## What are the key concepts?
+| Concept | Definition | Example |
+| --- | --- | --- |
+| Source | A logical input like a PDF or web page. | "A PDF source titled 'Paper A'." |
+| Asset | A concrete retrievable item for a source. | "A stored PDF file." |
+| Anchor | A stable pointer into a source. | "A page+rect selection." |
+| Note | Editor content tied to a source or anchor. | "An extract linked to a highlight." |
 
-This maps cleanly to existing domain types:
+## What naming rules apply?
+- Use "source" in docs; the schema table is named `references` for historical reasons.
+- Anchors and notes use per-source local numbers for debug-friendly IDs.
 
-- `@repo/core` `PdfSource` ≈ **Reference** where `reference.type = 'pdf'`
-- `@repo/core` `PdfAnchor` ≈ **Anchor** where `anchor.reference_id` points at the PDF reference
+## What entities are required?
+| Entity | Purpose | Example |
+| --- | --- | --- |
+| Source | Identify a logical item. | "A PDF source" |
+| Source asset | Store file/URL metadata. | "app-asset://blobs/sha256" |
+| Anchor | Locate a point in a source. | "pdf_text anchor" |
+| Note | Store editor content. | "tiptap_json content" |
 
-We don’t need to dogmatically choose “reference” vs “document/source” in the UI. Internally, **Reference** stays generic.
+## What ID strategy is recommended?
+- Use integer primary keys for joins.
+- Use `(source_id, local_no)` for human-readable IDs.
+- Add optional public IDs later if sync requires them.
 
-## Entities
+## What are the facts?
+- Anchors must be queryable by source and type.
 
-### Reference
-Represents the logical source.
+## What decisions are recorded?
+- SQLite schema keeps PDF anchor fields in SQL columns.
 
-Suggested fields:
-- `id` (INTEGER PK)
-- `type` (TEXT, e.g. `pdf`, `web`, `image`, `youtube`)
-- `title` (TEXT)
-- `created_at`, `updated_at` (INTEGER unix ms)
+## What are the open questions?
+- Should notes allow multiple anchors per note in later phases?
 
-### ReferenceAsset
-One reference can have multiple assets.
+## What are the failure modes or edge cases?
+- Overloaded JSON locators make anchor queries slow.
 
-Examples:
-- a PDF copied into app storage
-- the original file path (optional)
-- a remote URL
-- a derived thumbnail
+## What assumptions and invariants apply?
+- A source can have many anchors and notes.
 
-Suggested fields:
-- `id` (INTEGER PK)
-- `reference_id` (FK)
-- `kind` (TEXT, e.g. `file`, `url`, `thumbnail`)
-- `uri` (TEXT)
-- `content_hash` (TEXT, optional)
-- `byte_size` (INTEGER, optional)
-- `metadata_json` (TEXT JSON, optional)
+## What related docs matter?
+- Schema proposal: [`schema-sqlite.md`](./schema-sqlite.md)
+- Queries: [`queries.md`](./queries.md)
+- Assets: [`assets.md`](./assets.md)
 
-### Anchor
-Anchors must be:
-- stable as the library grows
-- fast to lookup by reference
-- suitable for SQL queries (especially for PDF anchors)
-
-Suggested fields:
-- `id` (INTEGER PK)
-- `reference_id` (FK)
-- `local_no` (INTEGER, unique within a reference)
-- `kind` (TEXT, e.g. `pdf_text`, `pdf_point`, `pdf_figure`, `web_selector`, `youtube_time_range`)
-- `created_at`, `updated_at`
-
-For "proper SQL" PDF anchors, store PDF-specific details in separate tables keyed by `anchor_id`.
-For other reference types, use a small table or JSON column for locators.
-
-### Note
-A note is editor content (likely JSON) plus metadata.
-
-Suggested fields:
-- `id` (INTEGER PK)
-- `reference_id` (FK)
-- `anchor_id` (FK, nullable)
-- `local_no` (INTEGER, unique within a reference)
-- `content` (TEXT)
-- `content_type` (TEXT, e.g. `tiptap_json`)
-- `created_at`, `updated_at`
-
-MVP constraint (optional): one anchor has 0..1 note.
-
-## ID strategy (no UUIDs)
-
-Goals:
-- easy to inspect/debug in SQLite
-- short identifiers for logs and editor nodes
-- document-unique at least
-
-Recommendation:
-- Use integer primary keys (`references.id`, `anchors.id`, `notes.id`) for joins.
-- Use `(reference_id, local_no)` as the **human/debug identity** for anchors and notes.
-
-Example debug IDs:
-- `r12:a37` (reference 12, anchor local 37)
-- `r12:n5`
-
-If you later need globally unique IDs (sync/export), add an optional `public_id` column without removing integer keys.
-
+## What this doc does not cover
+- Concrete SQL DDL or migration steps.

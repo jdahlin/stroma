@@ -1,37 +1,64 @@
-# Storage
+---
+title: "How are the storage docs organized?"
+status: planned
+audience: [contributor, maintainer]
+last_updated: 2026-01-04
+---
 
-## Status
+# How are the storage docs organized?
+This document explains the storage documentation map and key decisions.
 
-Planned.
+## Who is this for?
+- Contributors working on persistence.
+- Maintainers reviewing storage decisions.
 
-## Goal
+## What is the scope?
+- In scope: storage doc map and core decisions.
+- Out of scope: complete implementation design.
 
-Define a local, durable persistence layer for:
-- sources (PDF now; web/image/video later)
-- anchors into sources (PDF page/text/rects, future locators)
-- notes/extracts linked to sources and anchors
-- imported assets (like PDFs) stored on disk, referenced from the database
+## What is the mental model?
+- Storage centers on sources, anchors, and notes with SQLite as the default store.
 
-The default assumption is **SQLite**, accessed from the Electron **main process** via a typed IPC layer.
+## What are the key concepts?
+| Concept | Definition | Example |
+| --- | --- | --- |
+| Source | A durable input like a PDF. | "A PDF in the library." |
+| Anchor | A stable pointer into a source. | "A highlight on page 3." |
+| Note | Editor content linked to a source or anchor. | "An extract tied to a highlight." |
+| Asset | A stored file like a PDF. | "A file stored under app data." |
 
-## Start here
-
+## Where are the storage docs?
 - Data model and naming: [`model.md`](./model.md)
 - SQLite schema proposal: [`schema-sqlite.md`](./schema-sqlite.md)
-- Canonical SQL queries: [`queries.md`](./queries.md)
-- Imported assets (PDF storage on disk): [`assets.md`](./assets.md)
-- Scaling guidance (how far SQLite can go): [`scaling.md`](./scaling.md)
+- Canonical queries: [`queries.md`](./queries.md)
+- Asset storage: [`assets.md`](./assets.md)
+- Scaling guidance: [`scaling.md`](./scaling.md)
 - Migrations approach: [`migrations.md`](./migrations.md)
 
-## Key decisions
+## What are the key decisions?
+- IDs are integer primary keys with per-source local numbering.
+- PDF anchor geometry is stored in SQL columns, not only JSON.
+- Binary assets live on disk; the DB stores metadata and URIs.
 
-- IDs: prefer **small, debuggable IDs**. Use integer primary keys internally + per-reference local numbering for anchors/notes.
-- PDF data: store PDF anchor geometry in **proper SQL columns** (page/rects/text), not just JSON.
-- Binary assets: store PDFs on disk; the DB stores metadata + a stable app-managed URI/path.
+## What are the facts?
+- SQLite is the default assumption for local persistence.
 
-## See also
+## What decisions are recorded?
+- The DB is owned by the Electron main process, not the renderer.
 
-- Editor integration (PDF references): [`../editor/integration.md`](../editor/integration.md)
-- PDF renderer docs: [`../pdf/README.md`](../pdf/README.md)
+## What are the open questions?
+- When should full-text search be introduced?
+
+## What are the failure modes or edge cases?
+- Storing large PDFs as BLOBs bloats the DB.
+
+## What assumptions and invariants apply?
+- Sources, anchors, and notes are the core storage entities.
+
+## What related docs matter?
+- Editor integration: [`../editor/integration.md`](../editor/integration.md)
+- PDF docs: [`../pdf/README.md`](../pdf/README.md)
 - MVP roadmap: [`../roadmap-mvp.md`](../roadmap-mvp.md)
 
+## What this doc does not cover
+- Full IPC API design or DB implementation details.

@@ -1,39 +1,73 @@
-# PDF renderer architecture
+---
+title: "How does the PDF renderer work?"
+status: implemented
+audience: [contributor, maintainer]
+last_updated: 2026-01-04
+---
 
-## Status
+# How does the PDF renderer work?
+This document explains the PDF renderer flow and its core components.
 
-Implemented. The desktop renderer uses `pdfjs-dist` directly.
+## Who is this for?
+- Contributors modifying PDF rendering.
+- Maintainers reviewing renderer changes.
 
-## High-level flow
+## What is the scope?
+- In scope: high-level flow, worker setup, and state behavior.
+- Out of scope: performance optimization plans.
 
-- `PdfPane` is the Dockview pane wrapper.
-- `PdfViewer` loads the document via `getDocument(...)`, wires the pdf.js worker, and renders a scrollable stack of pages.
-- `PdfPage` renders:
-  - a canvas layer (page bitmap)
-  - a text layer (for selection)
-  - overlay layers (anchors/highlights/figures)
+## What is the mental model?
+- A pane hosts a viewer that loads a document, then renders a stack of pages with overlays.
 
-## Worker setup
+## What are the key concepts?
+| Concept | Definition | Example |
+| --- | --- | --- |
+| Pane host | The container for the PDF UI. | "A Dockview pane showing a PDF." |
+| Viewer | Orchestrates document loading and scale. | "Loads the worker and sets zoom." |
+| Page | A canvas + text layer + overlays. | "Page 3 with highlights." |
+| Worker | pdf.js background renderer. | "Worker URL wired at startup." |
 
-The worker is configured in `PdfViewer.tsx`, using a bundler URL import:
+## What is the high-level flow?
+- Load the document via pdf.js.
+- Render a scrollable stack of pages.
+- Overlay anchors and highlights per page.
+- Persist zoom and scroll state.
 
-- `GlobalWorkerOptions.workerSrc = workerSrc`
+## How is the worker configured?
+- The worker URL is imported from `pdfjs-dist/legacy/build/pdf.worker.min.mjs?url`.
+- `GlobalWorkerOptions.workerSrc` is set during viewer initialization.
 
-(where `workerSrc` is imported from `pdfjs-dist/legacy/build/pdf.worker.min.mjs?url`).
-
-## Zoom + scroll persistence
-
-- Scale is stored in the renderer store (`pdfStore`) per pane.
+## How do zoom and scroll persist?
+- Scale is stored per pane in the PDF state.
 - Scroll position is persisted with a debounce.
-- Fit-to-width behavior is driven by a `ResizeObserver` in `PdfViewer` and can update scale.
+- Fit-to-width reacts to resize events.
 
-## Anchors
+## Where is it implemented?
+| Component | Purpose | Example |
+| --- | --- | --- |
+| Pane wrapper | Dockview host for PDF. | `apps/desktop/src/renderer/panes/PdfPane.tsx` |
+| Viewer | Document orchestration. | `apps/desktop/src/renderer/components/pdf/PdfViewer.tsx` |
+| Page | Canvas + text render. | `apps/desktop/src/renderer/components/pdf/PdfPage.tsx` |
 
-- Page overlays filter anchors per page index.
-- Focused anchors are located via a `data-anchor-id` selector and scrolled into view.
+## What are the facts?
+- The renderer uses pdf.js with canvas + text layers.
 
-## See also
+## What decisions are recorded?
+- Focused anchors are scrolled into view by selector lookup.
 
+## What are the open questions?
+- None.
+
+## What are the failure modes or edge cases?
+- Mismatched scale between canvas and text layer causes selection drift.
+
+## What assumptions and invariants apply?
+- Renderer state is stored in the UI store, not in the DB.
+
+## What related docs matter?
 - Performance plan: [`performance-plan.md`](./performance-plan.md)
-- Editor PDF references: [`../editor/extensions.md`](../editor/extensions.md)
+- Troubleshooting: [`troubleshooting.md`](./troubleshooting.md)
+- Editor extensions: [`../editor/extensions.md`](../editor/extensions.md)
 
+## What this doc does not cover
+- Performance optimizations or virtualization strategies.

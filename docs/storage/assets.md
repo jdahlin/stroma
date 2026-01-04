@@ -1,61 +1,64 @@
-# Imported assets (PDFs, thumbnails, etc.)
+---
+title: "How should source assets be stored?"
+status: planned
+audience: [contributor, maintainer]
+last_updated: 2026-01-04
+---
 
-## Status
+# How should source assets be stored?
+This document explains how to store source assets like PDFs and thumbnails.
 
-Planned.
+## Who is this for?
+- Contributors implementing asset import.
+- Maintainers reviewing storage trade-offs.
 
-## Recommendation
+## What is the scope?
+- In scope: asset storage strategy and directory layout.
+- Out of scope: UI for asset management.
 
-Store large/binary assets (PDFs) **on disk**, not inside SQLite.
+## What is the mental model?
+- Store large binaries on disk and reference them from SQLite.
 
-The database stores:
-- metadata (title, page count, byte size)
-- a stable identifier/URI to a file managed by the app
-- content hash for deduplication/integrity
+## What are the key concepts?
+| Concept | Definition | Example |
+| --- | --- | --- |
+| Asset store | App-managed files on disk. | "{userData}/assets" |
+| Content hash | Dedup and integrity key. | "sha256 of a PDF" |
+| Asset URI | Stable reference in the DB. | "app-asset://blobs/sha" |
 
-Why not store PDFs as BLOBs in SQLite?
-- DB file grows quickly and becomes costly to vacuum/backup/repair.
-- Harder to inspect/debug.
-- You often want streaming file IO and OS-level caching.
+## What is the recommendation?
+- Store PDFs on disk, not as SQLite BLOBs.
+- Store metadata and URIs in `reference_assets`.
 
-## Asset directory layout
-
-Use the OS app data directory (Electron `app.getPath('userData')`) and keep assets under:
-
+## What directory layout is suggested?
 - `{userData}/assets/`
+- `{userData}/assets/references/{reference_id}/` or a content-addressable store at `{userData}/assets/blobs/{sha256}`.
 
-Suggested structure:
-
-- `{userData}/assets/references/{reference_id}/` for derived assets
-- or content-addressable store: `{userData}/assets/blobs/{sha256}`
-
-Content-addressable is recommended if you want deduplication.
-
-## Reference assets in the DB
-
-Use `reference_assets` rows to record concrete items:
-
-- `kind='file'` and `uri='app-asset://blobs/{sha256}'` (or an absolute path)
-- optional `kind='file.original'` and `uri='file:///Users/.../paper.pdf'` if you want to remember where it came from
-- `kind='thumbnail'` for cached previews
-
-Keep `content_hash` and `byte_size` for integrity checks and quick UI.
-
-## Import flow (PDF)
-
+## What is the import flow for a PDF?
 1. User selects a PDF.
-2. Main process computes a hash (e.g. sha256) and normalizes filename metadata.
-3. App copies the file into the app-managed asset store (or hard-links if safe).
-4. Create `reference` + `reference_assets` in a transaction.
-5. Renderer opens PDF by reading the app-managed file path/URI.
+2. Main process computes a hash and normalizes metadata.
+3. App copies the file into the asset store.
+4. Create source and asset rows in a transaction.
+5. Renderer opens the app-managed URI.
 
-## Notes about paths
+## What are the facts?
+- BLOB storage makes the DB harder to back up and inspect.
 
-Prefer storing an app-managed URI rather than raw absolute paths in the DB.
-Absolute paths break when:
-- user moves the app data directory
-- user switches machines
-- sandboxing rules differ
+## What decisions are recorded?
+- Asset storage uses disk files with DB metadata.
 
-You can still store the original path as a best-effort hint.
+## What are the open questions?
+- Should we store original file paths as optional hints?
 
+## What are the failure modes or edge cases?
+- Absolute paths break if the app data directory moves.
+
+## What assumptions and invariants apply?
+- The app controls the asset directory lifecycle.
+
+## What related docs matter?
+- Storage model: [`model.md`](./model.md)
+- Schema proposal: [`schema-sqlite.md`](./schema-sqlite.md)
+
+## What this doc does not cover
+- File import UX or permission prompts.

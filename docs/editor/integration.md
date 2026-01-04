@@ -1,34 +1,65 @@
-# Editor integration
+---
+title: "How does the editor integrate with the app?"
+status: implemented
+audience: [contributor, maintainer]
+last_updated: 2026-01-04
+---
 
-## Desktop app integration
+# How does the editor integrate with the app?
+This document explains how the editor integrates with the desktop renderer and PDF flow.
 
-The desktop renderer imports the editor in pane(s) such as:
-- `apps/desktop/src/renderer/panes/NotesPane.tsx`
-- `apps/desktop/src/renderer/panes/HomePane.tsx`
+## Who is this for?
+- Contributors wiring editor into the UI.
+- Maintainers reviewing cross-pane behavior.
 
-The desktop app also imports `@repo/editor/styles` in its renderer bootstrap.
+## What is the scope?
+- In scope: renderer integration, PDF reference flow, and persistence guidance.
+- Out of scope: full persistence schema details.
 
-## PDF reference flow
+## What is the mental model?
+- The editor is a pane that reads and writes extracts linked to source anchors.
 
+## What are the key concepts?
+| Concept | Definition | Example |
+| --- | --- | --- |
+| Pane integration | Where editor lives in the UI. | "Notes pane uses the editor." |
+| Reference flow | Create and follow source links. | "Click a reference to jump to PDF." |
+| Persistence | Store editor content per document. | "Debounced save to storage." |
+
+## Where is the editor used?
+- Notes pane and home panes in the renderer.
+- The renderer imports `@repo/editor/styles` at startup.
+
+## How does the PDF reference flow work?
 1. User selects text/region in the PDF pane.
-2. App creates/updates a `PdfAnchor` in state/storage.
-3. User inserts a `PdfReference` node in the editor.
-4. Clicking the reference navigates to the anchor in the PDF pane.
+2. The app creates or updates an anchor in state/storage.
+3. The user inserts a PDF reference node in the editor.
+4. Clicking the reference navigates to the anchor.
 
-## Persistence
+## How should persistence work?
+- Use per-document keys in local storage for MVP.
+- Key pattern: `editor:document:{documentId}`.
+- Store document JSON plus optional cursor/scroll state.
 
-Editor content persistence is a separate concern from PDF pane persistence.
+## What are the facts?
+- Editor content persistence is separate from PDF pane state.
 
-If using localStorage as an MVP persistence layer, prefer per-document keys:
+## What decisions are recorded?
+- The editor is imported via `@repo/editor` in the renderer.
 
-- Key pattern: `editor:document:{documentId}`
-- Store: document JSON content (+ optional cursor/scroll position)
-- Autosave on change with a debounce
+## What are the open questions?
+- When should editor content move from local storage to SQLite?
 
-For longer-term persistence, see the SQLite-oriented plan:
-- [`../storage/README.md`](../storage/README.md)
+## What are the failure modes or edge cases?
+- References break if anchors are deleted but nodes remain.
 
-## See also
+## What assumptions and invariants apply?
+- Renderer panes are the integration points for editor usage.
 
+## What related docs matter?
 - PDF docs: [`../pdf/README.md`](../pdf/README.md)
+- Storage plan: [`../storage/README.md`](../storage/README.md)
 - MVP roadmap: [`../roadmap-mvp.md`](../roadmap-mvp.md)
+
+## What this doc does not cover
+- Storage schemas or IPC details.
