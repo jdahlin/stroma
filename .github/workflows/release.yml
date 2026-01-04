@@ -55,6 +55,25 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+      - name: Resolve version
+        id: version
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            VERSION="${{ inputs.version }}"
+          else
+            VERSION="${GITHUB_REF#refs/tags/}"
+          fi
+          VERSION="${VERSION#v}"
+          if [ -z "$VERSION" ] || [[ "$VERSION" == v* ]]; then
+            echo "Invalid version: $VERSION"
+            exit 1
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "RELEASE_VERSION=$VERSION" >> "$GITHUB_ENV"
+      - name: Stamp app version
+        run: |
+          node -e "const fs=require('fs');const p='apps/desktop/package.json';const v=process.env.RELEASE_VERSION;const d=new Date().toISOString().slice(0,10);const j=JSON.parse(fs.readFileSync(p,'utf8'));j.version=v;j.releaseDate=d;fs.writeFileSync(p,JSON.stringify(j,null,2)+'\n');"
 
       - name: Download icons
         uses: actions/download-artifact@v4
@@ -109,6 +128,25 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+      - name: Resolve version
+        id: version
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            VERSION="${{ inputs.version }}"
+          else
+            VERSION="${GITHUB_REF#refs/tags/}"
+          fi
+          VERSION="${VERSION#v}"
+          if [ -z "$VERSION" ] || [[ "$VERSION" == v* ]]; then
+            echo "Invalid version: $VERSION"
+            exit 1
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "RELEASE_VERSION=$VERSION" >> "$GITHUB_ENV"
+      - name: Stamp app version
+        run: |
+          node -e "const fs=require('fs');const p='apps/desktop/package.json';const v=process.env.RELEASE_VERSION;const d=new Date().toISOString().slice(0,10);const j=JSON.parse(fs.readFileSync(p,'utf8'));j.version=v;j.releaseDate=d;fs.writeFileSync(p,JSON.stringify(j,null,2)+'\n');"
 
       - name: Download icons
         uses: actions/download-artifact@v4
@@ -162,6 +200,25 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+      - name: Resolve version
+        id: version
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            VERSION="${{ inputs.version }}"
+          else
+            VERSION="${GITHUB_REF#refs/tags/}"
+          fi
+          VERSION="${VERSION#v}"
+          if [ -z "$VERSION" ] || [[ "$VERSION" == v* ]]; then
+            echo "Invalid version: $VERSION"
+            exit 1
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "RELEASE_VERSION=$VERSION" >> "$GITHUB_ENV"
+      - name: Stamp app version
+        run: |
+          node -e "const fs=require('fs');const p='apps/desktop/package.json';const v=process.env.RELEASE_VERSION;const d=new Date().toISOString().slice(0,10);const j=JSON.parse(fs.readFileSync(p,'utf8'));j.version=v;j.releaseDate=d;fs.writeFileSync(p,JSON.stringify(j,null,2)+'\n');"
 
       - name: Download icons
         uses: actions/download-artifact@v4
@@ -229,10 +286,16 @@ jobs:
         id: version
         run: |
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            echo "version=${{ inputs.version }}" >> $GITHUB_OUTPUT
+            VERSION="${{ inputs.version }}"
           else
-            echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+            VERSION="${GITHUB_REF#refs/tags/}"
           fi
+          VERSION="${VERSION#v}"
+          if [ -z "$VERSION" ] || [[ "$VERSION" == v* ]]; then
+            echo "Invalid version: $VERSION"
+            exit 1
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Generate changelog
         id: changelog
@@ -240,15 +303,23 @@ jobs:
           # Get previous tag
           PREV_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
           if [ -z "$PREV_TAG" ]; then
-            echo "body=Initial release" >> $GITHUB_OUTPUT
+            {
+              echo "body<<EOF"
+              echo "Initial release"
+              echo "EOF"
+            } >> "$GITHUB_OUTPUT"
           else
             # Generate changelog from commits
             CHANGELOG=$(git log --pretty=format:"- %s" $PREV_TAG..HEAD | head -50)
-            # Escape for GitHub Actions
-            CHANGELOG="${CHANGELOG//'%'/'%25'}"
-            CHANGELOG="${CHANGELOG//$'\n'/'%0A'}"
-            CHANGELOG="${CHANGELOG//$'\r'/'%0D'}"
-            echo "body=## What's Changed%0A%0A$CHANGELOG%0A%0A**Full Changelog**: https://github.com/jdahlin/stroma/compare/$PREV_TAG...v${{ steps.version.outputs.version }}" >> $GITHUB_OUTPUT
+            {
+              echo "body<<EOF"
+              echo "## What's Changed"
+              echo ""
+              echo "$CHANGELOG"
+              echo ""
+              echo "**Full Changelog**: https://github.com/jdahlin/stroma/compare/$PREV_TAG...v${{ steps.version.outputs.version }}"
+              echo "EOF"
+            } >> "$GITHUB_OUTPUT"
           fi
 
       - name: Create GitHub Release
