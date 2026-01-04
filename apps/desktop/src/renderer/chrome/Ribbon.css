@@ -24,3 +24,8 @@
   align-items: center;
   gap: 0.25rem;
 }
+
+.ribbon .icon-button.ribbon-button-active {
+  background-color: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+}

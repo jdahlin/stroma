@@ -15,14 +15,7 @@ export const Ribbon: React.FC = () => {
           icon={PanelLeft}
           label="Toggle left sidebar"
           aria-pressed={leftOpen}
-          style={
-            leftOpen
-              ? {
-                  backgroundColor: 'var(--color-bg-tertiary)',
-                  color: 'var(--color-text-primary)',
-                }
-              : undefined
-          }
+          className={leftOpen ? 'ribbon-button-active' : ''}
           onClick={() => toggleSidebar('left')}
         />
         <IconButton icon={Home} label="Home" />
@@ -35,14 +28,7 @@ export const Ribbon: React.FC = () => {
           icon={PanelRight}
           label="Toggle right sidebar"
           aria-pressed={rightOpen}
-          style={
-            rightOpen
-              ? {
-                  backgroundColor: 'var(--color-bg-tertiary)',
-                  color: 'var(--color-text-primary)',
-                }
-              : undefined
-          }
+          className={rightOpen ? 'ribbon-button-active' : ''}
           onClick={() => toggleSidebar('right')}
         />
       </div>

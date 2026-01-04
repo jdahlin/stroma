@@ -1,5 +1,6 @@
 import type { LucideIcon } from 'lucide-react'
 import React from 'react'
+import './Icon.css'
 
 export type IconSize = 'sm' | 'md' | 'lg'
 
@@ -19,19 +20,17 @@ const sizeMap: Record<IconSize, string> = {
 export const Icon: React.FC<IconProps> = ({
   icon: LucideIcon,
   size = 'md',
-  className,
+  className = '',
   style,
 }) => {
   const iconSize = sizeMap[size]
+  const classes = `icon ${className}`.trim()
 
   return (
     <LucideIcon
       size={iconSize}
-      className={className}
-      style={{
-        flexShrink: 0,
-        ...style,
-      }}
+      className={classes}
+      style={style}
     />
   )
 }
