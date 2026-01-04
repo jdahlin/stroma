@@ -12,7 +12,7 @@ export const NotesPane: React.FC<IDockviewPanelProps> = ({ api }) => {
 
   const handlePdfReferenceClick = useCallback(
     (anchorId: string) => {
-      if (!activePaneId) {
+      if (activePaneId === null) {
         console.warn('No active PDF pane to focus.', anchorId)
         return
       }

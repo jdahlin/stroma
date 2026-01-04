@@ -134,13 +134,15 @@ export const SlashCommand = Extension.create<SlashCommandOptions>({
   name: 'slashCommand',
 
   addOptions() {
-    return {
-      suggestion: {
-        char: '/',
-        command: ({ editor, range, props }) => {
-          props.command({ editor, range })
-        },
+    const suggestion: Omit<SuggestionOptions<SlashCommandItem>, 'editor'> = {
+      char: '/',
+      command: ({ editor, range, props }: { editor: Editor, range: Range, props: SlashCommandItem }) => {
+        props.command({ editor, range })
       },
+    }
+
+    return {
+      suggestion,
     }
   },
 

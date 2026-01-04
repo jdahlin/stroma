@@ -8,6 +8,14 @@ export interface PdfReferenceOptions {
   onReferenceClick?: (anchorId: string) => void
 }
 
+interface PdfReferenceAttributeMap {
+  anchorId?: string | null
+  sourceId?: string | null
+  sourceName?: string | null
+  pageIndex?: number | null
+  previewText?: string | null
+}
+
 declare module '@tiptap/core' {
   interface Commands<ReturnType> {
     pdfReference: {
@@ -37,40 +45,50 @@ export const PdfReference = Node.create<PdfReferenceOptions>({
     return {
       anchorId: {
         default: null,
-        parseHTML: element => element.getAttribute('data-anchor-id'),
-        renderHTML: attributes => ({
-          'data-anchor-id': attributes.anchorId,
-        }),
+        parseHTML: (element: HTMLElement) => element.getAttribute('data-anchor-id'),
+        renderHTML: (attributes: PdfReferenceAttributeMap) => {
+          if (typeof attributes.anchorId !== 'string')
+            return {}
+          return { 'data-anchor-id': attributes.anchorId }
+        },
       },
       sourceId: {
         default: null,
-        parseHTML: element => element.getAttribute('data-source-id'),
-        renderHTML: attributes => ({
-          'data-source-id': attributes.sourceId,
-        }),
+        parseHTML: (element: HTMLElement) => element.getAttribute('data-source-id'),
+        renderHTML: (attributes: PdfReferenceAttributeMap) => {
+          if (typeof attributes.sourceId !== 'string')
+            return {}
+          return { 'data-source-id': attributes.sourceId }
+        },
       },
       sourceName: {
         default: 'PDF',
-        parseHTML: element => element.getAttribute('data-source-name'),
-        renderHTML: attributes => ({
-          'data-source-name': attributes.sourceName,
-        }),
+        parseHTML: (element: HTMLElement) => element.getAttribute('data-source-name'),
+        renderHTML: (attributes: PdfReferenceAttributeMap) => {
+          const sourceName = typeof attributes.sourceName === 'string'
+            ? attributes.sourceName
+            : 'PDF'
+          return { 'data-source-name': sourceName }
+        },
       },
       pageIndex: {
         default: 0,
-        parseHTML: (element) => {
+        parseHTML: (element: HTMLElement) => {
           const value = element.getAttribute('data-page-index')
-          return value ? Number(value) : 0
+          return value === null ? 0 : Number(value)
         },
-        renderHTML: attributes => ({
-          'data-page-index': String(attributes.pageIndex ?? 0),
-        }),
+        renderHTML: (attributes: PdfReferenceAttributeMap) => {
+          const pageIndex = Number.isFinite(attributes.pageIndex)
+            ? attributes.pageIndex
+            : 0
+          return { 'data-page-index': String(pageIndex) }
+        },
       },
       previewText: {
         default: null,
-        parseHTML: element => element.getAttribute('data-preview-text'),
-        renderHTML: (attributes) => {
-          if (!attributes.previewText)
+        parseHTML: (element: HTMLElement) => element.getAttribute('data-preview-text'),
+        renderHTML: (attributes: PdfReferenceAttributeMap) => {
+          if (typeof attributes.previewText !== 'string' || attributes.previewText.length === 0)
             return {}
           return { 'data-preview-text': attributes.previewText }
         },

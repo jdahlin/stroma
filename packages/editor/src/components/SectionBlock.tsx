@@ -56,7 +56,9 @@ const collapsedContentStyles: React.CSSProperties = {
 }
 
 export function SectionBlock({ node, updateAttributes }: NodeViewProps) {
-  const { title, collapsed } = node.attrs
+  const attrs = node.attrs as { title?: unknown, collapsed?: unknown }
+  const title = typeof attrs.title === 'string' ? attrs.title : 'Untitled Section'
+  const collapsed = attrs.collapsed === true
   const [isEditing, setIsEditing] = useState(false)
   const [editTitle, setEditTitle] = useState(title)
 
@@ -72,8 +74,9 @@ export function SectionBlock({ node, updateAttributes }: NodeViewProps) {
 
   const handleTitleBlur = useCallback(() => {
     setIsEditing(false)
-    if (editTitle.trim() !== title) {
-      updateAttributes({ title: editTitle.trim() || 'Untitled Section' })
+    const trimmed = editTitle.trim()
+    if (trimmed !== title) {
+      updateAttributes({ title: trimmed.length > 0 ? trimmed : 'Untitled Section' })
     }
   }, [editTitle, title, updateAttributes])
 

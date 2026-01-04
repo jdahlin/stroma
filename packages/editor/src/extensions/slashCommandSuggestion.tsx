@@ -1,3 +1,4 @@
+import type { Editor, Range } from '@tiptap/core'
 import type { SuggestionOptions, SuggestionProps } from '@tiptap/suggestion'
 import type { SlashCommandMenuRef } from '../components/SlashCommandMenu'
 import type { SlashCommandItem } from './SlashCommand'
@@ -107,7 +108,7 @@ export const slashCommandSuggestion: Omit<SuggestionOptions<SlashCommandItem>, '
     }
   },
 
-  command: ({ editor, range, props }) => {
+  command: ({ editor, range, props }: { editor: Editor, range: Range, props: SlashCommandItem }) => {
     props.command({ editor, range })
   },
 }

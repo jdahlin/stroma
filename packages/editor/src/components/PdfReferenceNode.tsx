@@ -1,4 +1,5 @@
 import type { NodeViewProps } from '@tiptap/react'
+import type { PdfReferenceAttributes } from '../types'
 import { Icon } from '@repo/ux'
 import { NodeViewWrapper } from '@tiptap/react'
 import { FileText } from 'lucide-react'
@@ -6,8 +7,14 @@ import React, { useCallback } from 'react'
 import './PdfReferenceNode.css'
 
 export function PdfReferenceNode({ node, extension }: NodeViewProps) {
-  const { anchorId, sourceName, pageIndex, previewText } = node.attrs
-  const { onReferenceClick } = extension.options
+  const attrs = node.attrs as Partial<PdfReferenceAttributes>
+  const anchorId = typeof attrs.anchorId === 'string' ? attrs.anchorId : ''
+  const sourceName = typeof attrs.sourceName === 'string' ? attrs.sourceName : 'PDF'
+  const pageIndex = Number.isFinite(attrs.pageIndex) ? (attrs.pageIndex as number) : 0
+  const previewText = typeof attrs.previewText === 'string' ? attrs.previewText : ''
+  const { onReferenceClick } = extension.options as {
+    onReferenceClick?: (anchor: string) => void
+  }
 
   const handleActivate = useCallback(() => {
     onReferenceClick?.(anchorId)
@@ -23,7 +30,7 @@ export function PdfReferenceNode({ node, extension }: NodeViewProps) {
     [handleActivate],
   )
 
-  const ariaLabel = previewText
+  const ariaLabel = previewText.length > 0
     ? `${sourceName}, page ${pageIndex + 1}: ${previewText}`
     : `${sourceName}, page ${pageIndex + 1}`
 

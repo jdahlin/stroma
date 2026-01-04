@@ -45,25 +45,30 @@ export const Section = Node.create<SectionOptions>({
     return {
       id: {
         default: null,
-        parseHTML: element => element.getAttribute('data-id'),
-        renderHTML: (attributes) => {
-          if (!attributes.id)
+        parseHTML: (element: HTMLElement) => element.getAttribute('data-id'),
+        renderHTML: (attributes: { id?: unknown }) => {
+          const id = typeof attributes.id === 'string' ? attributes.id : null
+          if (id === null || id.length === 0)
             return {}
-          return { 'data-id': attributes.id }
+          return { 'data-id': id }
         },
       },
       title: {
         default: 'Untitled Section',
-        parseHTML: element => element.getAttribute('data-title'),
-        renderHTML: (attributes) => {
-          return { 'data-title': attributes.title }
+        parseHTML: (element: HTMLElement) => element.getAttribute('data-title'),
+        renderHTML: (attributes: { title?: unknown }) => {
+          const title = typeof attributes.title === 'string'
+            ? attributes.title
+            : 'Untitled Section'
+          return { 'data-title': title }
         },
       },
       collapsed: {
         default: false,
-        parseHTML: element => element.getAttribute('data-collapsed') === 'true',
-        renderHTML: (attributes) => {
-          return { 'data-collapsed': attributes.collapsed ? 'true' : 'false' }
+        parseHTML: (element: HTMLElement) => element.getAttribute('data-collapsed') === 'true',
+        renderHTML: (attributes: { collapsed?: unknown }) => {
+          const collapsed = attributes.collapsed === true
+          return { 'data-collapsed': collapsed ? 'true' : 'false' }
         },
       },
     }
@@ -119,7 +124,7 @@ export const Section = Node.create<SectionOptions>({
               return false
 
             return commands.updateAttributes(this.name, {
-              collapsed: !node.attrs.collapsed,
+              collapsed: node.attrs.collapsed !== true,
             })
           },
 

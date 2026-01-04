@@ -11,14 +11,13 @@ export interface LinkPopoverProps {
 
 export const LinkPopover: React.FC<LinkPopoverProps> = ({ editor, onClose }) => {
   const inputRef = useRef<HTMLInputElement>(null)
-  const [url, setUrl] = useState('')
+  const [url, setUrl] = useState(() => {
+    const attrs = editor.getAttributes('link') as { href?: unknown }
+    return typeof attrs.href === 'string' ? attrs.href : ''
+  })
 
   // Get current link URL if any
   useEffect(() => {
-    const attrs = editor.getAttributes('link')
-    if (attrs.href) {
-      setUrl(attrs.href)
-    }
     inputRef.current?.focus()
     inputRef.current?.select()
   }, [editor])
