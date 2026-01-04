@@ -1,15 +1,33 @@
 /* Offset the leftmost tab strip where it can sit under window controls. */
-.app-content:not(:has(.sidebar-left.is-open))
-  .dockview-theme-stroma
-  .dv-split-view-container.dv-horizontal
-  > .dv-view-container:is(:first-child, :nth-child(2))
-  > .dv-view:first-child
-  .dv-groupview
-  .dv-scrollable {
-  margin-left: 40px !important;
+.app-content:not(:has(.sidebar-left.is-open)) .dockview-theme-stroma .dv-split-view-container.dv-horizontal > .dv-view-container:first-child > .dv-view:first-child .dv-groupview .dv-scrollable,
+.app-content:not(:has(.sidebar-left.is-open)) .dockview-theme-stroma .dv-split-view-container.dv-horizontal > .dv-view-container:nth-child(2) > .dv-view:first-child .dv-groupview .dv-scrollable {
+  /* calculate margin from traffic lights base, plus ribbon and sidebar offsets */
+  margin-left: calc(
+    var(--stroma-traffic-offset, 40px) +
+    var(--ribbon-offset, 0px) +
+    var(--sidebar-offset, 0px)
+  ) !important;
 }
 
 /* App-level dock tab height hook for sidebar/ribbon spacing. */
 .app-container .dockview-theme-stroma {
   --dv-tabs-and-actions-container-height: var(--stroma-dock-tabs-height);
+  /* Defaults and variables used to compute left margin for tabs */
+  --stroma-traffic-offset: var(--stroma-traffic-offset, 40px);
+  /* ribbon width is defined in Ribbon.css as --stroma-ribbon-width (default 3rem) */
+  --stroma-ribbon-width: var(--stroma-ribbon-width, 3rem);
+  --stroma-sidebar-min-width: var(--stroma-sidebar-min-width, 15rem);
+  /* runtime offsets that are toggled when ribbon/sidebar are hidden/open */
+  --ribbon-offset: 0px;
+  --sidebar-offset: 0px;
+}
+
+/* When ribbon exists in the left-row, make room for its width */
+.app-content:has(.ribbon) .dockview-theme-stroma {
+  --ribbon-offset: var(--stroma-ribbon-width);
+}
+
+/* When left sidebar is open, account for its min width (sidebar resizes may override inline width) */
+.app-content:has(.sidebar-left.is-open) .dockview-theme-stroma {
+  --sidebar-offset: var(--stroma-sidebar-min-width);
 }

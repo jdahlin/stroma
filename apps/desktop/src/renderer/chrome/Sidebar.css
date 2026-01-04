@@ -9,10 +9,13 @@
     width 110ms cubic-bezier(0.3, 0.9, 0.35, 1),
     opacity 110ms cubic-bezier(0.3, 0.9, 0.35, 1),
     transform 110ms cubic-bezier(0.3, 0.9, 0.35, 1);
+  /* expose a min-width variable so layout can account for sidebar size */
+  --stroma-sidebar-min-width: var(--stroma-sidebar-min-width, 15rem);
 }
 
 .sidebar-left {
   border-right: 1px solid var(--color-border);
+  min-width: var(--stroma-sidebar-min-width);
 }
 
 .sidebar-right {
