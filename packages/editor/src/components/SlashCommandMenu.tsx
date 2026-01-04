@@ -1,6 +1,6 @@
 import type { SlashCommandItem, SlashCommandSuggestionProps } from '../extensions/SlashCommand'
 import { Icon } from '@repo/ux'
-import React, { useCallback, useEffect, useImperativeHandle, useState } from 'react'
+import React, { useCallback, useImperativeHandle, useState } from 'react'
 import './SlashCommandMenu.css'
 
 export interface SlashCommandMenuRef {
@@ -15,11 +15,13 @@ export interface SlashCommandMenuProps {
 
 export function SlashCommandMenu({ items, command, menuRef }: SlashCommandMenuProps) {
   const [selectedIndex, setSelectedIndex] = useState(0)
+  const [prevItems, setPrevItems] = useState(items)
 
   // Reset selection when items change
-  useEffect(() => {
+  if (items !== prevItems) {
+    setPrevItems(items)
     setSelectedIndex(0)
-  }, [items])
+  }
 
   const selectItem = useCallback(
     (index: number) => {
