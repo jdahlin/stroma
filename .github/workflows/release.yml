@@ -211,6 +211,11 @@ jobs:
       contents: write
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Need full history for changelog
+
       - name: Download all artifacts
         uses: actions/download-artifact@v4
         with:
@@ -229,6 +234,23 @@ jobs:
             echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
           fi
 
+      - name: Generate changelog
+        id: changelog
+        run: |
+          # Get previous tag
+          PREV_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+          if [ -z "$PREV_TAG" ]; then
+            echo "body=Initial release" >> $GITHUB_OUTPUT
+          else
+            # Generate changelog from commits
+            CHANGELOG=$(git log --pretty=format:"- %s" $PREV_TAG..HEAD | head -50)
+            # Escape for GitHub Actions
+            CHANGELOG="${CHANGELOG//'%'/'%25'}"
+            CHANGELOG="${CHANGELOG//$'\n'/'%0A'}"
+            CHANGELOG="${CHANGELOG//$'\r'/'%0D'}"
+            echo "body=## What's Changed%0A%0A$CHANGELOG%0A%0A**Full Changelog**: https://github.com/jdahlin/stroma/compare/$PREV_TAG...v${{ steps.version.outputs.version }}" >> $GITHUB_OUTPUT
+          fi
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
@@ -236,7 +258,7 @@ jobs:
           name: Stroma v${{ steps.version.outputs.version }}
           draft: true
           prerelease: ${{ contains(steps.version.outputs.version, '-') }}
-          generate_release_notes: true
+          body: ${{ steps.changelog.outputs.body }}
           files: |
             artifacts/**/*.dmg
             artifacts/**/*.zip
