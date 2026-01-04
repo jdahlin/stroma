@@ -18,6 +18,7 @@ const containerStyles: React.CSSProperties = {
 export const Editor: React.FC<EditorProps> = ({
   content,
   onChange,
+  onPdfReferenceClick,
   placeholder,
   readOnly = false,
   autoFocus = false,
@@ -25,6 +26,7 @@ export const Editor: React.FC<EditorProps> = ({
   const editor = useEditor({
     content,
     onChange,
+    onPdfReferenceClick,
     placeholder,
     editable: !readOnly,
     autofocus: autoFocus,

@@ -1,4 +1,5 @@
 export { configureExtensions, type ConfigureExtensionsOptions } from './configureExtensions'
+export { PdfReference, type PdfReferenceOptions } from './PdfReference'
 export { Section, type SectionOptions } from './Section'
 export {
   SlashCommand,

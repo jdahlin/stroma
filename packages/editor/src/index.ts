@@ -4,7 +4,20 @@ export { EditorContent } from './EditorContent'
 export { EditorToolbar } from './EditorToolbar'
 
 // Extensions
-export { configureExtensions, type ConfigureExtensionsOptions } from './extensions'
+export {
+  configureExtensions,
+  type ConfigureExtensionsOptions,
+  PdfReference,
+  type PdfReferenceOptions,
+  Section,
+  type SectionOptions,
+  SlashCommand,
+  type SlashCommandItem,
+  slashCommandItems,
+  type SlashCommandOptions,
+  type SlashCommandSuggestionProps,
+  slashCommandSuggestion,
+} from './extensions'
 
 // Hooks
 export {

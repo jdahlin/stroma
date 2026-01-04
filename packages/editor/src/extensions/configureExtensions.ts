@@ -20,6 +20,7 @@ import Paragraph from '@tiptap/extension-paragraph'
 import Placeholder from '@tiptap/extension-placeholder'
 import Strike from '@tiptap/extension-strike'
 import Text from '@tiptap/extension-text'
+import { PdfReference } from './PdfReference'
 import { Section } from './Section'
 import { SlashCommand } from './SlashCommand'
 import { slashCommandSuggestion } from './slashCommandSuggestion'
@@ -27,6 +28,8 @@ import { slashCommandSuggestion } from './slashCommandSuggestion'
 export interface ConfigureExtensionsOptions {
   /** Placeholder text when the editor is empty */
   placeholder?: string
+  /** PDF reference click handler */
+  onPdfReferenceClick?: (anchorId: string) => void
 }
 
 /**
@@ -36,7 +39,7 @@ export interface ConfigureExtensionsOptions {
 export function configureExtensions(
   options: ConfigureExtensionsOptions = {},
 ): Extensions {
-  const { placeholder = 'Start writing...' } = options
+  const { placeholder = 'Start writing...', onPdfReferenceClick } = options
 
   return [
     // Core document structure
@@ -82,6 +85,11 @@ export function configureExtensions(
         rel: 'noopener noreferrer',
         target: '_blank',
       },
+    }),
+
+    // PDF references
+    PdfReference.configure({
+      onReferenceClick: onPdfReferenceClick,
     }),
 
     // Editor behavior

@@ -8,6 +8,8 @@ export interface UseEditorOptions {
   content?: DocumentContent
   /** Called on every content change */
   onChange?: (content: DocumentContent) => void
+  /** PDF reference click handler */
+  onPdfReferenceClick?: (anchorId: string) => void
   /** Additional extensions to include */
   extensions?: Extensions
   /** Placeholder text when empty */
@@ -26,6 +28,7 @@ export function useEditor(options: UseEditorOptions = {}): Editor | null {
   const {
     content,
     onChange,
+    onPdfReferenceClick,
     extensions = [],
     placeholder,
     editable = true,
@@ -33,7 +36,10 @@ export function useEditor(options: UseEditorOptions = {}): Editor | null {
   } = options
 
   const editor = useTiptapEditor({
-    extensions: [...configureExtensions({ placeholder }), ...extensions],
+    extensions: [
+      ...configureExtensions({ placeholder, onPdfReferenceClick }),
+      ...extensions,
+    ],
     content,
     editable,
     autofocus,
