@@ -5,11 +5,13 @@
   "private": true,
   "main": "dist/index.mjs",
   "scripts": {
-    "build": "esbuild src/index.ts --bundle --platform=node --format=esm --sourcemap --tsconfig=tsconfig.json --outfile=dist/index.mjs --external:electron --conditions=import",
+    "build": "esbuild src/index.ts --bundle --platform=node --format=esm --sourcemap --tsconfig=tsconfig.json --outfile=dist/index.mjs --external:electron --external:better-sqlite3 --conditions=import",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@repo/core": "workspace:*",
+    "@repo/storage": "workspace:*",
+    "better-sqlite3": "^12.5.0",
     "electron": "39.2.7"
   },
   "devDependencies": {
