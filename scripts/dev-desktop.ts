@@ -42,6 +42,8 @@ async function startDev(): Promise<void> {
     runPnpm(['-s', '--filter', '@repo/main', 'build'], 'main build'),
   ])
 
+  await runPnpm(['-s', '--filter', '@repo/main', 'rebuild:electron'], 'main native rebuild')
+
   // Watchers
   const rendererDev: ChildProcess = spawnPnpm(['--filter', '@repo/renderer', 'dev'])
   const preloadWatch: ChildProcess = spawnPnpm(['--filter', '@repo/preload', 'exec', 'esbuild', 'src/index.ts', '--bundle', '--platform=node', '--format=esm', '--sourcemap', '--tsconfig=tsconfig.json', '--outfile=dist/index.mjs', '--external:electron', '--conditions=import', '--watch'])
