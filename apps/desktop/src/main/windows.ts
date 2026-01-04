@@ -1,6 +1,9 @@
-import { join } from 'node:path'
+import { dirname, join } from 'node:path'
 import process from 'node:process'
+import { fileURLToPath } from 'node:url'
 import { BrowserWindow } from 'electron'
+
+const __dirname = dirname(fileURLToPath(import.meta.url))
 
 export function createMainWindow(): BrowserWindow {
   const win = new BrowserWindow({
@@ -9,7 +12,7 @@ export function createMainWindow(): BrowserWindow {
     minWidth: 800,
     minHeight: 600,
     webPreferences: {
-      preload: join(__dirname, '../preload/index.js'),
+      preload: join(__dirname, '../preload/index.mjs'),
       contextIsolation: true,
       nodeIntegration: false,
       sandbox: true,
