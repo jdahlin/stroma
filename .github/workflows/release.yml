@@ -16,16 +16,16 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # Generate icons on macOS first (has all required tools)
+  # Generate icons on Linux first (cheaper runner)
   build-icons:
     name: Build Icons
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install librsvg
-        run: brew install librsvg imagemagick
+      - name: Install icon tooling
+        run: sudo apt-get update && sudo apt-get install -y librsvg2-bin imagemagick icnsutils
 
       - name: Generate icons
         run: ./apps/desktop/scripts/build-icon.sh
