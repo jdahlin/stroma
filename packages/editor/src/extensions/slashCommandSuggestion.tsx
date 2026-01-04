@@ -20,6 +20,19 @@ function PopupComponent({ items, command, menuRef }: PopupComponentProps) {
 export const slashCommandSuggestion: Omit<SuggestionOptions<SlashCommandItem>, 'editor'> = {
   char: '/',
 
+  allow: ({ state, range }) => {
+    const $from = state.doc.resolve(range.from)
+    const isStartOfBlock = $from.parentOffset === 0
+
+    if (isStartOfBlock)
+      return true
+
+    const textBefore = $from.parent.textBetween(0, $from.parentOffset, '\n', '\0')
+    const charBefore = textBefore.slice(-1)
+
+    return /\s/.test(charBefore)
+  },
+
   items: ({ query }) => {
     return slashCommandItems.filter(item =>
       item.label.toLowerCase().includes(query.toLowerCase())
