@@ -35,6 +35,21 @@ async function startDev(): Promise<void> {
       })
     })
 
+  const runPnpmCheck = (args: string[], label: string, env?: NodeJS.ProcessEnv): Promise<boolean> =>
+    new Promise((resolve) => {
+      const child = spawnPnpm(args, { stdio: 'inherit', env })
+      child.on('exit', (code) => {
+        if (code === 0) {
+          console.log(`[${label}] Completed.`)
+          resolve(true)
+        }
+        else {
+          console.warn(`[${label}] Failed (code ${code ?? 'unknown'}).`)
+          resolve(false)
+        }
+      })
+    })
+
   // Initial builds
   await Promise.all([
     runPnpm(['-s', '--filter', '@repo/renderer', 'build'], 'renderer build'),
@@ -42,7 +57,14 @@ async function startDev(): Promise<void> {
     runPnpm(['-s', '--filter', '@repo/main', 'build'], 'main build'),
   ])
 
-  await runPnpm(['-s', '--filter', '@repo/main', 'rebuild:electron'], 'main native rebuild')
+  const nativeOk = await runPnpmCheck(
+    ['-s', '--filter', '@repo/main', 'exec', 'electron', '-e', 'require("better-sqlite3")'],
+    'main native check',
+    { ELECTRON_RUN_AS_NODE: '1' },
+  )
+  if (!nativeOk) {
+    await runPnpm(['-s', '--filter', '@repo/main', 'rebuild:electron'], 'main native rebuild')
+  }
 
   // Watchers
   const rendererDev: ChildProcess = spawnPnpm(['--filter', '@repo/renderer', 'dev'])
