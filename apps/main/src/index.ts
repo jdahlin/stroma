@@ -3,11 +3,16 @@ import { basename } from 'node:path'
 import process from 'node:process'
 import { app, BrowserWindow, dialog, ipcMain } from 'electron'
 import { setupMenu } from './menu'
+import { closeStorage, initStorage, registerStorageHandlers } from './storage-ipc'
 import { createMainWindow } from './windows'
 
 app.commandLine.appendSwitch('remote-debugging-port', '9222')
 
 void app.whenReady().then(async () => {
+  // Initialize storage before creating window
+  initStorage()
+  registerStorageHandlers()
+
   ipcMain.handle('app:get-version', () => app.getVersion())
   ipcMain.handle('pdf:open-dialog', async () => {
     const result = await dialog.showOpenDialog({
@@ -65,4 +70,8 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit()
   }
+})
+
+app.on('will-quit', () => {
+  closeStorage()
 })
