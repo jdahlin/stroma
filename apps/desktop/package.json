@@ -1,6 +1,6 @@
 {
   "name": "@repo/desktop",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "private": true,
   "productName": "Stroma",
   "description": "A desktop knowledge work environment for deep reading and learning",
