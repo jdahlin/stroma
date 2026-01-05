@@ -34,6 +34,7 @@ This document explains the storage documentation map and key decisions.
 - Asset storage: [`assets.md`](./assets.md)
 - Scaling guidance: [`scaling.md`](./scaling.md)
 - Migrations approach: [`migrations.md`](./migrations.md)
+- Debugging commands: [`debugging.md`](./debugging.md)
 
 ## What are the key decisions?
 - IDs are integer primary keys with per-source local numbering.

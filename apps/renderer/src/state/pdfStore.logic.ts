@@ -8,6 +8,7 @@ export const createAnchorId = (): PdfAnchorId => crypto.randomUUID() as PdfAncho
 export const PANE_PDF_KEY = 'stroma-pdf-panes'
 
 export interface StoredPdfReference {
+  referenceId?: number
   path: string
   name: string
   scrollPosition?: PdfScrollPosition
@@ -54,12 +55,13 @@ export function getStoredScrollPosition(stored?: StoredPdfReference): PdfScrollP
 export function computeSetPaneData(
   state: PdfState,
   paneId: string,
-  payload: { source: PdfSource, data: Uint8Array },
+  payload: { source: PdfSource, data: Uint8Array, referenceId?: number | null },
   stored?: StoredPdfReference,
 ): Partial<PdfData> {
   const scrollPosition = getStoredScrollPosition(stored)
   const paneState: PdfPaneState = {
     source: payload.source,
+    referenceId: payload.referenceId ?? stored?.referenceId ?? null,
     data: payload.data,
     anchors: [],
     focusedAnchorId: null,
@@ -91,12 +93,13 @@ export function computeAddTextAnchor(
   text: string,
   rects: PdfRect[],
   anchorId: PdfAnchorId = createAnchorId(),
+  createdAt: Date = new Date(),
+  updatedAt: Date = createdAt,
 ): Partial<PdfData> {
   const pane = state.panes[paneId]
   if (!pane)
     return {}
 
-  const now = new Date()
   const anchor: PdfTextAnchor = {
     id: anchorId,
     sourceId: pane.source.id,
@@ -104,8 +107,8 @@ export function computeAddTextAnchor(
     type: 'text',
     text,
     rects,
-    createdAt: now,
-    updatedAt: now,
+    createdAt,
+    updatedAt,
   }
 
   return {

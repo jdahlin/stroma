@@ -32,7 +32,7 @@ This document explains the proposed SQLite schema for sources, anchors, and note
 | `references` | Store sources (PDF, web, image). | "type=pdf, title='Paper'" |
 | `reference_assets` | Store concrete source assets. | "file URI and hash" |
 | `anchors` | Store anchor identities. | "kind=pdf_text" |
-| `notes` | Store editor content. | "tiptap_json note" |
+| `notes` | Store editor content and derived title. | "title='...', tiptap_json note" |
 
 ## What PDF-specific tables are required?
 | Table | Purpose | Example |

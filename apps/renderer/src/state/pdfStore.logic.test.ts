@@ -63,7 +63,7 @@ describe('pdfStore logic', () => {
     it('creates new pane state', () => {
       const state = createInitialState()
       const source = createMockSource('src-1')
-      const payload = { source, data: new Uint8Array([1, 2, 3]) }
+      const payload = { source, data: new Uint8Array([1, 2, 3]), referenceId: null }
 
       const result: Partial<PdfData> = computeSetPaneData(state, 'pane-1', payload)
 
@@ -81,7 +81,12 @@ describe('pdfStore logic', () => {
         scrollPosition: { ratio: 0.8, top: 500, scale: 2 },
       }
 
-      const result: Partial<PdfData> = computeSetPaneData(state, 'pane-1', { source, data: new Uint8Array() }, stored)
+      const result: Partial<PdfData> = computeSetPaneData(
+        state,
+        'pane-1',
+        { source, data: new Uint8Array(), referenceId: null },
+        stored,
+      )
 
       expect(result.panes?.['pane-1']?.scrollPosition).toEqual(stored.scrollPosition)
     })
@@ -95,6 +100,7 @@ describe('pdfStore logic', () => {
         panes: {
           'pane-1': {
             source,
+            referenceId: null,
             data: new Uint8Array(),
             anchors: [],
             focusedAnchorId: null,
@@ -116,6 +122,7 @@ describe('pdfStore logic', () => {
         panes: {
           'pane-1': {
             source: createMockSource('s1'),
+            referenceId: null,
             data: new Uint8Array(),
             anchors: [],
             focusedAnchorId: null,
@@ -139,6 +146,7 @@ describe('pdfStore logic', () => {
         panes: {
           [paneId]: {
             source: createMockSource('s1'),
+            referenceId: null,
             data: new Uint8Array(),
             anchors: [],
             focusedAnchorId: null,
@@ -171,6 +179,7 @@ describe('pdfStore logic', () => {
         panes: {
           [paneId]: {
             source: createMockSource('s1'),
+            referenceId: null,
             data: new Uint8Array(),
             anchors: [],
             focusedAnchorId: null,
@@ -201,6 +210,7 @@ describe('pdfStore logic', () => {
         panes: {
           [paneId]: {
             source: createMockSource('s1'),
+            referenceId: null,
             data: new Uint8Array(),
             anchors: [],
             focusedAnchorId: null,

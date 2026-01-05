@@ -4,6 +4,7 @@ import {
   mainBoundaries,
   rendererBoundaries,
   sharedBoundaries,
+  storageBoundaries,
   uxBoundaries,
 } from '@repo/eslint-config/boundaries'
 
@@ -15,6 +16,10 @@ export default repoConfig.append(
   {
     files: ['packages/core/**'],
     ...coreBoundaries,
+  },
+  {
+    files: ['packages/storage/**'],
+    ...storageBoundaries,
   },
   {
     files: ['packages/ux/**'],

@@ -1,4 +1,12 @@
-import type { PdfSource } from '@repo/core'
+import type {
+  CreatePdfTextAnchorInput,
+  PdfAnchorId,
+  PdfRect,
+  PdfSource,
+  PdfSourceId,
+  PdfTextAnchor,
+  PdfTextAnchorFull,
+} from '@repo/core'
 import type { PdfScrollPosition, PdfState } from './pdfStore.types'
 import { create } from 'zustand'
 import {
@@ -55,6 +63,34 @@ function clearScrollPersistence(paneId: string): void {
   }
 }
 
+function toPdfTextAnchor(sourceId: PdfSourceId, anchor: PdfTextAnchorFull): PdfTextAnchor {
+  return {
+    id: String(anchor.id) as PdfAnchorId,
+    sourceId,
+    pageIndex: anchor.pageIndex,
+    type: 'text',
+    text: anchor.text,
+    rects: anchor.rects.map(rect => ({
+      x: rect.x,
+      y: rect.y,
+      width: rect.width,
+      height: rect.height,
+    })),
+    createdAt: new Date(anchor.createdAt),
+    updatedAt: new Date(anchor.updatedAt),
+  }
+}
+
+function toStorageRects(pageIndex: number, rects: PdfRect[]): CreatePdfTextAnchorInput['rects'] {
+  return rects.map(rect => ({
+    pageIndex,
+    x: rect.x,
+    y: rect.y,
+    width: rect.width,
+    height: rect.height,
+  }))
+}
+
 export const usePdfStore = create<PdfState>((set, get) => ({
   panes: {},
   activePaneId: null,
@@ -64,17 +100,37 @@ export const usePdfStore = create<PdfState>((set, get) => ({
     if (!result)
       return null
 
-    const now = new Date()
+    const storage = window.stroma?.storage
+    let referenceId: number | null = null
+    let name = result.name
+    let path = result.path
+    let createdAt = new Date()
+    let updatedAt = new Date()
+
+    if (storage?.asset?.importPdfFromBuffer) {
+      const reference = await storage.asset.importPdfFromBuffer(result.data, result.name)
+      referenceId = reference.id
+      name = reference.title
+      createdAt = new Date(reference.createdAt)
+      updatedAt = new Date(reference.updatedAt)
+
+      const storedPath = await storage.asset.getFilePath(reference.id)
+      if (storedPath !== null) {
+        path = storedPath
+      }
+    }
+
     const source: PdfSource = {
-      id: createSourceId(),
-      name: result.name,
-      path: result.path,
-      createdAt: now,
-      updatedAt: now,
+      id: (referenceId === null ? createSourceId() : String(referenceId) as PdfSourceId),
+      name,
+      path,
+      createdAt,
+      updatedAt,
     }
 
     return {
       source,
+      referenceId,
       data: new Uint8Array(result.data),
     }
   },
@@ -84,21 +140,44 @@ export const usePdfStore = create<PdfState>((set, get) => ({
     if (!stored)
       return null
 
-    const result = await window.stroma?.openPdfByPath?.(stored.path)
+    let path = stored.path
+    let name = stored.name
+    const referenceId = stored.referenceId ?? null
+    let createdAt = new Date()
+    let updatedAt = new Date()
+
+    if (referenceId !== null) {
+      const storage = window.stroma?.storage
+      if (storage?.asset?.getFilePath) {
+        const storedPath = await storage.asset.getFilePath(referenceId)
+        if (storedPath !== null) {
+          path = storedPath
+        }
+      }
+
+      const reference = await storage?.reference?.get(referenceId)
+      if (reference) {
+        name = reference.title
+        createdAt = new Date(reference.createdAt)
+        updatedAt = new Date(reference.updatedAt)
+      }
+    }
+
+    const result = await window.stroma?.openPdfByPath?.(path)
     if (!result)
       return null
 
-    const now = new Date()
     const source: PdfSource = {
-      id: createSourceId(),
-      name: result.name ?? stored.name,
+      id: (referenceId === null ? createSourceId() : String(referenceId) as PdfSourceId),
+      name: name ?? result.name ?? stored.name,
       path: result.path,
-      createdAt: now,
-      updatedAt: now,
+      createdAt,
+      updatedAt,
     }
 
     return {
       source,
+      referenceId,
       data: new Uint8Array(result.data),
     }
   },
@@ -113,6 +192,7 @@ export const usePdfStore = create<PdfState>((set, get) => ({
       return
 
     paneMap[paneId] = {
+      referenceId: payload.referenceId ?? undefined,
       path: payload.source.path,
       name: payload.source.name,
       scrollPosition: paneState.scrollPosition,
@@ -121,6 +201,29 @@ export const usePdfStore = create<PdfState>((set, get) => ({
     savePaneMap(paneMap)
 
     set(nextState)
+
+    const payloadReferenceId = payload.referenceId
+    if (payloadReferenceId !== null && payloadReferenceId !== undefined) {
+      void (async () => {
+        const anchors = await window.stroma?.storage?.anchor.getPdfTextForReference(payloadReferenceId)
+        if (!anchors)
+          return
+        set((state) => {
+          const pane = state.panes[paneId]
+          if (!pane || pane.referenceId !== payloadReferenceId)
+            return state
+          return {
+            panes: {
+              ...state.panes,
+              [paneId]: {
+                ...pane,
+                anchors: anchors.map(anchor => toPdfTextAnchor(pane.source.id, anchor)),
+              },
+            },
+          }
+        })
+      })()
+    }
   },
 
   removePane: (paneId) => {
@@ -156,7 +259,40 @@ export const usePdfStore = create<PdfState>((set, get) => ({
   },
 
   addTextAnchor: (paneId, pageIndex, text, rects) => {
-    set(state => computeAddTextAnchor(state, paneId, pageIndex, text, rects))
+    const pane = get().panes[paneId]
+    if (!pane) {
+      return
+    }
+
+    const referenceId = pane.referenceId
+    if (referenceId === null) {
+      set(state => computeAddTextAnchor(state, paneId, pageIndex, text, rects))
+      return
+    }
+
+    void (async () => {
+      const created = await window.stroma?.storage?.anchor.createPdfText({
+        referenceId,
+        pageIndex,
+        text,
+        rects: toStorageRects(pageIndex, rects),
+      })
+
+      if (!created) {
+        return
+      }
+
+      set(state => computeAddTextAnchor(
+        state,
+        paneId,
+        pageIndex,
+        text,
+        rects,
+        String(created.id) as PdfAnchorId,
+        new Date(created.createdAt),
+        new Date(created.updatedAt),
+      ))
+    })()
   },
 
   focusAnchor: (paneId, id) => {

@@ -12,6 +12,7 @@
     "dev": "cross-env NODE_OPTIONS= tsx scripts/dev-desktop.ts",
     "dev:desktop": "cross-env NODE_OPTIONS= tsx scripts/dev-desktop.ts",
     "dev:editor": "pnpm --filter @repo/editor-standalone-web dev",
+    "check": "pnpm -s run with-node-opts turbo run typecheck lint test --log-prefix=none --output-logs=errors-only",
     "start": "pnpm -s --filter @repo/main exec electron .",
     "build": "pnpm -s run with-node-opts turbo build",
     "lint": "pnpm -s run with-node-opts turbo lint --log-prefix=none --output-logs=errors-only",
@@ -21,7 +22,7 @@
     "typecheck": "pnpm -s run with-node-opts turbo typecheck --log-prefix=none --output-logs=errors-only",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "clean": "cross-env TURBO_UI=stream turbo clean && rm -rf node_modules",
+    "clean": "cross-env TURBO_UI=stream turbo clean --log-prefix=none --output-logs=errors-only && rm -rf node_modules",
     "prepare": "husky"
   },
   "lint-staged": {
@@ -51,6 +52,7 @@
   },
   "pnpm": {
     "onlyBuiltDependencies": [
+      "better-sqlite3",
       "electron",
       "esbuild"
     ]

@@ -16,6 +16,7 @@ function createPayload() {
       createdAt: now,
       updatedAt: now,
     },
+    referenceId: null,
     data: new Uint8Array([1, 2, 3]),
   }
 }
