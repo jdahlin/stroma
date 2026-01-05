@@ -27,6 +27,7 @@ export default defineConfig({
           index: resolve(__dirname, 'apps/main/src/index.ts'),
         },
       },
+      isolatedEntries: true,
     },
     resolve: { alias: aliases('core', 'shared', 'storage') },
   },
@@ -40,6 +41,7 @@ export default defineConfig({
       rollupOptions: {
         external: ['electron'],
       },
+      isolatedEntries: true,
     },
     resolve: { alias: aliases('core', 'shared') },
   },
@@ -52,6 +54,7 @@ export default defineConfig({
           index: resolve(__dirname, 'apps/renderer/index.html'),
         },
       },
+      isolatedEntries: true,
     },
     plugins: [react()],
     resolve: {
