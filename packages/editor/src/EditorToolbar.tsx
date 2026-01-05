@@ -1,6 +1,5 @@
 import type { PdfAnchorId, PdfSourceId } from '@repo/core'
 import type { Editor } from '@tiptap/core'
-import { IconButton } from '@repo/ux'
 import {
   Bold,
   Code,
@@ -9,6 +8,7 @@ import {
   Heading1,
   Heading2,
   Heading3,
+  IconButton,
   Image,
   Italic,
   Link,
@@ -19,7 +19,7 @@ import {
   Redo,
   Strikethrough,
   Undo,
-} from 'lucide-react'
+} from '@repo/ux'
 import React, { useCallback, useState } from 'react'
 import { LinkPopover } from './components'
 import { useToolbarState } from './hooks'

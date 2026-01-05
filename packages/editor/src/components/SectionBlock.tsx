@@ -1,7 +1,6 @@
 import type { NodeViewProps } from '@tiptap/react'
-import { Icon } from '@repo/ux'
+import { ChevronDown, ChevronRight, GripVertical, Icon } from '@repo/ux'
 import { NodeViewContent, NodeViewWrapper } from '@tiptap/react'
-import { ChevronDown, ChevronRight, GripVertical } from 'lucide-react'
 import React, { useCallback, useState } from 'react'
 
 const sectionStyles: React.CSSProperties = {

@@ -1,8 +1,7 @@
 import type { NodeViewProps } from '@tiptap/react'
 import type { PdfReferenceAttributes } from '../types'
-import { Icon } from '@repo/ux'
+import { FileText, Icon } from '@repo/ux'
 import { NodeViewWrapper } from '@tiptap/react'
-import { FileText } from 'lucide-react'
 import React, { useCallback } from 'react'
 import './PdfReferenceNode.css'
 

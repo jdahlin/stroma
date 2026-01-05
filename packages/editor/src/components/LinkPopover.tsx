@@ -1,6 +1,5 @@
 import type { Editor } from '@tiptap/core'
-import { IconButton } from '@repo/ux'
-import { Check, Link2Off, X } from 'lucide-react'
+import { Check, IconButton, Link2Off, X } from '@repo/ux'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import './LinkPopover.css'
 
