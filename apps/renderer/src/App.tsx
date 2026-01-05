@@ -79,9 +79,12 @@ export const App: React.FC = () => {
         <main className="app-main">
           <DockRoot />
         </main>
-        <Sidebar side="right">
-          <SidebarAnchors />
-        </Sidebar>
+        <div className="right-stack">
+          <div className="top-right-spacer" />
+          <Sidebar side="right">
+            <SidebarAnchors />
+          </Sidebar>
+        </div>
       </div>
       <CommandPalette isOpen={commandPaletteOpen} onClose={toggleCommandPalette} />
     </div>
