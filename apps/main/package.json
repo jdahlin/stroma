@@ -3,7 +3,7 @@
   "type": "module",
   "version": "0.1.6",
   "private": true,
-  "main": "dist/index.mjs",
+  "main": "dist/index.js",
   "scripts": {
     "build": "esbuild src/index.ts --bundle --platform=node --format=esm --sourcemap --tsconfig=tsconfig.json --outfile=dist/index.mjs --external:electron --external:better-sqlite3 --conditions=import",
     "rebuild:electron": "cross-env ELECTRON_RUN_AS_NODE=1 npm_config_runtime=electron npm_config_target=39.2.7 npm_config_disturl=https://electronjs.org/headers npm_config_build_from_source=true pnpm rebuild better-sqlite3",
