@@ -68,14 +68,19 @@ function getAppMetadata(): AppMetadata {
   }
 }
 
+function capitalize(str: string): string {
+  return str.charAt(0).toUpperCase() + str.slice(1)
+}
+
 function showAboutDialog(): void {
   const { name, version, releaseDate } = getAppMetadata()
   const releaseLabel = releaseDate ?? 'unreleased'
 
   void dialog.showMessageBox({
     type: 'info',
-    title: `About ${name}`,
-    message: name,
+    // Capitalize name
+    title: `About ${capitalize(name)}`,
+    message: capitalize(name),
     detail: `Version: ${version}\nRelease date: ${releaseLabel}`,
     buttons: ['OK'],
   })
@@ -83,6 +88,20 @@ function showAboutDialog(): void {
 
 export function setupMenu(): void {
   const isMac = process.platform === 'darwin'
+  const zoomStep = 0.5
+
+  const withFocusedWindow = (action: (window: BrowserWindow) => void): void => {
+    const window = BrowserWindow.getFocusedWindow()
+    if (!window) {
+      console.error('No focused window found')
+      return
+    }
+    action(window)
+  }
+
+  const withFocusedWebContents = (action: (window: BrowserWindow) => void): void => {
+    withFocusedWindow(action)
+  }
 
   const template: MenuItemConstructorOptions[] = [
     // App menu (macOS only)
@@ -98,13 +117,13 @@ export function setupMenu(): void {
                 },
               },
               { type: 'separator' as const },
-              { role: 'services' as const },
-              { type: 'separator' as const },
-              { role: 'hide' as const },
-              { role: 'hideOthers' as const },
-              { role: 'unhide' as const },
-              { type: 'separator' as const },
-              { role: 'quit' as const },
+              {
+                label: `Quit ${app.name}`,
+                accelerator: 'Cmd+Q',
+                click: () => {
+                  app.quit()
+                },
+              },
             ],
           },
         ]
@@ -124,19 +143,6 @@ export function setupMenu(): void {
               return
             }
             window.webContents.send('execute-command', COMMANDS.newNote)
-          },
-        },
-        { type: 'separator' },
-        {
-          label: 'Open PDF...',
-          accelerator: 'CmdOrCtrl+O',
-          click: () => {
-            const window = BrowserWindow.getFocusedWindow()
-            if (!window) {
-              console.error('No focused window found')
-              return
-            }
-            window.webContents.send('execute-command', COMMANDS.openPdf)
           },
         },
         { type: 'separator' },
@@ -173,23 +179,86 @@ export function setupMenu(): void {
     {
       label: 'Edit',
       submenu: [
-        { role: 'undo' },
-        { role: 'redo' },
+        {
+          label: 'Undo',
+          accelerator: 'CmdOrCtrl+Z',
+          click: () => withFocusedWebContents(window => window.webContents.undo()),
+        },
+        {
+          label: 'Redo',
+          accelerator: isMac ? 'Shift+Command+Z' : 'Ctrl+Y',
+          click: () => withFocusedWebContents(window => window.webContents.redo()),
+        },
         { type: 'separator' },
-        { role: 'cut' },
-        { role: 'copy' },
-        { role: 'paste' },
+        {
+          label: 'Cut',
+          accelerator: 'CmdOrCtrl+X',
+          click: () => withFocusedWebContents(window => window.webContents.cut()),
+        },
+        {
+          label: 'Copy',
+          accelerator: 'CmdOrCtrl+C',
+          click: () => withFocusedWebContents(window => window.webContents.copy()),
+        },
+        {
+          label: 'Paste',
+          accelerator: 'CmdOrCtrl+V',
+          click: () => withFocusedWebContents(window => window.webContents.paste()),
+        },
         ...(isMac
           ? [
-              { role: 'pasteAndMatchStyle' as const },
-              { role: 'delete' as const },
-              { role: 'selectAll' as const },
+              {
+                label: 'Paste and Match Style',
+                accelerator: 'Shift+Command+V',
+                click: () => withFocusedWebContents(window => window.webContents.pasteAndMatchStyle()),
+              },
+              {
+                label: 'Delete',
+                accelerator: 'Backspace',
+                click: () => withFocusedWebContents(window => window.webContents.delete()),
+              },
+              {
+                label: 'Select All',
+                accelerator: 'Cmd+A',
+                click: () => withFocusedWebContents(window => window.webContents.selectAll()),
+              },
             ]
           : [
-              { role: 'delete' as const },
+              {
+                label: 'Delete',
+                accelerator: 'Delete',
+                click: () => withFocusedWebContents(window => window.webContents.delete()),
+              },
               { type: 'separator' as const },
-              { role: 'selectAll' as const },
+              {
+                label: 'Select All',
+                accelerator: 'Ctrl+A',
+                click: () => withFocusedWebContents(window => window.webContents.selectAll()),
+              },
             ]),
+      ],
+    },
+
+    // Import menu
+    {
+      label: 'Import',
+      submenu: [
+        {
+          label: 'PDF',
+          accelerator: 'CmdOrCtrl+O',
+          click: () => {
+            const window = BrowserWindow.getFocusedWindow()
+            if (!window) {
+              console.error('No focused window found')
+              return
+            }
+            window.webContents.send('execute-command', COMMANDS.openPdf)
+          },
+        },
+        // TODO: Website
+        // TODO: Text file
+        // TODO: Youtube video
+        // TODO: Anki deck
       ],
     },
 
@@ -197,43 +266,9 @@ export function setupMenu(): void {
     {
       label: 'View',
       submenu: [
-        {
-          label: 'Split Right',
-          click: () => {
-            const window = BrowserWindow.getFocusedWindow()
-            if (!window) {
-              console.error('No focused window found')
-              return
-            }
-            window.webContents.send('execute-command', COMMANDS.splitRight)
-          },
-        },
-        {
-          label: 'Split Down',
-          click: () => {
-            const window = BrowserWindow.getFocusedWindow()
-            if (!window) {
-              console.error('No focused window found')
-              return
-            }
-            window.webContents.send('execute-command', COMMANDS.splitDown)
-          },
-        },
+        // TODO Reading Mode
+        // TODO Source Mode
         { type: 'separator' },
-        {
-          label: 'Ribbon',
-          id: 'ribbon-toggle',
-          type: 'checkbox',
-          checked: true,
-          click: () => {
-            const window = BrowserWindow.getFocusedWindow()
-            if (!window) {
-              console.error('No focused window found')
-              return
-            }
-            window.webContents.send('execute-command', COMMANDS.toggleRibbon)
-          },
-        },
         {
           label: 'Left Sidebar',
           id: 'sidebar-left',
@@ -241,12 +276,7 @@ export function setupMenu(): void {
           accelerator: 'CmdOrCtrl+\\',
           checked: true,
           click: () => {
-            const window = BrowserWindow.getFocusedWindow()
-            if (!window) {
-              console.error('No focused window found')
-              return
-            }
-            window.webContents.send('execute-command', COMMANDS.toggleLeftSidebar)
+            withFocusedWindow(window => window.webContents.send('execute-command', COMMANDS.toggleLeftSidebar))
           },
         },
         {
@@ -256,50 +286,92 @@ export function setupMenu(): void {
           accelerator: 'CmdOrCtrl+Shift+\\',
           checked: true,
           click: () => {
+            withFocusedWindow(window => window.webContents.send('execute-command', COMMANDS.toggleRightSidebar))
+          },
+        },
+        { type: 'separator' },
+        {
+          label: 'Ribbon',
+          id: 'ribbon-toggle',
+          type: 'checkbox',
+          checked: true,
+          click: () => {
+            withFocusedWindow(window => window.webContents.send('execute-command', COMMANDS.toggleRibbon))
+          },
+        },
+        { type: 'separator' },
+        {
+          label: 'Split Right',
+          click: () => {
+            withFocusedWindow(window => window.webContents.send('execute-command', COMMANDS.splitRight))
+          },
+        },
+        {
+          label: 'Split Down',
+          click: () => {
+            withFocusedWindow(window => window.webContents.send('execute-command', COMMANDS.splitDown))
+          },
+        },
+        // TODO: separator when implementing the next items
+        // TODO: Navigate Back
+        // TODO: Navigate Forward
+        { type: 'separator' },
+        {
+          label: 'Actual Size',
+          accelerator: 'CmdOrCtrl+0',
+          click: () => withFocusedWebContents(window => window.webContents.setZoomLevel(0)),
+        },
+        {
+          label: 'Zoom In',
+          accelerator: 'CmdOrCtrl+=',
+          click: () => withFocusedWebContents(window => {
+            const next = window.webContents.getZoomLevel() + zoomStep
+            window.webContents.setZoomLevel(next)
+          }),
+        },
+        {
+          label: 'Zoom Out',
+          accelerator: 'CmdOrCtrl+-',
+          click: () => withFocusedWebContents(window => {
+            const next = window.webContents.getZoomLevel() - zoomStep
+            window.webContents.setZoomLevel(next)
+          }),
+        },
+        { type: 'separator' },
+        { label: 'Force Reload', role: 'forceReload'},
+        {
+          label: 'Toggle Developer Tools',
+          accelerator: isMac ? 'Alt+Command+I' : 'Ctrl+Shift+I',
+          click: () => {
             const window = BrowserWindow.getFocusedWindow()
             if (!window) {
               console.error('No focused window found')
               return
             }
-            window.webContents.send('execute-command', COMMANDS.toggleRightSidebar)
+            window.webContents.toggleDevTools()
           },
         },
         { type: 'separator' },
-        { role: 'resetZoom' },
-        { role: 'zoomIn' },
-        { role: 'zoomOut' },
       ],
     },
 
     // Window menu
     {
       label: 'Window',
-      submenu: [
-        { role: 'minimize' },
-        { role: 'zoom' },
-        { role: 'togglefullscreen' },
-        { type: 'separator' as const },
-        { role: 'front' as const },
-        { type: 'separator' as const },
-        { role: 'window' as const },
-      ],
+      role: 'windowMenu',
     },
 
     // Help menu
     {
-      role: 'help',
+      label: 'Help',
       submenu: [
-        ...(!isMac
-          ? [
-              {
-                label: `About ${app.name}`,
-                click: () => {
-                  showAboutDialog()
-                },
-              },
-              { type: 'separator' as const },
-            ]
-          : []),
+        {
+          label: `About ${app.name}`,
+          click: () => {
+            showAboutDialog()
+          },
+        },
+        { type: 'separator' as const },
         {
           label: 'Learn More',
           click: () => {
@@ -308,6 +380,7 @@ export function setupMenu(): void {
         },
       ],
     },
+
   ]
 
   const menu = Menu.buildFromTemplate(template)

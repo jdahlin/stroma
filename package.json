@@ -7,14 +7,16 @@
     "node": ">=20.0.0",
     "pnpm": ">=10.0.0"
   },
+  "main": "apps/main/dist/index.js",
   "scripts": {
     "with-node-opts": "cross-env TURBO_UI=stream NODE_OPTIONS=\"--max-old-space-size=4096 --throw-deprecation --disable-warning=DEP0169\" ELECTRON_RUN_AS_NODE=1",
-    "dev": "cross-env NODE_OPTIONS= tsx scripts/dev-desktop.ts",
-    "dev:desktop": "cross-env NODE_OPTIONS= tsx scripts/dev-desktop.ts",
+    "dev": "electron-vite dev",
+    "dev:desktop": "electron-vite dev",
     "dev:editor": "pnpm --filter @repo/editor-standalone-web dev",
     "check": "pnpm -s run with-node-opts turbo run typecheck lint test --log-prefix=none --output-logs=errors-only",
     "start": "pnpm -s --filter @repo/main exec electron .",
-    "build": "pnpm -s run with-node-opts turbo build",
+    "build": "pnpm -s run with-node-opts turbo build --log-prefix=none --output-logs=errors-only",
+    "build:desktop": "electron-vite build",
     "lint": "pnpm -s run with-node-opts turbo lint --log-prefix=none --output-logs=errors-only",
     "test": "pnpm -s run with-node-opts turbo test --log-prefix=none",
     "test:watch": "pnpm run with-node-opts turbo test:watch",
@@ -38,7 +40,9 @@
     "@repo/eslint-config": "workspace:*",
     "@vitest/coverage-v8": "^4.0.16",
     "@vitest/ui": "^4.0.16",
+    "@vitejs/plugin-react": "^4.7.0",
     "cross-env": "^10.1.0",
+    "electron-vite": "^5.0.0",
     "eslint": "^9.39.2",
     "husky": "^9.1.7",
     "jsdom": "^27.4.0",
@@ -48,6 +52,8 @@
     "tsx": "^4.21.0",
     "turbo": "^2.7.2",
     "typescript": "5.9.3",
+    "@types/node": "^22.12.0",
+    "vite": "^7.3.0",
     "vitest": "^4.0.16"
   },
   "pnpm": {

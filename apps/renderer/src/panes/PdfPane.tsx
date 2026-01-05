@@ -3,10 +3,14 @@ import type { IDockviewPanelProps } from 'dockview'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { PdfLoadingOverlay } from '../components/pdf/PdfLoadingOverlay'
 import { PdfToolbar } from '../components/pdf/PdfToolbar'
-import { PdfViewer } from '../components/pdf/PdfViewer'
 import { usePdfStore } from '../state'
 import './Pane.css'
 import './PdfPane.css'
+
+const PdfViewer = React.lazy(async () => {
+  const module = await import('../components/pdf/PdfViewer')
+  return { default: module.PdfViewer }
+})
 
 export const PdfPane: React.FC<IDockviewPanelProps> = ({ api }) => {
   const paneId = api.id

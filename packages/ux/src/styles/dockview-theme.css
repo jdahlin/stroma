@@ -67,6 +67,15 @@
   margin: 0;
 }
 
+.dockview-theme-stroma .dv-tab .dv-default-tab-content {
+  max-width: 10rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+  display: inline-block;
+}
+
 .dockview-theme-stroma .tab:hover:not(.active-tab) {
   background-color: var(--color-bg-tertiary);
 }

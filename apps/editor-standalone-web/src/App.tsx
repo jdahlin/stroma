@@ -1,5 +1,4 @@
-import { IconButton } from '@repo/ux'
-import { Moon, Sun } from 'lucide-react'
+import { IconButton, Moon, Sun } from '@repo/ux'
 import React, { useState } from 'react'
 import { EditorPlayground } from './EditorPlayground'
 

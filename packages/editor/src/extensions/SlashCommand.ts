@@ -1,8 +1,6 @@
+import type { LucideIcon } from '@repo/ux'
 import type { Editor, Range } from '@tiptap/core'
 import type { SuggestionOptions, SuggestionProps } from '@tiptap/suggestion'
-import type { LucideIcon } from 'lucide-react'
-import { Extension } from '@tiptap/core'
-import Suggestion from '@tiptap/suggestion'
 import {
   Code2,
   FolderOpen,
@@ -14,7 +12,9 @@ import {
   ListOrdered,
   Minus,
   Quote,
-} from 'lucide-react'
+} from '@repo/ux'
+import { Extension } from '@tiptap/core'
+import Suggestion from '@tiptap/suggestion'
 
 export interface SlashCommandItem {
   id: string

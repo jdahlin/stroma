@@ -36,18 +36,3 @@ export const Icon: React.FC<IconProps> = ({
 }
 
 // Re-export commonly used icons for convenience
-export {
-  ChevronDown,
-  ChevronLeft,
-  ChevronRight,
-  FileText,
-  FolderOpen,
-  Home,
-  ListTodo,
-  PanelLeft,
-  PanelRight,
-  Plus,
-  Search,
-  Settings,
-  X,
-} from 'lucide-react'

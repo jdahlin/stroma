@@ -3,11 +3,11 @@ import type { DocumentContent } from '@repo/editor'
 import type { IDockviewPanelProps } from 'dockview'
 import { Editor } from '@repo/editor'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { usePdfStore } from '../state'
+import { useLibraryStore, usePdfStore } from '../state'
 import { PaneMenu } from './PaneMenu'
 import './Pane.css'
 
-export const NotesPane: React.FC<IDockviewPanelProps> = ({ api }) => {
+export const NotesPane: React.FC<IDockviewPanelProps> = ({ api, params }) => {
   const activePaneId = usePdfStore(state => state.activePaneId)
   const focusAnchor = usePdfStore(state => state.focusAnchor)
   const activePane = usePdfStore((state) => {
@@ -19,6 +19,17 @@ export const NotesPane: React.FC<IDockviewPanelProps> = ({ api }) => {
   })
 
   const referenceId = activePane?.referenceId ?? null
+  const noteTargetId = params?.noteId as string | undefined
+  const noteMode = Boolean(noteTargetId)
+  const noteTitle = useLibraryStore(state => (
+    noteTargetId ? state.notes.find(note => note.id === noteTargetId)?.title ?? null : null
+  ))
+  const noteContent = useLibraryStore(state => (
+    noteTargetId ? state.noteContents[noteTargetId] : undefined
+  ))
+  const setNoteContent = useLibraryStore(state => state.setNoteContent)
+  const addNote = useLibraryStore(state => state.addNote)
+  const updateNote = useLibraryStore(state => state.updateNote)
   const [content, setContent] = useState<DocumentContent | undefined>(undefined)
   const [noteId, setNoteId] = useState<number | null>(null)
   const [editorKey, setEditorKey] = useState(`notes:${api.id}:empty`)
@@ -26,6 +37,7 @@ export const NotesPane: React.FC<IDockviewPanelProps> = ({ api }) => {
   const noteIdRef = useRef<number | null>(null)
   const referenceIdRef = useRef<number | null>(referenceId)
   const titleRef = useRef<string>('Notes')
+  const paneRef = useRef<HTMLDivElement | null>(null)
 
   const handlePdfReferenceClick = useCallback(
     (anchorId: string) => {
@@ -73,6 +85,26 @@ export const NotesPane: React.FC<IDockviewPanelProps> = ({ api }) => {
     return firstLine && firstLine.length > 0 ? firstLine : null
   }, [])
 
+  const toExtractTitle = useCallback((raw: string): string => {
+    const firstLine = raw.split('\n').map(line => line.trim()).find(Boolean) ?? ''
+    if (firstLine.length > 0) {
+      return firstLine.slice(0, 80)
+    }
+    return 'New extract'
+  }, [])
+
+  const toDocumentContent = useCallback((text: string): DocumentContent => {
+    return {
+      type: 'doc',
+      content: [
+        {
+          type: 'paragraph',
+          content: [{ type: 'text', text }],
+        },
+      ],
+    }
+  }, [])
+
   const setPaneTitle = useCallback((nextTitle: string | null) => {
     const title = nextTitle && nextTitle.trim().length > 0 ? nextTitle.trim() : 'Notes'
     if (titleRef.current === title) {
@@ -101,6 +133,14 @@ export const NotesPane: React.FC<IDockviewPanelProps> = ({ api }) => {
     let cancelled = false
 
     const loadNote = async () => {
+      if (noteMode && noteTargetId) {
+        setContent(noteContent)
+        setNoteId(null)
+        setEditorKey(`note:${noteTargetId}`)
+        setPaneTitle(noteTitle ?? 'Note')
+        return
+      }
+
       if (referenceId === null) {
         setContent(undefined)
         setNoteId(null)
@@ -136,7 +176,36 @@ export const NotesPane: React.FC<IDockviewPanelProps> = ({ api }) => {
     return () => {
       cancelled = true
     }
-  }, [api.id, extractTitle, parseContent, referenceId, setPaneTitle])
+  }, [api.id, extractTitle, noteContent, noteMode, noteTargetId, noteTitle, parseContent, referenceId, setPaneTitle])
+
+  useEffect(() => {
+    if (!noteMode || !noteTargetId) {
+      return
+    }
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (!event.ctrlKey || event.metaKey || event.key.toLowerCase() !== 'x') {
+        return
+      }
+      const activeElement = document.activeElement
+      if (!paneRef.current || !activeElement || !paneRef.current.contains(activeElement)) {
+        return
+      }
+      const selection = window.getSelection()
+      const text = selection?.toString().trim() ?? ''
+      if (!text) {
+        return
+      }
+
+      event.preventDefault()
+      const title = toExtractTitle(text)
+      const extract = addNote({ title, type: 'extract', parentId: noteTargetId })
+      setNoteContent(extract.id, toDocumentContent(text))
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [addNote, noteMode, noteTargetId, setNoteContent, toDocumentContent, toExtractTitle])
 
   useEffect(() => {
     return () => {
@@ -176,6 +245,16 @@ export const NotesPane: React.FC<IDockviewPanelProps> = ({ api }) => {
   }, [])
 
   const handleChange = useCallback((nextContent: DocumentContent) => {
+    if (noteMode && noteTargetId) {
+      const nextTitle = extractTitle(nextContent)
+      setPaneTitle(nextTitle ?? noteTitle ?? 'Note')
+      if (nextTitle && nextTitle !== noteTitle) {
+        updateNote(noteTargetId, { title: nextTitle })
+      }
+      setNoteContent(noteTargetId, nextContent)
+      return
+    }
+
     if (referenceId === null) {
       return
     }
@@ -191,17 +270,20 @@ export const NotesPane: React.FC<IDockviewPanelProps> = ({ api }) => {
       saveTimerRef.current = null
       void persistContent(nextContent, nextTitle)
     }, 300)
-  }, [extractTitle, persistContent, referenceId, setPaneTitle])
+  }, [extractTitle, noteMode, noteTargetId, noteTitle, persistContent, referenceId, setNoteContent, setPaneTitle, updateNote])
 
   const documentId = useMemo(() => {
+    if (noteMode && noteTargetId) {
+      return `note:${noteTargetId}`
+    }
     if (referenceId === null) {
       return `notes:${api.id}:empty`
     }
     return `notes:${api.id}:${referenceId}`
-  }, [api.id, referenceId])
+  }, [api.id, noteMode, noteTargetId, referenceId])
 
   return (
-    <div className="pane pane-notes">
+    <div className="pane pane-notes" ref={paneRef}>
       <PaneMenu />
       <Editor
         key={editorKey}

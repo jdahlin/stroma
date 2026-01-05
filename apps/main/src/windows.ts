@@ -28,8 +28,9 @@ export function createMainWindow(): BrowserWindow {
   })
 
   // Load from Vite dev server or built files
-  if (process.env.VITE_DEV_SERVER_URL !== undefined) {
-    void win.loadURL(process.env.VITE_DEV_SERVER_URL)
+  const devServerUrl = process.env.ELECTRON_RENDERER_URL ?? process.env.VITE_DEV_SERVER_URL
+  if (devServerUrl !== undefined) {
+    void win.loadURL(devServerUrl)
     win.webContents.openDevTools()
   }
   else {
