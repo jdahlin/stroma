@@ -1,0 +1,86 @@
+.library-sidebar {
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem;
+  color: var(--color-text-primary);
+}
+
+.library-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.library-section-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.library-section-title {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--color-text-secondary);
+}
+
+.library-section-subtitle {
+  font-size: 0.85rem;
+  color: var(--color-text-primary);
+}
+
+.library-tree {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.library-tree-row {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.25rem;
+  padding-left: calc(var(--tree-depth, 0) * 0.9rem + 0.25rem);
+  cursor: default;
+  user-select: none;
+  min-width: 0;
+}
+
+.library-tree-row.is-branch {
+  cursor: pointer;
+}
+
+.library-tree-row:hover {
+  background: var(--color-bg-secondary);
+}
+
+.library-tree-prefix {
+  width: 0.7rem;
+  color: var(--color-text-secondary);
+  text-align: center;
+}
+
+.library-tree-row.is-leaf .library-tree-prefix {
+  color: transparent;
+}
+
+.library-tree-title {
+  font-size: 0.86rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 14rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.library-empty {
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+}
+
+.library-hint {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+}

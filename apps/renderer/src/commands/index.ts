@@ -1,6 +1,6 @@
 import type { CommandId } from '@repo/core'
 import { commandRegistry, COMMANDS } from '@repo/core'
-import { useLayoutStore, usePdfStore, useUIStore } from '../state'
+import { useLayoutStore, useLibraryStore, usePdfStore, useUIStore } from '../state'
 
 const THEMES = ['light', 'dark', 'system'] as const
 
@@ -47,7 +47,12 @@ export function registerCommands(): () => void {
 
     // Notes commands
     commandRegistry.register(COMMANDS.newNote, () => {
-      useLayoutStore.getState().openNotesPane()
+      const note = useLibraryStore.getState().addNote({
+        title: 'Untitled',
+        type: 'topic',
+        parentId: null,
+      })
+      useLayoutStore.getState().openNotesPane(note.id, note.title)
     }),
 
     // Tab commands

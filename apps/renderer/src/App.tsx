@@ -5,6 +5,7 @@ import { CommandPalette } from './chrome/CommandPalette'
 import { Ribbon } from './chrome/Ribbon'
 import { Sidebar } from './chrome/Sidebar'
 import { SidebarAnchors } from './chrome/SidebarAnchors'
+import { SidebarLibrary } from './chrome/SidebarLibrary'
 import { registerCommands } from './commands'
 import { DockRoot } from './layout/DockRoot'
 import { useLayoutStore, useUIStore } from './state'
@@ -71,7 +72,7 @@ export const App: React.FC = () => {
           <div className="left-row">
             {ribbonOpen ? <Ribbon /> : null}
             <Sidebar side="left">
-              <div className="sidebar-placeholder">Left Sidebar</div>
+              <SidebarLibrary />
             </Sidebar>
           </div>
         </div>
