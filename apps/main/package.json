@@ -19,7 +19,7 @@
     "@repo/preload": "workspace:*",
     "@repo/renderer": "workspace:*",
     "@repo/tsconfig": "workspace:*",
-    "@types/node": "22.7.7",
+    "@types/node": "^22.12.0",
     "esbuild": "^0.27.2",
     "typescript": "5.9.3"
   }
